@@ -5,4 +5,5 @@ int main()
 {
     resetBoard();
     printBoard();
+    saveGame();
 }
