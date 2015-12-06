@@ -26,10 +26,14 @@ void printGameOption(void)
                 printf("%d- %s\n", INDEX+1, gameOption[INDEX]);
         }
 }
+void clearScreen(void)
+{
+        system("clear");
+}
 int getGameOption(void)
 {
         char input[3];
-        bool endFound = false, rightNum = false;
+        bool endFound = false, rightNum = false,special = false;
         do
         {
                 endFound= false;
@@ -44,6 +48,7 @@ int getGameOption(void)
                         printf(ANSI_COLOR_RED"Your input is too large.\nPlease only enter the Number of the Option.\n"ANSI_COLOR_RESET "\n");
                 else if ( (!rightNum) )
                         printf(ANSI_COLOR_RED"This Number isn't included in the List.\n"ANSI_COLOR_RESET "\n");
+              //  if(input[1]== '\0' && input[0] == ) Handle special Character
         }while( (!endFound) || (!rightNum));
         return input[0] - '0';
 }
@@ -67,9 +72,10 @@ int getMove(char *moveType)//Move type such as current place or next place"
                         rightForm = true;
                 if( (!endFound) )
                         printf(ANSI_COLOR_RED"Your input is too large.\nPlease only enter The character of the Column in uppercase followed by\n the number of the Row without spaces.\n"ANSI_COLOR_RESET "\n");
-                else if ( (!rightNum) )
+                else if ( (!rightForm) )
                         printf(ANSI_COLOR_RED"Please only enter The character of the Column in uppercase followed by\n the number of the Row without spaces.\n"ANSI_COLOR_RESET "\n");
-        }while( (!endFound) || (!rightNum));
+                //  if(input[1]== '\0' && input[0] == ) Handle special Character
+        }while( (!endFound) || (!rightForm));
         int point;
         point = ( input[0] - 'A' +1) + ( input[0] - '0')*8 ;
         return point;
