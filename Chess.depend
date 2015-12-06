@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1449417845 source:d:\whatever\my workspace\cs121 project\main.c
+	<stdio.h>
+	<stdlib.h>
+	"Board.h"
+
+1449416090 source:d:\whatever\my workspace\cs121 project\board.c
+	<stdio.h>
+
+1449417927 d:\whatever\my workspace\cs121 project\board.h
+	<stdio.h>
+
