@@ -10,7 +10,7 @@
 1449417927 d:\whatever\my workspace\cs121 project\board.h
 	<stdio.h>
 
-1449418623 source:/media/mado14/DATA/Chess/main.c
+1449422699 source:/media/mado14/DATA/Chess/main.c
 	<stdio.h>
 	<stdlib.h>
 	"Board.h"
@@ -18,9 +18,16 @@
 1449418644 /media/mado14/DATA/Chess/Board.h
 	<stdio.h>
 
-1449418815 source:/media/mado14/DATA/Chess/Game.c
+1449422503 source:/media/mado14/DATA/Chess/Game.c
+	<stdio.h>
+	"Game.h"
 
 1449417159 source:/media/mado14/DATA/Chess/Movement.c
 
 1449417156 source:/media/mado14/DATA/Chess/Save.c
+
+1449420504 source:/media/mado14/DATA/Chess/Board.c
+	<stdio.h>
+
+1449422731 /media/mado14/DATA/Chess/Game.h
 
