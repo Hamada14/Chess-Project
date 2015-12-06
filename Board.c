@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include "Board.h"
-
-
 void printBoard(void)
 {
     int i,j;
@@ -12,7 +10,7 @@ void printBoard(void)
 
     for(i = 0 ; i < 8 ; i++)
     {
-        printf("\n\n\n%d",i + 1);
+        printf("\n\n\n%d",8 - i);
         for(j = 0 ; j < 8 ; j++)
         {
            printf("\t%c",board[i][j]);
