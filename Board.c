@@ -1,7 +1,5 @@
 #include <stdio.h>
-#include "board.h"
-
-
+#include "Board.h"
 void printBoard(void)
 {
     int i,j;
