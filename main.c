@@ -4,5 +4,6 @@
 
 int main()
 {
-    printInterface();
+        resetBoard();
+        printBoard();
 }
