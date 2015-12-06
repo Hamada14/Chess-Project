@@ -1,14 +1,16 @@
 # depslib dependency file v1.0
-1449428104 source:d:\whatever\my workspace\cs121 project\main.c
+1449428859 source:d:\whatever\my workspace\cs121 project\main.c
 	<stdio.h>
 	<stdlib.h>
 	"Board.h"
+	"Game.h"
+	"Save.h"
 
-1449428269 source:d:\whatever\my workspace\cs121 project\board.c
+1449428438 source:d:\whatever\my workspace\cs121 project\board.c
 	<stdio.h>
-	"board.h"
+	"Board.h"
 
-1449425092 d:\whatever\my workspace\cs121 project\board.h
+1449428380 d:\whatever\my workspace\cs121 project\board.h
 	<stdio.h>
 
 1449425115 source:/media/mado14/DATA/Chess/main.c
@@ -28,19 +30,32 @@
 
 1449417156 source:/media/mado14/DATA/Chess/Save.c
 
-<<<<<<< HEAD
-1449420779 source:d:\whatever\my workspace\cs121 project\game.c
+1449417156 D
+
+1449428380 source:d:\whatever\my workspace\cs121 project\game.c
+	<stdio.h>
+	<stdbool.h>
+	<string.h>
+	"Game.h"
 
 1449418185 source:d:\whatever\my workspace\cs121 project\movement.c
 
-1449428085 source:d:\whatever\my workspace\cs121 project\save.c
+1449428940 source:d:\whatever\my workspace\cs121 project\save.c
 	<stdio.h>
-	"board.h"
-=======
+	"Board.h"
+	"Save.h"
+
+1449428085 
+
 1449426063 source:/media/mado14/DATA/Chess/Board.c
 	<stdio.h>
 	"Board.h"
 
 1449426277 /media/mado14/DATA/Chess/Game.h
->>>>>>> 8f954115f715bb8b47427d34ef8fdc3700b4eb58
+
+1449426277 54115f715bb8b47427d34ef8fdc3700b4eb58
+
+1449428380 d:\whatever\my workspace\cs121 project\game.h
+
+1449428061 d:\whatever\my workspace\cs121 project\save.h
 
