@@ -1,0 +1,5 @@
+int getInput(void)
+{
+        printBoard();
+
+}
