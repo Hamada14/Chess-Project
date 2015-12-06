@@ -35,8 +35,17 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Board.h" />
+		<Unit filename="Game.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="Game.h" />
+		<Unit filename="Movement.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="Movement.h" />
+		<Unit filename="Save.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="Save.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
