@@ -34,9 +34,11 @@ void resetBoard(void)
                     else
                             board[i][j] = '-';
             }
-            else if (i == 1 || i == 6)
+            else if ( i == 6)
                     board[i][j] = 'P';
-            else
+            else if ( i == 1)
+                    board[i][j] = 'p';
+            else if(i == 7)
             {
                 if(j == 0 || j == 7)
                     board[i][j] = 'R';
@@ -49,6 +51,20 @@ void resetBoard(void)
                 else
                     board[i][j] = 'K';
             }
+            else
+            {
+                if(j == 0 || j == 7)
+                    board[i][j] = 'r';
+                else if(j == 1 || j == 6)
+                    board[i][j] = 'n';
+                else if(j == 2 || j == 5)
+                    board[i][j] = 'b';
+                else if(j == 3)
+                    board[i][j] = 'q';
+                else
+                    board[i][j] = 'k';
+            }
+
         }
     }
 }

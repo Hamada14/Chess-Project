@@ -4,7 +4,7 @@
 void saveGame(void)
 {
     FILE* save;
-    save = fopen("save.bin","wb");
+    save = fopen("save.bin","w");
     if(save == NULL)
     {
         return;
@@ -15,7 +15,7 @@ void saveGame(void)
 void loadGame(void)
 {
     FILE* load;
-    load = fopen("save.bin","rb");
+    load = fopen("save.bin","r");
     if(load == NULL)
     {
         return;

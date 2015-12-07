@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "board.h"
+#include "Board.h"
+#include "Save.h"
 void saveGame(void)
 {
     FILE* save;
@@ -8,7 +9,7 @@ void saveGame(void)
     {
         return;
     }
-    fputs(board,save);
+    fwrite(board,64,1,save);
     fclose(save);
 }
 void loadGame(void)
@@ -19,5 +20,6 @@ void loadGame(void)
     {
         return;
     }
-    fread(board;)
+    fread(board,64,1,load);
+    fclose(load);
 }
