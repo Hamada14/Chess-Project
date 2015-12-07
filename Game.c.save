@@ -1,7 +1,0 @@
-int getInput(void)
-{
-        printBoard();
-        char* foo;
-    
-
-}

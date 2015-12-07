@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "Game.h"
-
+#include <conio.h>
 
 void printInterface(void)
 {
@@ -26,9 +26,13 @@ void printGameOption(void)
                 printf("%d- %s\n", INDEX+1, gameOption[INDEX]);
         }
 }
+void clearScreen(void)
+{
+        system("clear");
+}
 int getGameOption(void)
 {
-        char input[3];
+        char input[2];
         bool endFound = false, rightNum = false;
         do
         {
@@ -41,36 +45,160 @@ int getGameOption(void)
                 if( (input[0] > '0') && (input[0] <= '0' + gameOptionSize) )
                         rightNum = true;
                 if( (!endFound) )
-                        printf(ANSI_COLOR_RED"Your input is too large.\nPlease only enter the Number of the Option.\n"ANSI_COLOR_RESET "\n");
+                    printError("large");
                 else if ( (!rightNum) )
-                        printf(ANSI_COLOR_RED"This Number isn't included in the List.\n"ANSI_COLOR_RESET "\n");
+                    printError("number not in list");
         }while( (!endFound) || (!rightNum));
         return input[0] - '0';
 }
 
-int getMove(char *moveType)//Move type such as current place or next place"
+void getMove()
 {
-        char input[4];
-        bool endFound = false, rightForm = false;
+        char input[7];
+        bool done,promotion,command;
         do
         {
-                endFound= false;
-                rightForm = false;
-                if( strcmp (moveType,"current") == 0 )
-                        printf("Enter the Current Coordinate of the piece you wish to Move: ");
-                else if ( strcmp(moveType, "next") == 0 )
-                        printf("Enter the Current Coordinate of the place you wish to Move to: ");
-                scanf("%s", &input);
-                if( input[2] == '\0')
-                        endFound = true;
-                if( (input[0] >= 'A' && input[0] <='H') && (input[1] > '0' && input[1] <= '8') )
-                        rightForm = true;
-                if( (!endFound) )
-                        printf(ANSI_COLOR_RED"Your input is too large.\nPlease only enter The character of the Column in uppercase followed by\n the number of the Row without spaces.\n"ANSI_COLOR_RESET "\n");
-                else if ( (!rightNum) )
-                        printf(ANSI_COLOR_RED"Please only enter The character of the Column in uppercase followed by\n the number of the Row without spaces.\n"ANSI_COLOR_RESET "\n");
-        }while( (!endFound) || (!rightNum));
-        int point;
-        point = ( input[0] - 'A' +1) + ( input[0] - '0')*8 ;
-        return point;
+            done = false;
+            promotion = false;
+            command = false;
+            printf("Enter the Index of current and Desired Move: ");
+            scanf("%s",&input);
+            int nullPosition = getNull( input, 7);
+            if( nullPosition == 1)
+            {
+                if( verifyCommand( input[0]) )
+                {
+                    command = true;
+                    break;
+                }
+            }
+            if( nullPosition == 5 || nullPosition == 6 )
+            {
+                    switch( nullPosition){
+                case 5:
+                    promotion = false;
+                    break;
+                case 6:
+                    promotion = true;
+                    break;
+                }
+                if( verifyInput( input) )
+                {
+                    done = true;
+                }
+            }else if( nullPosition == 0)
+                printError("no input");
+            else
+                printError("large");
+        }while( !done );
+        if( command )
+        {
+            doCommand( input);
+        }
+        else
+        {
+            setCommand( input, promotion);
+        }
+}
+
+bool verifyNumber(char number)
+{
+    if( (number > '0') && (number < '8') )
+        return true;
+    else
+        return false;
+}
+
+bool verifyLetter(char letter)
+{
+    if( (letter >= 'A') && (letter <= 'H') )
+        return true;
+    else
+        return false;
+}
+
+int getNull( char input[], int maxSize)
+{
+    int INDEX;
+    for( INDEX = 0; INDEX < maxSize; INDEX++)
+        if( input[INDEX] == '\0' )
+            return INDEX;
+    return 0;
+}
+
+int convertLetter( char letter)
+{
+    return (letter - 'A');
+}
+
+int convertNumber( char number)
+{
+    return ( number - '1');
+}
+bool verifyInput( char input[])
+{
+    bool verifiedInput = true;
+    if( verifyLetter( input[0]) && verifyLetter( input[2]) )
+        verifiedInput = true;
+    else
+    {
+        printError("letter out of bound");
+        verifiedInput = false;
+    }
+    if( verifyNumber( input[1]) && verifyNumber( input[3]) )
+        verifiedInput = true;
+    else
+    {
+        printError("number out of bound");
+        verifiedInput = false;
+    }
+    return verifiedInput;
+}
+void printError(char *type)
+{
+    int INDEX;
+    for( INDEX = 0; INDEX < errorMessageSize; INDEX++)
+    {
+        if( strcmp(type, errorCode[INDEX]) == 0 )
+        {
+            printf(ANSI_COLOR_RED"%s", errorMessage[INDEX]);
+            break;
+        }
+    }
+    printf("Please refer to the help section if you need more informations."ANSI_COLOR_RESET "\n");
+}
+void doCommand( char input[])
+{
+    switch( input[0])
+    {
+        //Finish here commands like redo and undo...etc
+    }
+}
+
+void setCommand( char input[], bool promotion)
+{
+    command.currentX = convertNumber( input[1]);
+    command.currentY = convertLetter( input[0]);
+    command.nextX = convertNumber( input[3]);
+    command.nextY = convertLetter( input[2] );
+    if( promotion)
+    {
+        command.promotion = input[4];
+        command.promotionExist = true;
+    }
+    else
+    {
+        command.promotion = '\0';
+        command.promotionExist = false;
+    }
+}
+
+void printHelp()
+{
+    //remember to fill here
+}
+
+bool verifyCommand( char input)
+{
+    //checks if the character is among the special characters
 }
