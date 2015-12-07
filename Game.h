@@ -61,7 +61,7 @@ int convertNumber( char number);
 bool verifyInput( char input[]);
 void printError(char *type);
 void setCommand( char input[], bool promotion);
-void doCommand( char input[]);//not finished
+void doCommand( char input);//not finished
 void printHelp();//not finished
 bool verifyCommand( char input);//not Finished
 

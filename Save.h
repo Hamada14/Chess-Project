@@ -1,6 +1,6 @@
 #ifndef SAVE_H_INCLUDED
 #define SAVE_H_INCLUDED
-#include <stdio.h>
+
 void saveGame(void);
 
 void loadGame(void);

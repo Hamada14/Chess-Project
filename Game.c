@@ -2,8 +2,9 @@
 #include <stdbool.h>
 #include <string.h>
 #include "Game.h"
-#include <conio.h>
-
+#include <stdlib.h>
+#include "Board.h"
+#include "Save.h"
 void printInterface(void)
 {
         printLogo();
@@ -29,6 +30,7 @@ void printGameOption(void)
 void clearScreen(void)
 {
         system("clear");
+        return;
 }
 int getGameOption(void)
 {
@@ -39,7 +41,7 @@ int getGameOption(void)
                 endFound= false;
                 rightNum = false;
                 printf("Type the Number facing your desired Menu Option.\n");
-                scanf("%s", &input);
+                scanf("%s", input);
                 if( input[1] == '\0')
                         endFound = true;
                 if( (input[0] > '0') && (input[0] <= '0' + gameOptionSize) )
@@ -62,7 +64,7 @@ void getMove()
             promotion = false;
             command = false;
             printf("Enter the Index of current and Desired Move: ");
-            scanf("%s",&input);
+            scanf("%s",input);
             int nullPosition = getNull( input, 7);
             if( nullPosition == 1)
             {
@@ -93,7 +95,7 @@ void getMove()
         }while( !done );
         if( command )
         {
-            doCommand( input);
+            doCommand( input[0]);
         }
         else
         {
@@ -167,11 +169,27 @@ void printError(char *type)
     }
     printf("Please refer to the help section if you need more informations."ANSI_COLOR_RESET "\n");
 }
-void doCommand( char input[])
+void doCommand( char input)
 {
-    switch( input[0])
+    switch( input)
     {
-        //Finish here commands like redo and undo...etc
+    case 's':
+        saveGame();
+        break;
+    case 'l':
+        loadGame();
+        break;
+    case 'u':
+        //call the undo function here
+        break;
+    case 'r':
+        //call the redo function here
+        break;
+    case 'n':
+        resetBoard();
+        break;
+    default:
+        printError("no input");
     }
 }
 
@@ -193,12 +211,23 @@ void setCommand( char input[], bool promotion)
     }
 }
 
-void printHelp()
+void printHelp()//TODO
 {
     //remember to fill here
 }
 
 bool verifyCommand( char input)
 {
-    //checks if the character is among the special characters
+    if (input == 's')//save command
+            return true;
+    else if (input == 'l')//load command
+            return true;
+    else if (input == 'u')//undo command
+            return true;
+    else if (input == 'r')//redo command
+            return true;
+    else if (input == 'n')//new game
+            return true;
+    else //not a special command
+            return false;
 }
