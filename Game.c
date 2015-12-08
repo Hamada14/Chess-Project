@@ -76,17 +76,17 @@ void getMove()
             }
             if( nullPosition == 5 || nullPosition == 6 )
             {
-                    switch( nullPosition){
+                switch( nullPosition){
                 case 5:
                     promotion = false;
                     break;
                 case 6:
-                    promotion = true;
+                    promotion = true;//TODO
                     break;
                 }
                 if( verifyInput( input) )
                 {
-                    done = true;
+                    done = true;//TODO
                 }
             }else if( nullPosition == 0)
                 printError("no input");
@@ -105,7 +105,7 @@ void getMove()
 
 bool verifyNumber(char number)
 {
-    if( (number > '0') && (number < '8') )
+    if( (number > '0') && (number < '9') )
         return true;
     else
         return false;
@@ -130,12 +130,12 @@ int getNull( char input[], int maxSize)
 
 int convertLetter( char letter)
 {
-    return (letter - 'A');
+    return (letter - 'A'+1);
 }
 
 int convertNumber( char number)
 {
-    return ( number - '1');
+    return ( number - '0');
 }
 bool verifyInput( char input[])
 {
