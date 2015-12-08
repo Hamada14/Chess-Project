@@ -7,6 +7,7 @@ void saveGame(void)
     save = fopen("save.bin","w");
     if(save == NULL)
     {
+        printf("ERROR: failed to open file");
         return;
     }
     fwrite(board,64,1,save);
@@ -18,6 +19,7 @@ void loadGame(void)
     load = fopen("save.bin","r");
     if(load == NULL)
     {
+        printf("ERROR: failed to open file");
         return;
     }
     fread(board,64,1,load);

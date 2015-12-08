@@ -1,6 +1,7 @@
 #ifndef SAVE_H_INCLUDED
 #define SAVE_H_INCLUDED
-#include <stdio.h>
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
 void saveGame(void);
 
 void loadGame(void);
