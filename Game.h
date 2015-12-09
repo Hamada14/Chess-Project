@@ -5,7 +5,8 @@
 #define errorMessageSize 5
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
-int currentPlayer = firstPlayer;
+#define GAME_H_INCLUDED
+#include <windows.h>
 struct commands {
                 int currentX;
                 int nextX;
@@ -15,13 +16,13 @@ struct commands {
                 bool promotionExist;
 } command;
 enum Turn {     firstPlayer,
-                          secondPlayer,
+                secondPlayer,
 };
 enum GameState{ menu,
                 load,
                 help,
                 setting
-};
+} gameState;
 char *interfaceScreen[] = {     " ________   ___  ___   _______    ________    ________ ",
                                 "|\\   ____\\ |\\  \\|\\  \\ |\\  ___ \\  |\\   ____\\  |\\   ____\\",
                                 "\\ \\  \\___| \\ \\  \\\\\\  \\\\ \\   __/| \\ \\  \\___|_ \\ \\  \\___|_",
@@ -30,11 +31,14 @@ char *interfaceScreen[] = {     " ________   ___  ___   _______    ________    _
                                 "   \\ \\_______\\\\ \\__\\ \\__\\\\ \\_______\\ ____\\_\\  \\  ____\\_\\  \\",
                                 "    \\|_______| \\|__|\\|__| \\|_______||\\_________\\|\\_________\\",
                                 "                                    \\|_________|\\|_________|"};
+int interfaceScreenSize = sizeof(interfaceScreen) / sizeof(char*);
 char *gameOption[] ={   "Start a new Game",
                         "Load last Game",
                         "Help",
                         "Setting",
 };
+int gameOptionSize = sizeof(gameOption) / sizeof(char*);
+int currentPlayer = firstPlayer;
 char *errorCode[] = { "no input",
                     "large",
                     "number out of bound",
@@ -48,6 +52,11 @@ char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "Make sure you type the right Character in uppercase.",
                             "Make sure the number you entered exists in the List."
 };
+int errorMessageSize = sizeof(errorCode) / sizeof(char*);
+
+char commandSpecial[] = { 's', 'l', 'u', 'r', 'n'};
+int commandSpecialSize = sizeof(commandSpecial) / sizeof(char);
+
 void printInterface(void);
 void printLogo(void);
 void clearScreen(void);
@@ -65,5 +74,5 @@ void setCommand( char input[], bool promotion);
 void doCommand( char input);//not finished
 void printHelp();//not finished
 bool verifyCommand( char input);//not Finished
-
+void setColor(char* text);
 #endif // GAME_H_INCLUDED

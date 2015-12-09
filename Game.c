@@ -5,26 +5,29 @@
 #include <stdlib.h>
 #include "Board.h"
 #include "Save.h"
+
 void printInterface(void)
 {
-        printLogo();
-        printf("This is a Chess Game made by Team \"M&Ms\" as a project for Programming I course.\n");
-        printGameOption();
+    printLogo();
+    printf("This is a Chess Game made by Team \"M&Ms\" as a project for Programming I course.\n");
+    printGameOption();
 }
 void printLogo(void)
 {
+        setColor("RED");
         int INDEX;
         for( INDEX = 0; INDEX < interfaceScreenSize; INDEX++)
         {
-                printf("%s\n",interfaceScreen[INDEX] );
+            printf("%s\n",interfaceScreen[INDEX] );
         }
+        setColor("DEFAULT");
 }
 void printGameOption(void)
 {
         int INDEX;
         for( INDEX = 0; INDEX < gameOptionSize; INDEX++)
         {
-                printf("%d- %s\n", INDEX+1, gameOption[INDEX]);
+            printf("%d- %s\n", INDEX+1, gameOption[INDEX]);
         }
 }
 void clearScreen(void)
@@ -74,19 +77,19 @@ void getMove()
                     break;
                 }
             }
-            if( nullPosition == 5 || nullPosition == 6 )
+            if( nullPosition == 4 || nullPosition == 5 )
             {
                 switch( nullPosition){
-                case 5:
+                case 4:
                     promotion = false;
                     break;
-                case 6:
+                case 5:
                     promotion = true;//TODO
                     break;
                 }
                 if( verifyInput( input) )
                 {
-                    done = true;//TODO
+                    done = true;
                 }
             }else if( nullPosition == 0)
                 printError("no input");
@@ -130,12 +133,12 @@ int getNull( char input[], int maxSize)
 
 int convertLetter( char letter)
 {
-    return (letter - 'A'+1);
+    return (letter - 'A');
 }
 
 int convertNumber( char number)
 {
-    return ( number - '0');
+    return ( 8 - (number - '1' + 1));
 }
 bool verifyInput( char input[])
 {
@@ -158,16 +161,23 @@ bool verifyInput( char input[])
 }
 void printError(char *type)
 {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    WORD saved_attributes;
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    saved_attributes = consoleInfo.wAttributes;
+    SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
     int INDEX;
     for( INDEX = 0; INDEX < errorMessageSize; INDEX++)
     {
         if( strcmp(type, errorCode[INDEX]) == 0 )
         {
-            printf(ANSI_COLOR_RED"%s", errorMessage[INDEX]);
+            printf("%s", errorMessage[INDEX]);
             break;
         }
     }
-    printf("Please refer to the help section if you need more informations."ANSI_COLOR_RESET "\n");
+    printf("Please refer to the help section if you need more informations.\n");
+    SetConsoleTextAttribute(hConsole, saved_attributes);
 }
 void doCommand( char input)
 {
@@ -195,10 +205,10 @@ void doCommand( char input)
 
 void setCommand( char input[], bool promotion)
 {
-    command.currentX = convertNumber( input[1]);
-    command.currentY = convertLetter( input[0]);
-    command.nextX = convertNumber( input[3]);
-    command.nextY = convertLetter( input[2] );
+    command.currentY = convertNumber( input[1]);
+    command.currentX = convertLetter( input[0]);
+    command.nextY = convertNumber( input[3]);
+    command.nextX = convertLetter( input[2] );
     if( promotion)
     {
         command.promotion = input[4];
@@ -211,23 +221,39 @@ void setCommand( char input[], bool promotion)
     }
 }
 
-void printHelp()//TODO
-{
-    //remember to fill here
-}
-
 bool verifyCommand( char input)
 {
-    if (input == 's')//save command
+
+    for(int counter = 0; counter < commandSpecialSize; counter++)
+    {
+        if( input == commandSpecial[counter])
             return true;
-    else if (input == 'l')//load command
-            return true;
-    else if (input == 'u')//undo command
-            return true;
-    else if (input == 'r')//redo command
-            return true;
-    else if (input == 'n')//new game
-            return true;
-    else //not a special command
-            return false;
+    }
+    return false;
+}
+
+void printHelp()//TODO
+{
+
+}
+
+void setColor(char* text)
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    WORD saved_attributes;
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+     saved_attributes = consoleInfo.wAttributes;
+    if( strcmp(text,"RED") == 0)
+        SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+    else if( strcmp(text, "BLUE") == 0 )
+        SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
+    else if( strcmp(text, "GREEN") == 0 )
+        SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
+    else if( strcmp(text, "INTENSITY") == 0 )
+        SetConsoleTextAttribute(hConsole,  FOREGROUND_INTENSITY);
+    else if ( strcmp(text,"DEFAULT") == 0 )
+        SetConsoleTextAttribute(hConsole,  FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
+    else
+        SetConsoleTextAttribute(hConsole,  FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 }
