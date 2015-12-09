@@ -10,6 +10,7 @@ int main()
     system("cls");
     currentPlayer = secondPlayer;
     resetBoard();
+    loadGame();
     printBoard();
     getMove();
     applyMove();
