@@ -35,12 +35,12 @@ void applyMove(void)
                 }
                 break;
         case 'R':
-                if(deltaX == 0 && deltaY != 0 && isNotOccupied() &&)
+                if(deltaX == 0 && deltaY != 0 && isNotOccupied() && !obstaclesExist('R'))
                 {
                     movePiece();
                     movedSuccessfully = true;
                 }
-                else if(deltaX != 0 && deltaY == 0 && isNotOccupied())
+                else if(deltaX != 0 && deltaY == 0 && isNotOccupied() && ! obstaclesExist('R'))
                 {
                     movePiece();
                     movedSuccessfully = true;
@@ -109,12 +109,12 @@ void applyMove(void)
                 }
                 break;
         case 'B':
-                if(deltaX == deltaY && isNotOccupied())
+                if(deltaX == deltaY && isNotOccupied() && !obstaclesExist('B'))
                 {
                     movePiece();
                     movedSuccessfully = true;
                 }
-                else if (deltaX == -deltaY && isNotOccupied())
+                else if (deltaX == -deltaY && isNotOccupied() && !obstaclesExist('B'))
                 {
                     movePiece();
                     movedSuccessfully = true;
@@ -132,7 +132,7 @@ void applyMove(void)
                 break;
         }
         case 'Q':
-                if(deltaX == 0 && deltaY != 0 && isNotOccupied())
+                if(deltaX == 0 && deltaY != 0 && isNotOccupied() && !obstaclesExist)
                 {
                     movePiece();
                     movedSuccessfully = true;
@@ -230,29 +230,175 @@ bool obstaclesExist(char piece)
     case 'r':
             if(deltaX == 0)
             {
-                for(int y = y1 ; y < y2 ; y++)
+                if(y2 > y1)
                 {
-                    if(board[y][x1] != '#' && board[y][x1] != '-')
+                    for(int y = y1+1 ; y < y2 ; y++)
                     {
-                        return false ;
+                        if(board[y][x1] != '#' && board[y][x1] != '-')
+                        {
+                            return false ;
+                        }
+                    }
+                }
+                else if(y2 < y1)
+                {
+                    for(int y = y1-1 ; y < y2 ; y--)
+                    {
+                        if(board[y][x1] != '#' && board[y][x1] != '-')
+                        {
+                            return false ;
+                        }
                     }
                 }
             }
             else if(deltaY == 0)
             {
-                for(int x = x1 ; x < x2 ; x++)
+                if(x2 > x1)
                 {
-                    if(board[y1][x] != '#' && board[y1][x] != '-')
+                    for(int x = x1+1 ; x < x2 ; x++)
                     {
-                        return false ;
+                        if(board[y1][x] != '#' && board[y1][x] != '-')
+                        {
+                            return false ;
+                        }
+                    }
+                }
+                else if(x2 < x1)
+                {
+                    for(int x = x1-1 ; x < x2 ; x--)
+                    {
+                        if(board[y1][x] != '#' && board[y1][x] != '-')
+                        {
+                            return false ;
+                        }
                     }
                 }
             }
             break;
     case 'B':
     case 'b':
-            if(deltaX == deltaY)
-            
+            if(deltaX == deltaY && x2 > x1)
+            {
+                for(int x = x1+1, y = y1+1 ; x < x2 ; x++)
+                {
+                    if(board[y][x] != '#' && board[y][x] != '-')
+                        return false;
+                    y++;
+                }
+            }
+            else if(deltaX == deltaY && x2 < x1)
+            {
+                for(int x = x1-1, y = y1-1 ; x > x2 ; x--)
+                {
+                    if(board[y][x] != '#' && board[y][x] != '-')
+                        return false;
+                    y--;
+                }
+            }
+            else if(deltaX == -deltaY && x2 > x1)
+            {
+                for(int x = x1+1, y = y1-1 ; x < x2 ; x++)
+                {
+                    if(board[y][x] != '#' && board[y][x] != '-')
+                        return false;
+                    y--;
+                }
+            }
+            else if(deltaX == -deltaY && x2 < x1)
+            {
+                for(int x = x1-1, y = y1+1 ; x < x2 ; x--)
+                {
+                    if(board[y][x] != '#' && board[y][x] != '-')
+                        return false;
+                    y++;
+                }
+            }
+            break;
+    case 'Q':
+    case 'q':
+            if(deltaX == 0)
+            {
+                if(y2 > y1)
+                {
+                    for(int y = y1+1 ; y < y2 ; y++)
+                    {
+                        if(board[y][x1] != '#' && board[y][x1] != '-')
+                        {
+                            return false ;
+                        }
+                    }
+                }
+                else if(y2 < y1)
+                {
+                    for(int y = y1-1 ; y < y2 ; y--)
+                    {
+                        if(board[y][x1] != '#' && board[y][x1] != '-')
+                        {
+                            return false ;
+                        }
+                    }
+                }
+            }
+            else if(deltaY == 0)
+            {
+                if(x2 > x1)
+                {
+                    for(int x = x1+1 ; x < x2 ; x++)
+                    {
+                        if(board[y1][x] != '#' && board[y1][x] != '-')
+                        {
+                            return false ;
+                        }
+                    }
+                }
+                else if(x2 < x1)
+                {
+                    for(int x = x1-1 ; x < x2 ; x--)
+                    {
+                        if(board[y1][x] != '#' && board[y1][x] != '-')
+                        {
+                            return false ;
+                        }
+                    }
+                }
+            }
+            else if(deltaX == deltaY && x2 > x1)
+            {
+                for(int x = x1+1, y = y1+1 ; x < x2 ; x++)
+                {
+                    if(board[y][x] != '#' && board[y][x] != '-')
+                        return false;
+                    y++;
+                }
+            }
+            else if(deltaX == deltaY && x2 < x1)
+            {
+                for(int x = x1-1, y = y1-1 ; x > x2 ; x--)
+                {
+                    if(board[y][x] != '#' && board[y][x] != '-')
+                        return false;
+                    y--;
+                }
+            }
+            else if(deltaX == -deltaY && x2 > x1)
+            {
+                for(int x = x1+1, y = y1-1 ; x < x2 ; x++)
+                {
+                    if(board[y][x] != '#' && board[y][x] != '-')
+                        return false;
+                    y--;
+                }
+            }
+            else if(deltaX == -deltaY && x2 < x1)
+            {
+                for(int x = x1-1, y = y1+1 ; x < x2 ; x--)
+                {
+                    if(board[y][x] != '#' && board[y][x] != '-')
+                        return false;
+                    y++;
+                }
+            }
+            break;
     }
     return true;
 }
