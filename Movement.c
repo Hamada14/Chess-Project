@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include "Board.h"
 #include "Game.h"
+#include "Movement.h"
 void applyMove(void)
 {
     int deltaX = command.nextX - command.currentX ;
@@ -53,7 +54,7 @@ void applyMove(void)
                 }
                 else
                 {
-                    getMove()
+                    getMove();
                 }
                 break;
         case 'N':
@@ -130,24 +131,23 @@ void applyMove(void)
                     getMove();
                 }
                 break;
-        }
         case 'Q':
                 if(deltaX == 0 && deltaY != 0 && isNotOccupied() && !obstaclesExist('Q'))
                 {
                     movePiece();
                     movedSuccessfully = true;
                 }
-                else if(deltaX != 0 && deltaY == 0 && isNotOccupied() && !obstaclesExist('Q')))
+                else if(deltaX != 0 && deltaY == 0 && isNotOccupied() && !obstaclesExist('Q'))
                 {
                     movePiece();
                     movedSuccessfully = true;
                 }
-                else if(deltaX == deltaY && isNotOccupied() && !obstaclesExist('Q')))
+                else if(deltaX == deltaY && isNotOccupied() && !obstaclesExist('Q'))
                 {
                     movePiece();
                     movedSuccessfully = true;
                 }
-                else if (deltaX == -deltaY && isNotOccupied() && !obstaclesExist('Q')))
+                else if (deltaX == -deltaY && isNotOccupied() && !obstaclesExist('Q'))
                 {
                     movePiece();
                     movedSuccessfully = true;
@@ -160,10 +160,10 @@ void applyMove(void)
                 }
                 else
                 {
-                    getMove()
+                    getMove();
                 }
                 break;
-
+        }
     }
 }
 bool isNotOccupied(void)
@@ -181,16 +181,16 @@ bool isFirstMove(void)
     if(board[y][x] == 'P')
     {
         if(x == 6)
-            return true
-        return false
+            return true;
+        return false;
     }
     if(board[y][x] == 'p')
     {
         if(x == 1)
-            return true
-        return false
+            return true;
+        return false;
     }
-    return false
+    return false;
 }
 bool isValidEat(char piece)
 {
@@ -208,8 +208,8 @@ bool obstaclesExist(char piece)
 {
     int x1 = command.currentX,x2 = command.nextX;
     int y1 = command.currentY,y2 = command.nextY;
-    deltaX = x2 - x1;
-    deltaY = y2 - y1;
+    int deltaX = x2 - x1;
+    int deltaY = y2 - y1;
     switch(piece)
     {
     case 'P':

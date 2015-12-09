@@ -1,12 +1,7 @@
 #ifndef GAME_H_INCLUDED
 #define GAME_H_INCLUDED
-#define interfaceScreenSize 8
-#define gameOptionSize  4
-#define errorMessageSize 5
-#define ANSI_COLOR_RED     "\x1b[31m"
-#define ANSI_COLOR_RESET   "\x1b[0m"
-#define GAME_H_INCLUDED
 #include <windows.h>
+#include <stdbool.h>
 struct commands {
                 int currentX;
                 int nextX;
@@ -14,7 +9,7 @@ struct commands {
                 int nextY;
                 char promotion;
                 bool promotionExist;
-} command;
+}command;
 enum Turn {     firstPlayer,
                 secondPlayer,
 };
@@ -22,7 +17,7 @@ enum GameState{ menu,
                 load,
                 help,
                 setting
-} gameState;
+};
 char *interfaceScreen[] = {     " ________   ___  ___   _______    ________    ________ ",
                                 "|\\   ____\\ |\\  \\|\\  \\ |\\  ___ \\  |\\   ____\\  |\\   ____\\",
                                 "\\ \\  \\___| \\ \\  \\\\\\  \\\\ \\   __/| \\ \\  \\___|_ \\ \\  \\___|_",
@@ -38,7 +33,6 @@ char *gameOption[] ={   "Start a new Game",
                         "Setting",
 };
 int gameOptionSize = sizeof(gameOption) / sizeof(char*);
-int currentPlayer = firstPlayer;
 char *errorCode[] = { "no input",
                     "large",
                     "number out of bound",
@@ -73,6 +67,7 @@ void printError(char *type);
 void setCommand( char input[], bool promotion);
 void doCommand( char input);//not finished
 void printHelp();//not finished
-bool verifyCommand( char input);//not Finished
+bool verifyCommand( char input);
 void setColor(char* text);
+int currentPlayer;
 #endif // GAME_H_INCLUDED

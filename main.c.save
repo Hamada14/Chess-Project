@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "Game.h"
 int main()
 {
-    saveGame();
-    printf("%c[1;34mHello, world!\n", 27);
+    currentPlayer = firstPlayer;
 }
