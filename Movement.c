@@ -165,6 +165,162 @@ void applyMove(void)
                 break;
         }
     }
+    else if(currentPlayer == secondPlayer)
+    {
+        switch(board[command.currentY][command.currentX])
+        {
+        case 'p':
+                if(deltaY == 1 && deltaX == 0 && isNotOccupied())
+                {
+                        movePiece();
+                        movedSuccessfully = true;
+                }
+                else if(deltaY == 2 && deltaX == 0 && isNotOccupied() && isFirstMove() && !obstaclesExist('p'))
+                {
+                        movePiece();
+                        movedSuccessfully = true;
+                }
+                /*else if(isValidEat('p'))
+                {
+                    //add eaten piece to graveyard
+                    movePiece();
+                    movedSuccessfully = true;
+                }*/
+                else
+                {
+                    getMove();
+                }
+                break;
+        case 'r':
+                if(deltaX == 0 && deltaY != 0 && isNotOccupied() && !obstaclesExist('r'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX != 0 && deltaY == 0 && isNotOccupied() && ! obstaclesExist('r'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                /*else if(isValidEat('r'))
+                {
+                    //add eaten piece to graveyard
+                    movePiece();
+                    movedSuccessfully = true;
+                }*/
+                else
+                {
+                    getMove();
+                }
+                break;
+        case 'n':
+                if(deltaX == 1 && deltaY == 2 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == -1 && deltaY == 2 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == 1 && deltaY == -2 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == -1 && deltaY == -2 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == 2 && deltaY == 1 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == -2 && deltaY == 1 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == 2 && deltaY == -1 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == -2 && deltaY == -1 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                /*else if(isValidEat('n'))
+                {
+                    //add eaten piece to graveyard
+                    movePiece();
+                    movedSuccessfully = true;
+                }*/
+                else
+                {
+                    getMove();
+                }
+                break;
+        case 'b':
+                if(deltaX == deltaY && isNotOccupied() && !obstaclesExist('b'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if (deltaX == -deltaY && isNotOccupied() && !obstaclesExist('b'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+               /* else if(isValidEat('b'))
+                {
+                    //add eaten piece to graveyard
+                    movePiece();
+                    movedSuccessfully = true;
+                }*/
+                else
+                {
+                    getMove();
+                }
+                break;
+        case 'q':
+                if(deltaX == 0 && deltaY != 0 && isNotOccupied() && !obstaclesExist('q'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX != 0 && deltaY == 0 && isNotOccupied() && !obstaclesExist('q'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == deltaY && isNotOccupied() && !obstaclesExist('q'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if (deltaX == -deltaY && isNotOccupied() && !obstaclesExist('q'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+               /* else if(isValidEat('q'))
+                {
+                    //add eaten piece to graveyard
+                    movePiece();
+                    movedSuccessfully = true;
+                }*/
+                else
+                {
+                    getMove();
+                }
+                break;
+        }
+    }
 }
 bool isNotOccupied(void)
 {

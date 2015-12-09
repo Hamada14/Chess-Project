@@ -5,7 +5,10 @@
 #include "Board.h"
 int main()
 {
-    currentPlayer = firstPlayer;
+    printInterface();
+    getch();
+    system("cls");
+    currentPlayer = secondPlayer;
     resetBoard();
     printBoard();
     getMove();

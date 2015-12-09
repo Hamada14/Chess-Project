@@ -1,10 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Game.h"
+#include "Movement.h"
+#include "Board.h"
 int main()
 {
-    currentPlayer = firstPlayer;
+    printInterface();
+    getch();
+    sys
+    currentPlayer = secondPlayer;
     resetBoard();
+    printBoard();
     getMove();
-    a
+    applyMove();
+    system("cls");
+    printBoard();
+
 }

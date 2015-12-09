@@ -165,6 +165,162 @@ void applyMove(void)
                 break;
         }
     }
+    else if(currentPlayer == secondPlayer)
+    {
+        switch(board[command.currentY][command.currentX])
+        {
+        case 'p':
+                if(deltaY == 1 && deltaX == 0 && isNotOccupied())
+                {
+                        movePiece();
+                        movedSuccessfully = true;
+                }
+                else if(deltaY == 2 && deltaX == 0 && isNotOccupied() && isFirstMove() && !obstaclesExist('p'))
+                {
+                        movePiece();
+                        movedSuccessfully = true;
+                }
+                /*else if(isValidEat('P'))
+                {
+                    //add eaten piece to graveyard
+                    movePiece();
+                    movedSuccessfully = true;
+                }*/
+                else
+                {
+                    getMove();
+                }
+                break;
+        case 'R':
+                if(deltaX == 0 && deltaY != 0 && isNotOccupied() && !obstaclesExist('R'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX != 0 && deltaY == 0 && isNotOccupied() && ! obstaclesExist('R'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                /*else if(isValidEat('R'))
+                {
+                    //add eaten piece to graveyard
+                    movePiece();
+                    movedSuccessfully = true;
+                }*/
+                else
+                {
+                    getMove();
+                }
+                break;
+        case 'N':
+                if(deltaX == 1 && deltaY == 2 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == -1 && deltaY == 2 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == 1 && deltaY == -2 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == -1 && deltaY == -2 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == 2 && deltaY == 1 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == -2 && deltaY == 1 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == 2 && deltaY == -1 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == -2 && deltaY == -1 && isNotOccupied())
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                /*else if(isValidEat('N'))
+                {
+                    //add eaten piece to graveyard
+                    movePiece();
+                    movedSuccessfully = true;
+                }*/
+                else
+                {
+                    getMove();
+                }
+                break;
+        case 'B':
+                if(deltaX == deltaY && isNotOccupied() && !obstaclesExist('B'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if (deltaX == -deltaY && isNotOccupied() && !obstaclesExist('B'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+               /* else if(isValidEat('B'))
+                {
+                    //add eaten piece to graveyard
+                    movePiece();
+                    movedSuccessfully = true;
+                }*/
+                else
+                {
+                    getMove();
+                }
+                break;
+        case 'Q':
+                if(deltaX == 0 && deltaY != 0 && isNotOccupied() && !obstaclesExist('Q'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX != 0 && deltaY == 0 && isNotOccupied() && !obstaclesExist('Q'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if(deltaX == deltaY && isNotOccupied() && !obstaclesExist('Q'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+                else if (deltaX == -deltaY && isNotOccupied() && !obstaclesExist('Q'))
+                {
+                    movePiece();
+                    movedSuccessfully = true;
+                }
+               /* else if(isValidEat('Q'))
+                {
+                    //add eaten piece to graveyard
+                    movePiece();
+                    movedSuccessfully = true;
+                }*/
+                else
+                {
+                    getMove();
+                }
+                break;
+        }
+    }
 }
 bool isNotOccupied(void)
 {
@@ -308,7 +464,7 @@ bool obstaclesExist(char piece)
             }
             else if(deltaX == -deltaY && x2 < x1)
             {
-                for(int x = x1-1, y = y1+1 ; x  x2 ; x--)
+                for(int x = x1-1, y = y1+1 ; x > x2 ; x--)
                 {
                     if(board[y][x] != '#' && board[y][x] != '-')
                         return true;
@@ -332,7 +488,7 @@ bool obstaclesExist(char piece)
                 }
                 else if(y2 < y1)
                 {
-                    for(int y = y1-1 ; y < y2 ; y--)
+                    for(int y = y1-1 ; y > y2 ; y--)
                     {
                         if(board[y][x1] != '#' && board[y][x1] != '-')
                         {
@@ -355,7 +511,7 @@ bool obstaclesExist(char piece)
                 }
                 else if(x2 < x1)
                 {
-                    for(int x = x1-1 ; x < x2 ; x--)
+                    for(int x = x1-1 ; x > x2 ; x--)
                     {
                         if(board[y1][x] != '#' && board[y1][x] != '-')
                         {
@@ -393,7 +549,7 @@ bool obstaclesExist(char piece)
             }
             else if(deltaX == -deltaY && x2 < x1)
             {
-                for(int x = x1-1, y = y1+1 ; x < x2 ; x--)
+                for(int x = x1-1, y = y1+1 ; x > x2 ; x--)
                 {
                     if(board[y][x] != '#' && board[y][x] != '-')
                         return true;
