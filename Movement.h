@@ -5,5 +5,5 @@ bool isNotOccupied(void);
 void applyMove(void);
 bool isValidEat(char piece);
 void movePiece(void);
-
+bool obstaclesExist(char piece);
 #endif // MOVEMENT_H_INCLUDED
