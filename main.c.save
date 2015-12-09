@@ -4,4 +4,7 @@
 int main()
 {
     currentPlayer = firstPlayer;
+    resetBoard();
+    getMove();
+    a
 }

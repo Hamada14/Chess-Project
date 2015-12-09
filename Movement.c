@@ -14,22 +14,22 @@ void applyMove(void)
         switch(board[command.currentY][command.currentX])
         {
         case 'P':
-                if(deltaY == -1 && isNotOccupied())
+                if(deltaY == -1 && deltaX == 0 && isNotOccupied())
                 {
                         movePiece();
                         movedSuccessfully = true;
                 }
-                else if(deltaY == -2 && isNotOccupied() && isFirstMove() && !obstaclesExist('P'))
+                else if(deltaY == -2 && deltaX == 0 && isNotOccupied() && isFirstMove() && !obstaclesExist('P'))
                 {
                         movePiece();
                         movedSuccessfully = true;
                 }
-                else if(isValidEat('P'))
+                /*else if(isValidEat('P'))
                 {
                     //add eaten piece to graveyard
                     movePiece();
                     movedSuccessfully = true;
-                }
+                }*/
                 else
                 {
                     getMove();
@@ -46,12 +46,12 @@ void applyMove(void)
                     movePiece();
                     movedSuccessfully = true;
                 }
-                else if(isValidEat('R'))
+                /*else if(isValidEat('R'))
                 {
                     //add eaten piece to graveyard
                     movePiece();
                     movedSuccessfully = true;
-                }
+                }*/
                 else
                 {
                     getMove();
@@ -98,12 +98,12 @@ void applyMove(void)
                     movePiece();
                     movedSuccessfully = true;
                 }
-                else if(isValidEat('N'))
+                /*else if(isValidEat('N'))
                 {
-                    //add Eaten piece to graveyard
+                    //add eaten piece to graveyard
                     movePiece();
                     movedSuccessfully = true;
-                }
+                }*/
                 else
                 {
                     getMove();
@@ -120,12 +120,12 @@ void applyMove(void)
                     movePiece();
                     movedSuccessfully = true;
                 }
-                else if(isValidEat('B'))
+               /* else if(isValidEat('B'))
                 {
                     //add eaten piece to graveyard
                     movePiece();
                     movedSuccessfully = true;
-                }
+                }*/
                 else
                 {
                     getMove();
@@ -152,12 +152,12 @@ void applyMove(void)
                     movePiece();
                     movedSuccessfully = true;
                 }
-                else if(isValidEat('Q'))
+               /* else if(isValidEat('Q'))
                 {
                     //add eaten piece to graveyard
                     movePiece();
                     movedSuccessfully = true;
-                }
+                }*/
                 else
                 {
                     getMove();
