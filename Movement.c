@@ -10,12 +10,13 @@
 char pieces[] = { 'p', 'r','n', 'b', 'q', 'k'};
 int pieceSize = sizeof(pieces) / sizeof(pieces[0]);
 
-void applyMove(void)
+bool applyMove(void)
 {
-
     bool movedSuccessfully = false ;
     do{
         getMove();
+        if( commandStart)
+        return false;
         int deltaX = command.nextX - command.currentX ;
         int deltaY = command.nextY - command.currentY ;
         if( checkRightPiece() )
@@ -44,7 +45,7 @@ void applyMove(void)
             }
         else
         {
-            printError("wrong piece");
+            printError("not valid move");
             continue;
         }
         if( !(movedSuccessfully) )
@@ -52,6 +53,7 @@ void applyMove(void)
             printError("not valid move");
         }
     }while( !(movedSuccessfully) );
+    return true;
 }
 
 bool isNotOccupied(void)

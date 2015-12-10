@@ -5,15 +5,7 @@
 #include "Board.h"
 int main()
 {
-    printInterface();
-    getch();
-    system("cls");
-    currentPlayer = secondPlayer;
-    resetBoard();
-    loadGame();
-    printBoard();
-    applyMove();
-    system("cls");
-    printBoard();
-
+    game();
 }
+
+

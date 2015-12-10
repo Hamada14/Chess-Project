@@ -9,17 +9,18 @@ struct commands {
                 int nextY;
                 char promotion;
                 bool promotionExist;
+                bool specialCommand;
 }command;
+
+enum GameState{ menu,
+                play,
+                help,
+                setting,
+} state;
 enum Turn {     firstPlayer,
                 secondPlayer,
-};
-enum GameState{ menu,
-                load,
-                help,
-                setting
-};
-
-
+}currentPlayer;
+bool commandStart;
 void printInterface(void);
 void printLogo(void);
 void clearScreen(void);
@@ -39,5 +40,13 @@ void printHelp();//not finished
 bool verifyCommand( char input);
 void setColor(char* text);
 void setBackgroundColor(char* text);
-int currentPlayer;
+void switchTurn();
+void gameFlow();
+void printRequiredScreen();
+void startMenu();
+void printSetting();
+void goBack();
+void game();
+
+//remember to handle in continue when it's first time to play
 #endif // GAME_H_INCLUDED

@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "Board.h"
 #include "Save.h"
+#include "Movement.h"
 char *interfaceScreen[] = {     " ________   ___  ___   _______    ________    ________ ",
                                 "|\\   ____\\ |\\  \\|\\  \\ |\\  ___ \\  |\\   ____\\  |\\   ____\\",
                                 "\\ \\  \\___| \\ \\  \\\\\\  \\\\ \\   __/| \\ \\  \\___|_ \\ \\  \\___|_",
@@ -15,7 +16,7 @@ char *interfaceScreen[] = {     " ________   ___  ___   _______    ________    _
                                 "                                    \\|_________|\\|_________|"};
 int interfaceScreenSize = sizeof(interfaceScreen) / sizeof(char*);
 char *gameOption[] ={   "Start a new Game",
-                        "Load last Game",
+                        "Continue",
                         "Help",
                         "Setting",
 };
@@ -25,18 +26,25 @@ char *errorCode[] = { "no input",
                     "number out of bound",
                     "letter out of bound",
                     "number out of list",
-
+                    "not valid move",
+                    "empty block",
+                    "not command"
 };
 char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "The input you entered was Too large.",
                             "The Index number you entered was out of bound.",
                             "Make sure you type the right Character in uppercase.",
-                            "Make sure the number you entered exists in the List."
+                            "Make sure the number you entered exists in the List.",
+                            "The move you just entered is invalid.",
+                            "The Block you entered is an empty one.",
+                            "This command wasn't recognized"
 };
 int errorMessageSize = sizeof(errorCode) / sizeof(char*);
 
-char commandSpecial[] = { 's', 'l', 'u', 'r', 'n'};
+char commandSpecial[] = { 's', 'l', 'u', 'r', 'n', 'b'};
 int commandSpecialSize = sizeof(commandSpecial) / sizeof(char);
+
+bool end = false;
 
 void printInterface(void)
 {
@@ -69,7 +77,7 @@ void clearScreen(void)
 }
 int getGameOption(void)
 {
-        char input[2];
+        char input[3];
         bool endFound = false, rightNum = false;
         do
         {
@@ -91,25 +99,26 @@ int getGameOption(void)
 
 void getMove()
 {
+        commandStart = false;
         char input[7];
-        bool done,promotion,command;
+        bool done,promotion;
         do
         {
             done = false;
             promotion = false;
-            command = false;
             printf("Enter the Index of current and Desired Move: ");
             scanf("%s",input);
             int nullPosition = getNull( input, 7);
-            if( nullPosition == 1)
+            if( nullPosition == 1 )
             {
-                if( verifyCommand( input[0]) )
+                if( verifyCommand(input[0]) )
                 {
-                    command = true;
+                    commandStart = true;
                     break;
-                }
+                }else
+                printError("not command");
             }
-            if( nullPosition == 4 || nullPosition == 5 )
+            else if( nullPosition == 4 || nullPosition == 5 )
             {
                 switch( nullPosition){
                 case 4:
@@ -128,7 +137,7 @@ void getMove()
             else
                 printError("large");
         }while( !done );
-        if( command )
+        if( commandStart )
         {
             doCommand( input[0]);
         }
@@ -204,7 +213,7 @@ void printError(char *type)
     {
         if( strcmp(type, errorCode[INDEX]) == 0 )
         {
-            printf("%s", errorMessage[INDEX]);
+            printf("%s\n", errorMessage[INDEX]);
             break;
         }
     }
@@ -229,6 +238,9 @@ void doCommand( char input)
         break;
     case 'n':
         resetBoard();
+        break;
+    case 'b':
+        goBack();
         break;
     default:
         printError("no input");
@@ -266,16 +278,13 @@ bool verifyCommand( char input)
 
 void printHelp()//TODO
 {
-
 }
 
 void setColor(char* text)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
     GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-     saved_attributes = consoleInfo.wAttributes;
     if( strcmp(text,"RED") == 0)
         SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
     else if( strcmp(text, "BLUE") == 0 )
@@ -294,9 +303,7 @@ void setBackgroundColor(char* text)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
     GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-     saved_attributes = consoleInfo.wAttributes;
     if( strcmp(text,"RED") == 0)
         SetConsoleTextAttribute(hConsole, BACKGROUND_RED);
     else if( strcmp(text, "BLUE") == 0 )
@@ -309,4 +316,79 @@ void setBackgroundColor(char* text)
         SetConsoleTextAttribute(hConsole,  BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
     else
         SetConsoleTextAttribute(hConsole,  BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
+}
+
+void switchTurn()
+{
+    currentPlayer = !currentPlayer;
+}
+
+void gameFlow()
+{
+    printBoard();
+    while(!end)
+    {
+        //check for checkmates and stale mate and winning
+        if( !applyMove() );
+        {
+            commandStart = false;
+            break;
+        }
+        clearScreen();
+        switchTurn();
+    }
+}
+
+void goBack()
+{
+    if( state == play || state == help || state == setting )
+        state = menu;
+}
+
+void printRequiredScreen()
+{
+    switch (state)
+    {
+    case menu:
+        startMenu();
+        break;
+    case help:
+        printHelp();
+        break;
+    case setting:
+        printSetting();
+        break;
+    case play:
+        gameFlow();
+        break;
+    }
+}
+void startMenu()
+{
+    printLogo();
+    printInterface();
+    int temp =getGameOption();
+    if(temp == 1 )
+    {
+        resetBoard();
+        state = play;
+    }
+    else if( temp == 2 )
+        state = play;
+    else if( temp == 3 )
+        state = help;
+    else if( temp == 4 )
+        state = setting;
+}
+void printSetting()
+{
+    //not finished
+}
+
+void game()
+{
+    while(1)
+    {
+        printRequiredScreen();
+    }
 }

@@ -2,7 +2,7 @@
 #define MOVEMENT_H_INCLUDED
 bool isFirstMove(void);
 bool isNotOccupied(void);
-void applyMove(void);
+bool applyMove(void);
 bool isValidEat(char piece);
 void movePiece(void);
 bool obstaclesExist(char piece);
