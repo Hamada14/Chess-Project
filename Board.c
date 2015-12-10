@@ -6,6 +6,8 @@ void printBoard(void)
     for(i = 0 ; i < 8 ; i++)
     {
         printf("\t%c",'A' + i);
+        if(i == 7)
+            printf("\t**Graveyard**");
     }
 
     for(i = 0 ; i < 8 ; i++)
@@ -15,29 +17,24 @@ void printBoard(void)
         {
            printf("\t%c",board[i][j]);
         }
-        if(i == 1)
+
+        printf("\t");
+        if(2*i  < graveyard1Size)
         {
-            printf("\t\t ****Graveyard****");
+            printf("%c",player1Graveyard[2*i]);
         }
-        if(i == 2)
+        if(2*i + 1 < graveyard1Size)
         {
-            for(j = 0 ; j < graveyard1Size ; j++)
-            {
-                if(j == 0)
-                    printf("\t\t%c",player1Graveyard[j]);
-                else
-                    printf("  %c",player1Graveyard[j]);
-            }
+            printf("  %c",player1Graveyard[2*i + 1]);
         }
-        if(i == 4)
+        printf("\t  ");
+        if(2*i < graveyard2Size)
         {
-            for(j = 0 ; j < graveyard2Size ; j++)
-            {
-                if(j == 0)
-                    printf("\t\t%c",player2Graveyard[j]);
-                else
-                    printf("  %c",player2Graveyard[j]);
-            }
+            printf("%c",player2Graveyard[2*i]);
+        }
+        if(2*i + 1 < graveyard2Size)
+        {
+            printf("  %c",player2Graveyard[2*i + 1]);
         }
     }
     printf("\n");
