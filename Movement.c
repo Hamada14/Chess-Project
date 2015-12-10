@@ -12,43 +12,34 @@ int pieceSize = sizeof(pieces) / sizeof(pieces[0]);
 
 void applyMove(void)
 {
-    int deltaX = command.nextX - command.currentX ;
-    int deltaY = command.nextY - command.currentY ;
+
     bool movedSuccessfully = false ;
     do{
         getMove();
+        int deltaX = command.nextX - command.currentX ;
+        int deltaY = command.nextY - command.currentY ;
         if( checkRightPiece() )
             switch(board[command.currentY][command.currentX])
             {
             case 'P':
-                movedSuccessfully = checkSoldier( deltaX, deltaY, board[command.currentY][command.currentX]);
-                break;
             case 'p':
                 movedSuccessfully = checkSoldier( deltaX, deltaY, board[command.currentY][command.currentX]);
                 break;
             case 'R':
-                movedSuccessfully = checkRook( deltaX, deltaY, board[command.currentY][command.currentX]);
-                break;
             case 'r':
                 movedSuccessfully = checkRook( deltaX, deltaY, board[command.currentY][command.currentX]);
                 break;
             case 'N':
-                movedSuccessfully = checkHorse(deltaX, deltaY, board[command.currentY][command.currentX]);
-                break;
             case 'n':
                 movedSuccessfully = checkHorse(deltaX, deltaY, board[command.currentY][command.currentX]);
                 break;
             case 'B':
-                movedSuccessfully = checkBishop(deltaX, deltaY, board[command.currentY][command.currentX]);
-                break;
             case 'b':
                 movedSuccessfully = checkBishop(deltaX, deltaY, board[command.currentY][command.currentX]);
-                break;
+            break;
             case 'Q':
-                movedSuccessfully = checkQueen(deltaX, deltaY, board[command.currentY][command.currentX]);
-                break;
             case 'q':
-                movedSuccessfully = checkBishop(deltaX, deltaY, board[command.currentY][command.currentX]);
+                movedSuccessfully = checkQueen(deltaX, deltaY, board[command.currentY][command.currentX]);
                 break;
             }
         else
@@ -354,19 +345,16 @@ bool checkRightPiece()
     switch ( board[command.currentY][command.currentX])
     {
     case '#':
-        printError("empty block");
-        return false;
     case '-':
         printError("empty block");
         return false;
     }
-    for(int counter = 0; counter < pieceSize; counter++)
-    {
-        if( currentPlayer == firstPlayer && board[command.currentY][command.currentX] == toupper( pieces[counter] ) )
+
+    if( currentPlayer == firstPlayer && board[command.currentY][command.currentX] == toupper( board[command.currentY][command.currentX] ) )
             return true;
-        if( currentPlayer == secondPlayer && board[command.currentY][command.currentX] ==  pieces[counter] )
+    if( currentPlayer == secondPlayer && board[command.currentY][command.currentX] ==  tolower(board[command.currentY][command.currentX]) )
             return true;
-    }
+
     return false;
 }
 
@@ -401,16 +389,16 @@ bool checkRook( int deltaX, int deltaY, char type)
     if( ( (deltaX == 0 && deltaY != 0) || ( deltaX != 0 && deltaY == 0) ) && !obstaclesExist(type))
     {
         if( isNotOccupied() )
-            {
-                movePiece();
-                return true;
-            }
-            else if( isValidEat(type) )
-            {
-                //add eaten piece to graveyard
-                movePiece();
-                return true;
-            }
+        {
+            movePiece();
+            return true;
+        }
+        else if( isValidEat(type) )
+        {
+            //add eaten piece to graveyard
+            movePiece();
+            return true;
+        }
     }
     return false;
 }
@@ -453,21 +441,7 @@ bool checkBishop(int deltaX, int deltaY, char type)
 }
 bool checkQueen( int deltaX, int deltaY, char type)
 {
-    if(deltaX == 0 && deltaY != 0 && !obstaclesExist(type))
-    {
-        if( isNotOccupied() )
-        {
-            movePiece();
-            return true;
-        }
-        else if( isValidEat(type) )
-        {
-            //add eaten piece to graveyard
-            movePiece();
-            return true;
-        }
-    }
-    else if(deltaX != 0 && deltaY == 0 && !obstaclesExist(type))
+    if( ( (deltaX == 0 && deltaY != 0) || ( deltaX != 0 && deltaY == 0) ) && !obstaclesExist(type))
     {
         if( isNotOccupied() )
         {

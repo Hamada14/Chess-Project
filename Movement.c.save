@@ -2,696 +2,58 @@
 #define MOVEMENT_C_INCLUDED
 #include <stdbool.h>
 #include <ctype.h>
+#include <math.h>
 #include "Board.h"
 #include "Game.h"
 #include "Movement.h"
+
+char pieces[] = { 'p', 'r','n', 'b', 'q', 'k'};
+int pieceSize = sizeof(pieces) / sizeof(pieces[0]);
+
 void applyMove(void)
 {
-    int deltaX = command.nextX - command.currentX ;
-    int deltaY = command.nextY - command.currentY ;
-    bool movedSuccessfully = false ;
-    if(currentPlayer == firstPlayer)
-    {
-        switch(board[command.currentY][command.currentX])
-        {
-        case 'P':
-                if(deltaY == -1 && deltaX == 0 && isNotOccupied())
-                {
-                        movePiece();
-                        movedSuccessfully = true;
-                }
-                else if(deltaY == -2 && deltaX == 0 && isNotOccupied() && isFirstMove() && !obstaclesExist('P'))
-                {
-                        movePiece();
-                        movedSuccessfully = true;
-                }
-                else if(isValidEat('P'))
-                {
-                    //add eaten piece to graveyard
-                    movePiece();
-                    movedSuccessfully = true;
-                }
-                else
-                {
-                    getMove();
-                }
-                break;
-        case 'R':
-                if(deltaX == 0 && deltaY != 0  && !obstaclesExist('R'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('R') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if(deltaX != 0 && deltaY == 0  && ! obstaclesExist('R'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('R') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
 
-                else
-                {
-                    getMove();
-                }
+    bool movedSuccessfully = false ;
+    do{
+        getMove();
+        int deltaX = command.nextX - command.currentX ;
+        int deltaY = command.nextY - command.currentY ;
+        if( checkRightPiece() )
+            switch(board[command.currentY][command.currentX])
+            {
+            case 'P':
+            case 'p':
+                movedSuccessfully = checkSoldier( deltaX, deltaY, board[command.currentY][command.currentX]);
                 break;
-        case 'N':
-                if( deltaX == 1 && deltaY == 2 )
-                {
-                   if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('N') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if( deltaX == -1 && deltaY == 2 )
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('N') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if( deltaX == 1 && deltaY == -2 )
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('N') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if( deltaX == -1 && deltaY == -2 )
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('N') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if( deltaX == 2 && deltaY == 1 )
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('N') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if( deltaX == -2 && deltaY == 1 )
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('N') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if( deltaX == 2 && deltaY == -1 )
-                {
-                   if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('N') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if( deltaX == -2 && deltaY == -1 )
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('N') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else
-                {
-                    getMove();
-                }
+            case 'R':
+            case 'r':
+                movedSuccessfully = checkRook( deltaX, deltaY, board[command.currentY][command.currentX]);
                 break;
-        case 'B':
-                if(deltaX == deltaY && !obstaclesExist('B'))
-                {
-                   if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('B') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if (deltaX == -deltaY && !obstaclesExist('B'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('B') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else
-                {
-                    getMove();
-                }
+            case 'N':
+            case 'n':
+                movedSuccessfully = checkHorse(deltaX, deltaY, board[command.currentY][command.currentX]);
                 break;
-        case 'Q':
-                if(deltaX == 0 && deltaY != 0 && !obstaclesExist('Q'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('Q') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if(deltaX != 0 && deltaY == 0 && !obstaclesExist('Q'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('Q') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if(deltaX == deltaY && !obstaclesExist('Q'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('Q') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if (deltaX == -deltaY && !obstaclesExist('Q'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('Q') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else
-                {
-                    getMove();
-                }
+            case 'B':
+            case 'b':
+                movedSuccessfully = checkBishop(deltaX, deltaY, board[command.currentY][command.currentX]);
+            break;
+            case 'Q':
+            case 'q':
+                movedSuccessfully = checkQueen(deltaX, deltaY, board[command.currentY][command.currentX]);
                 break;
-        }
-    }
-    else if(currentPlayer == secondPlayer)
-    {
-        switch(board[command.currentY][command.currentX])
+            }
+        else
         {
-        case 'p':
-                if(deltaY == 1 && deltaX == 0 && isNotOccupied())
-                {
-                        movePiece();
-                        movedSuccessfully = true;
-                }
-                else if(deltaY == 2 && deltaX == 0 && isNotOccupied() && isFirstMove() && !obstaclesExist('p'))
-                {
-                        movePiece();
-                        movedSuccessfully = true;
-                }
-                else if(isValidEat('p'))
-                {
-                    //add eaten piece to graveyard
-                    movePiece();
-                    movedSuccessfully = true;
-                }
-                else
-                {
-                    getMove();
-                }
-                break;
-        case 'r':
-                if(deltaX == 0 && deltaY != 0 && !obstaclesExist('r'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('r') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if(deltaX != 0 && deltaY == 0 && ! obstaclesExist('r'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('r') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else
-                {
-                    getMove();
-                }
-                break;
-        case 'n':
-                if( deltaX == 1 && deltaY == 2 )
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('n') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if( deltaX == -1 && deltaY == 2 )
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('n') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if( deltaX == 1 && deltaY == -2 )
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('n') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if( deltaX == -1 && deltaY == -2 )
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('n') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if( deltaX == 2 && deltaY == 1 )
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('n') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if( deltaX == -2 && deltaY == 1 )
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('n') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if( deltaX == 2 && deltaY == -1 )
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('n') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if( deltaX == -2 && deltaY == -1 )
-                {
-                   if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('n') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else
-                {
-                    getMove();
-                }
-                break;
-        case 'b':
-                if(deltaX == deltaY && !obstaclesExist('b'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('b') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if (deltaX == -deltaY && !obstaclesExist('b'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('b') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else
-                {
-                    getMove();
-                }
-                break;
-        case 'q':
-                if(deltaX == 0 && deltaY != 0 && !obstaclesExist('q'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('q') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if(deltaX != 0 && deltaY == 0 && !obstaclesExist('q'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('q') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if(deltaX == deltaY && !obstaclesExist('q'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('q') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else if (deltaX == -deltaY && !obstaclesExist('q'))
-                {
-                    if( isNotOccupied() )
-                    {
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else if( isValidEat('q') )
-                    {
-                        //add eaten piece to graveyard
-                        movePiece();
-                        movedSuccessfully = true;
-                    }
-                    else
-                    {
-                        getMove();
-                    }
-                }
-                else
-                {
-                    getMove();
-                }
-                break;
+            printError("wrong piece");
+            continue;
         }
-    }
+        if( !(movedSuccessfully) )
+        {
+            printError("not valid move");
+        }
+    }while( !(movedSuccessfully) );
 }
+
 bool isNotOccupied(void)
 {
     int x = command.nextX,y = command.nextY;
@@ -731,22 +93,22 @@ bool isValidEat(char piece)
         if(!isNotOccupied())
         {
             if( ( deltaX == 1 ) && ( deltaY == -1 ) && islower(board[y2][x2] ))
-                    return true;
+                return true;
             else if( ( deltaX == -1 ) && ( deltaY == -1 ) && islower(board[y2][x2]))
-                    return true;
+                return true;
             else
-                    return false;
+                return false;
         }
         break;
     case 'p':
         if(!isNotOccupied())
         {
             if( ( deltaX == 1 ) && ( deltaY == 1 ) && isupper(board[y2][x2]))
-                    return true;
+                return true;
             else if( ( deltaX == -1 ) && ( deltaY == 1 ) && isupper(board[y2][x2]))
-                    return true;
+                return true;
             else
-                    return false;
+                return false;
         }
         break;
     case 'R':
@@ -754,18 +116,18 @@ bool isValidEat(char piece)
     case 'B':
     case 'N':
         if( islower( board[y2][x2] ) )
-                return true;
+            return true;
         else
-                return false;
+            return false;
         break;
     case 'r':
     case 'q':
     case 'b':
     case 'n':
-        if( isupper( board[y2][x2] ) == board[y2][x2] )
-                return true;
+        if( isupper( board[y2][x2] ) )
+            return true;
         else
-                return false;
+            return false;
         break;
     }
     return false;
@@ -774,9 +136,9 @@ void movePiece(void)
 {
     board[command.nextY][command.nextX] = board[command.currentY][command.currentX];
     if((command.currentX + command.currentY) % 2 == 0)
-            board[command.currentY][command.currentX] = '#';
+        board[command.currentY][command.currentX] = '#';
     else
-            board[command.currentY][command.currentX] = '-';
+        board[command.currentY][command.currentX] = '-';
 }
 bool obstaclesExist(char piece)
 {
@@ -787,192 +149,325 @@ bool obstaclesExist(char piece)
     switch(piece)
     {
     case 'P':
-            if(isFirstMove())
-            {
-                if(board[y1-1][x1] != '#' && board[y1-1][x1] != '-')
-                        return true;
-            }
-            break;
+        if(isFirstMove())
+        {
+            if(board[y1-1][x1] != '#' && board[y1-1][x1] != '-')
+                return true;
+        }
+        break;
     case 'p':
-            if(isFirstMove())
-            {
-                if(board[y1+1][x1] != '#' && board[y1+1][x1] != '-')
-                        return true;
-            }
-            break;
+        if(isFirstMove())
+        {
+            if(board[y1+1][x1] != '#' && board[y1+1][x1] != '-')
+                return true;
+        }
+        break;
     case 'R':
     case 'r':
-            if(deltaX == 0)
+        if(deltaX == 0)
+        {
+            if(y2 > y1)
             {
-                if(y2 > y1)
+                for(int y = y1+1 ; y < y2 ; y++)
                 {
-                    for(int y = y1+1 ; y < y2 ; y++)
+                    if(board[y][x1] != '#' && board[y][x1] != '-')
                     {
-                        if(board[y][x1] != '#' && board[y][x1] != '-')
-                        {
-                            return true;
-                        }
-                    }
-                }
-                else if(y2 < y1)
-                {
-                    for(int y = y1-1 ; y > y2 ; y--)
-                    {
-                        if(board[y][x1] != '#' && board[y][x1] != '-')
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
-            else if(deltaY == 0)
+            else if(y2 < y1)
             {
-                if(x2 > x1)
+                for(int y = y1-1 ; y > y2 ; y--)
                 {
-                    for(int x = x1+1 ; x < x2 ; x++)
+                    if(board[y][x1] != '#' && board[y][x1] != '-')
                     {
-                        if(board[y1][x] != '#' && board[y1][x] != '-')
-                        {
-                            return true;
-                        }
-                    }
-                }
-                else if(x2 < x1)
-                {
-                    for(int x = x1-1 ; x > x2 ; x--)
-                    {
-                        if(board[y1][x] != '#' && board[y1][x] != '-')
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
-            break;
+        }
+        else if(deltaY == 0)
+        {
+            if(x2 > x1)
+            {
+                for(int x = x1+1 ; x < x2 ; x++)
+                {
+                    if(board[y1][x] != '#' && board[y1][x] != '-')
+                    {
+                        return true;
+                    }
+                }
+            }
+            else if(x2 < x1)
+            {
+                for(int x = x1-1 ; x > x2 ; x--)
+                {
+                    if(board[y1][x] != '#' && board[y1][x] != '-')
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        break;
     case 'B':
     case 'b':
-            if(deltaX == deltaY && x2 > x1)
+        if(deltaX == deltaY && x2 > x1)
+        {
+            for(int x = x1+1, y = y1+1 ; x < x2 ; x++)
             {
-                for(int x = x1+1, y = y1+1 ; x < x2 ; x++)
-                {
-                    if(board[y][x] != '#' && board[y][x] != '-')
-                        return true;
-                    y++;
-                }
+                if(board[y][x] != '#' && board[y][x] != '-')
+                    return true;
+                y++;
             }
-            else if(deltaX == deltaY && x2 < x1)
+        }
+        else if(deltaX == deltaY && x2 < x1)
+        {
+            for(int x = x1-1, y = y1-1 ; x > x2 ; x--)
             {
-                for(int x = x1-1, y = y1-1 ; x > x2 ; x--)
-                {
-                    if(board[y][x] != '#' && board[y][x] != '-')
-                        return true;
-                    y--;
-                }
+                if(board[y][x] != '#' && board[y][x] != '-')
+                    return true;
+                y--;
             }
-            else if(deltaX == -deltaY && x2 > x1)
+        }
+        else if(deltaX == -deltaY && x2 > x1)
+        {
+            for(int x = x1+1, y = y1-1 ; x < x2 ; x++)
             {
-                for(int x = x1+1, y = y1-1 ; x < x2 ; x++)
-                {
-                    if(board[y][x] != '#' && board[y][x] != '-')
-                        return true;
-                    y--;
-                }
+                if(board[y][x] != '#' && board[y][x] != '-')
+                    return true;
+                y--;
             }
-            else if(deltaX == -deltaY && x2 < x1)
+        }
+        else if(deltaX == -deltaY && x2 < x1)
+        {
+            for(int x = x1-1, y = y1+1 ; x > x2 ; x--)
             {
-                for(int x = x1-1, y = y1+1 ; x > x2 ; x--)
-                {
-                    if(board[y][x] != '#' && board[y][x] != '-')
-                        return true;
-                    y++;
-                }
+                if(board[y][x] != '#' && board[y][x] != '-')
+                    return true;
+                y++;
             }
-            break;
+        }
+        break;
     case 'Q':
     case 'q':
-            if(deltaX == 0)
+        if(deltaX == 0)
+        {
+            if(y2 > y1)
             {
-                if(y2 > y1)
+                for(int y = y1+1 ; y < y2 ; y++)
                 {
-                    for(int y = y1+1 ; y < y2 ; y++)
+                    if(board[y][x1] != '#' && board[y][x1] != '-')
                     {
-                        if(board[y][x1] != '#' && board[y][x1] != '-')
-                        {
-                            return true;
-                        }
-                    }
-                }
-                else if(y2 < y1)
-                {
-                    for(int y = y1-1 ; y > y2 ; y--)
-                    {
-                        if(board[y][x1] != '#' && board[y][x1] != '-')
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
-            else if(deltaY == 0)
+            else if(y2 < y1)
             {
-                if(x2 > x1)
+                for(int y = y1-1 ; y > y2 ; y--)
                 {
-                    for(int x = x1+1 ; x < x2 ; x++)
+                    if(board[y][x1] != '#' && board[y][x1] != '-')
                     {
-                        if(board[y1][x] != '#' && board[y1][x] != '-')
-                        {
-                            return true;
-                        }
-                    }
-                }
-                else if(x2 < x1)
-                {
-                    for(int x = x1-1 ; x > x2 ; x--)
-                    {
-                        if(board[y1][x] != '#' && board[y1][x] != '-')
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
-            else if(deltaX == deltaY && x2 > x1)
+        }
+        else if(deltaY == 0)
+        {
+            if(x2 > x1)
             {
-                for(int x = x1+1, y = y1+1 ; x < x2 ; x++)
+                for(int x = x1+1 ; x < x2 ; x++)
                 {
-                    if(board[y][x] != '#' && board[y][x] != '-')
+                    if(board[y1][x] != '#' && board[y1][x] != '-')
+                    {
                         return true;
-                    y++;
+                    }
                 }
             }
-            else if(deltaX == deltaY && x2 < x1)
+            else if(x2 < x1)
             {
-                for(int x = x1-1, y = y1-1 ; x > x2 ; x--)
+                for(int x = x1-1 ; x > x2 ; x--)
                 {
-                    if(board[y][x] != '#' && board[y][x] != '-')
+                    if(board[y1][x] != '#' && board[y1][x] != '-')
+                    {
                         return true;
-                    y--;
+                    }
                 }
             }
-            else if(deltaX == -deltaY && x2 > x1)
+        }
+        else if(deltaX == deltaY && x2 > x1)
+        {
+            for(int x = x1+1, y = y1+1 ; x < x2 ; x++)
             {
-                for(int x = x1+1, y = y1-1 ; x < x2 ; x++)
-                {
-                    if(board[y][x] != '#' && board[y][x] != '-')
-                        return true;
-                    y--;
-                }
+                if(board[y][x] != '#' && board[y][x] != '-')
+                    return true;
+                y++;
             }
-            else if(deltaX == -deltaY && x2 < x1)
+        }
+        else if(deltaX == deltaY && x2 < x1)
+        {
+            for(int x = x1-1, y = y1-1 ; x > x2 ; x--)
             {
-                for(int x = x1-1, y = y1+1 ; x > x2 ; x--)
-                {
-                    if(board[y][x] != '#' && board[y][x] != '-')
-                        return true;
-                    y++;
-                }
+                if(board[y][x] != '#' && board[y][x] != '-')
+                    return true;
+                y--;
             }
-            break;
+        }
+        else if(deltaX == -deltaY && x2 > x1)
+        {
+            for(int x = x1+1, y = y1-1 ; x < x2 ; x++)
+            {
+                if(board[y][x] != '#' && board[y][x] != '-')
+                    return true;
+                y--;
+            }
+        }
+        else if(deltaX == -deltaY && x2 < x1)
+        {
+            for(int x = x1-1, y = y1+1 ; x > x2 ; x--)
+            {
+                if(board[y][x] != '#' && board[y][x] != '-')
+                    return true;
+                y++;
+            }
+        }
+        break;
+    }
+    return false;
+}
+
+bool checkRightPiece()
+{
+
+    switch ( board[command.currentY][command.currentX])
+    {
+    case '#':
+    case '-':
+        printError("empty block");
+        return false;
+        
+    default:
+        if( currentPlayer == firstPlayer && board[command.currentY][command.currentX] == toupper( board[command.currentY][command.currentX] ) )
+                return true;
+        if( currentPlayer == secondPlayer && board[command.currentY][command.currentX] ==  tolower(board[command.currentY][command.currentX]) )
+                return true;
+    }
+    return false;
+}
+
+bool checkSoldier( int deltaX, int deltaY, char type)
+{
+    if( type == 'p' )
+        deltaY = -(deltaY);
+    if(deltaY == -1 && deltaX == 0 && isNotOccupied())
+    {
+        movePiece();
+        return true;
+    }
+    else if(deltaY == -2 && deltaX == 0 && isNotOccupied() && isFirstMove() && !obstaclesExist(type))
+    {
+        movePiece();
+        return true;
+    }
+    else if(isValidEat(type))
+    {
+        //add eaten piece to graveyard
+        movePiece();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool checkRook( int deltaX, int deltaY, char type)
+{
+    if( ( (deltaX == 0 && deltaY != 0) || ( deltaX != 0 && deltaY == 0) ) && !obstaclesExist(type))
+    {
+        if( isNotOccupied() )
+        {
+            movePiece();
+            return true;
+        }
+        else if( isValidEat(type) )
+        {
+            //add eaten piece to graveyard
+            movePiece();
+            return true;
+        }
+    }
+    return false;
+}
+
+bool checkHorse(int deltaX, int deltaY, char type)
+{
+    if( ( abs(deltaX) == 1 && abs(deltaY) == 2) || ( abs(deltaX) == 2 && abs(deltaY) == 1 ) )
+    {
+        if( isNotOccupied() )
+        {
+            movePiece();
+            return true;
+        }
+        else if( isValidEat(type) )
+        {
+            //add eaten piece to graveyard
+            movePiece();
+            return true;
+        }
+    }
+    return false;
+}
+bool checkBishop(int deltaX, int deltaY, char type)
+{
+    if( abs(deltaX) == abs(deltaY) && !obstaclesExist(type))
+    {
+        if( isNotOccupied() )
+        {
+            movePiece();
+            return true;
+        }
+        else if( isValidEat(type) )
+        {
+            //add eaten piece to graveyard
+            movePiece();
+            return true;
+        }
+    }
+    return false;
+}
+bool checkQueen( int deltaX, int deltaY, char type)
+{
+    if( ( (deltaX == 0 && deltaY != 0) || ( deltaX != 0 && deltaY == 0) ) && !obstaclesExist(type))
+    {
+        if( isNotOccupied() )
+        {
+            movePiece();
+            return true;
+        }
+        else if( isValidEat(type) )
+        {
+            //add eaten piece to graveyard
+            movePiece();
+            return true;
+        }
+    }
+    else if( abs(deltaX) == abs(deltaY) && !obstaclesExist(type))
+    {
+        if( isNotOccupied() )
+        {
+            movePiece();
+            return true;
+        }
+        else if( isValidEat(type) )
+        {
+            //add eaten piece to graveyard
+            movePiece();
+            return true;
+        }
     }
     return false;
 }

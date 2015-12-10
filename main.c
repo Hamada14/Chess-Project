@@ -12,7 +12,6 @@ int main()
     resetBoard();
     loadGame();
     printBoard();
-    getMove();
     applyMove();
     system("cls");
     printBoard();
