@@ -376,7 +376,7 @@ bool checkSoldier( int deltaX, int deltaY, char type)
     }
     else if(isValidEat(type))
     {
-        //add eaten piece to graveyard
+        addToGraveyard();
         movePiece();
         return true;
     }
@@ -397,7 +397,7 @@ bool checkRook( int deltaX, int deltaY, char type)
         }
         else if( isValidEat(type) )
         {
-            //add eaten piece to graveyard
+            addToGraveyard();
             movePiece();
             return true;
         }
@@ -416,7 +416,7 @@ bool checkHorse(int deltaX, int deltaY, char type)
         }
         else if( isValidEat(type) )
         {
-            //add eaten piece to graveyard
+            addToGraveyard();
             movePiece();
             return true;
         }
@@ -434,7 +434,7 @@ bool checkBishop(int deltaX, int deltaY, char type)
         }
         else if( isValidEat(type) )
         {
-            //add eaten piece to graveyard
+            addToGraveyard();
             movePiece();
             return true;
         }
@@ -452,7 +452,7 @@ bool checkQueen( int deltaX, int deltaY, char type)
         }
         else if( isValidEat(type) )
         {
-            //add eaten piece to graveyard
+            addToGraveyard();
             movePiece();
             return true;
         }
@@ -466,11 +466,22 @@ bool checkQueen( int deltaX, int deltaY, char type)
         }
         else if( isValidEat(type) )
         {
-            //add eaten piece to graveyard
+            addToGraveyard();
             movePiece();
             return true;
         }
     }
     return false;
+}
+void addToGraveyard(void)
+{
+    if(currentPlayer == firstPlayer)
+    {
+        player2Graveyard[graveyard2Size++] = board[command.nextY][command.nextX];
+    }
+    else
+    {
+        player1Graveyard[graveyard1Size++] = board[command.nextY][command.nextX];
+    }
 }
 #endif // MOVEMENT_C_INCLUDED

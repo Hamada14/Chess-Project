@@ -12,5 +12,5 @@ bool checkRook( int deltaX, int deltaY, char type);
 bool checkHorse(int deltaX, int deltaY, char type);
 bool checkBishop(int deltaX, int deltaY, char type);
 bool checkQueen( int deltaX, int deltaY, char type);
-
+void addToGraveyard(void);
 #endif // MOVEMENT_H_INCLUDED

@@ -15,7 +15,30 @@ void printBoard(void)
         {
            printf("\t%c",board[i][j]);
         }
-
+        if(i == 1)
+        {
+            printf("\t\t ****Graveyard****");
+        }
+        if(i == 2)
+        {
+            for(j = 0 ; j < graveyard1Size ; j++)
+            {
+                if(j == 0)
+                    printf("\t\t%c",player1Graveyard[j]);
+                else
+                    printf("  %c",player1Graveyard[j]);
+            }
+        }
+        if(i == 4)
+        {
+            for(j = 0 ; j < graveyard2Size ; j++)
+            {
+                if(j == 0)
+                    printf("\t\t%c",player2Graveyard[j]);
+                else
+                    printf("  %c",player2Graveyard[j]);
+            }
+        }
     }
     printf("\n");
 }
@@ -23,6 +46,8 @@ void printBoard(void)
 void resetBoard(void)
 {
     int i,j;
+    graveyard1Size = 0;
+    graveyard2Size = 0;
     for(i = 0 ; i < 8 ; i++)
     {
         for(j = 0 ; j < 8 ; j++)
