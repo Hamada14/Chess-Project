@@ -289,3 +289,24 @@ void setColor(char* text)
     else
         SetConsoleTextAttribute(hConsole,  FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 }
+
+void setBackgroundColor(char* text)
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    WORD saved_attributes;
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+     saved_attributes = consoleInfo.wAttributes;
+    if( strcmp(text,"RED") == 0)
+        SetConsoleTextAttribute(hConsole, BACKGROUND_RED);
+    else if( strcmp(text, "BLUE") == 0 )
+        SetConsoleTextAttribute(hConsole, BACKGROUND_BLUE);
+    else if( strcmp(text, "GREEN") == 0 )
+        SetConsoleTextAttribute(hConsole, BACKGROUND_GREEN);
+    else if( strcmp(text, "INTENSITY") == 0 )
+        SetConsoleTextAttribute(hConsole,  FOREGROUND_INTENSITY);
+    else if ( strcmp(text,"DEFAULT") == 0 )
+        SetConsoleTextAttribute(hConsole,  BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
+    else
+        SetConsoleTextAttribute(hConsole,  BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
+}

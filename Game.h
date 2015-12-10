@@ -38,5 +38,6 @@ void doCommand( char input);//not finished
 void printHelp();//not finished
 bool verifyCommand( char input);
 void setColor(char* text);
+void setBackgroundColor(char* text);
 int currentPlayer;
 #endif // GAME_H_INCLUDED
