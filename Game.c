@@ -48,7 +48,6 @@ bool end = false;
 
 void printInterface(void)
 {
-    printLogo();
     printf("This is a Chess Game made by Team \"M&Ms\" as a project for Programming I course.\n");
     printGameOption();
 }
@@ -72,7 +71,7 @@ void printGameOption(void)
 }
 void clearScreen(void)
 {
-        system("clear");
+        system("cls");
         return;
 }
 int getGameOption(void)
@@ -329,13 +328,17 @@ void gameFlow()
     while(!end)
     {
         //check for checkmates and stale mate and winning
-        if( !applyMove() );
+        if( applyMove() )
+        {
+            switchTurn();
+            clearScreen();
+        }else
         {
             commandStart = false;
             break;
         }
         clearScreen();
-        switchTurn();
+        printBoard();
     }
 }
 
@@ -387,8 +390,10 @@ void printSetting()
 
 void game()
 {
+    currentPlayer = firstPlayer;
     while(1)
     {
+        clearScreen();
         printRequiredScreen();
     }
 }
