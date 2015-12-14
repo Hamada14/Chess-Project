@@ -303,8 +303,38 @@ bool verifyCommand( char input)
     return false;
 }
 
-void printHelp()//TODO
+void printHelp()
 {
+    printLogo();
+    printf("Hello This is the help Section: \n\
+Game Play:\n\
+-You can start either by New Game or Continue game if you want\n\
+to continue a game you last played yet you didn\'t close the program.\n\
+Make sure when moving Piece to enter it in the Form XYLM\n\
+where :\n\
+'A' <= X,L <= 'H'\n\
+1 <= Y,M <= 8\n\
+Make sure to capitalize the letters.\n\
+If you want to promote a Pawn you can enter in this format XYLMT\n\
+where T is the promoted to piece.\n\
+make sure to Capitalize the Letters when needed.\n\
+\n\
+Commands:\n\
+There are certain commands used in this game.\n\
+'b' : used to go back to the main menu.\n\
+'l' : used to load a past saved game.\n\
+'s' : used to save a game for later use.\n\
+'u' : used to undo a move.\n\
+'r' : used to redo a move.\n\
+'n' : used to reset the board and start a new age.\n");
+    printf("Type \'b\' to get back to the main menu: ");
+    getchar();
+    while( getchar() != 'b' )
+    {
+        printf("Not acceptable command.\nType \'b\' to get back to the main menu: ");
+        getchar();
+    }
+    state = menu;
 }
 
 void setColor(char* text)
