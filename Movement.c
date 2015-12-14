@@ -53,6 +53,7 @@ bool applyMove(void)
             printError("not valid move");
         }
     }while( !(movedSuccessfully) );
+    doPromotion();
     return true;
 }
 

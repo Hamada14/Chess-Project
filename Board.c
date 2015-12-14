@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "Board.h"
+#include "Game.h"
+
 void printBoard(void)
 {
     int i,j;
@@ -42,6 +44,7 @@ void printBoard(void)
 
 void resetBoard(void)
 {
+    hasBoard = true;
     int i,j;
     graveyard1Size = 0;
     graveyard2Size = 0;

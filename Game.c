@@ -6,6 +6,8 @@
 #include "Board.h"
 #include "Save.h"
 #include "Movement.h"
+#include <ctype.h>
+
 char *interfaceScreen[] = {     " ________   ___  ___   _______    ________    ________ ",
                                 "|\\   ____\\ |\\  \\|\\  \\ |\\  ___ \\  |\\   ____\\  |\\   ____\\",
                                 "\\ \\  \\___| \\ \\  \\\\\\  \\\\ \\   __/| \\ \\  \\___|_ \\ \\  \\___|_",
@@ -28,7 +30,10 @@ char *errorCode[] = { "no input",
                     "number out of list",
                     "not valid move",
                     "empty block",
-                    "not command"
+                    "not command",
+                    "no promotion",
+                    "bad input",
+                    "not one piece"
 };
 char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "The input you entered was Too large.",
@@ -37,14 +42,22 @@ char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "Make sure the number you entered exists in the List.",
                             "The move you just entered is invalid.",
                             "The Block you entered is an empty one.",
-                            "This command wasn't recognized"
+                            "This command wasn't recognized",
+                            "promotion isn't available in this move.\nPlease recheck your move.",
+                            "Please make sure you entered the input in the correct structure.",
+                            "You can only promote to one's own pieces."
 };
 int errorMessageSize = sizeof(errorCode) / sizeof(char*);
 
 char commandSpecial[] = { 's', 'l', 'u', 'r', 'n', 'b'};
 int commandSpecialSize = sizeof(commandSpecial) / sizeof(char);
 
+char promotable[] = { 'r', 'n','q','b'};
+int sizeOfPromotable = sizeof(promotable) / sizeof( promotable[0]);
+
+bool hasBoard = false;
 bool end = false;
+
 
 void printInterface(void)
 {
@@ -129,13 +142,28 @@ void getMove()
                 }
                 if( verifyInput( input) )
                 {
-                    done = true;
+                    if( promotion)
+                    {
+                        if( checkPromotion( input) )
+                        {
+                            done = true;
+                            promotion = true;
+                        }
+                        else
+                        {
+                            done = false;
+                            promotion = false;
+                        }
+                    }else
+                    {
+                        done = true;
+                    }
                 }
             }else if( nullPosition == 0)
                 printError("no input");
             else
-                printError("large");
-        }while( !done );
+                printError("bad input");
+        }while( !(done || commandStart) );
         if( commandStart )
         {
             doCommand( input[0]);
@@ -371,17 +399,27 @@ void startMenu()
     printLogo();
     printInterface();
     int temp =getGameOption();
-    if(temp == 1 )
+    switch(temp)
     {
+    case 1:
         resetBoard();
+        currentPlayer = firstPlayer;
         state = play;
-    }
-    else if( temp == 2 )
+        break;
+    case 2:
+        if( !hasBoard)
+        {
+            resetBoard();
+        }
         state = play;
-    else if( temp == 3 )
+        break;
+    case 3:
         state = help;
-    else if( temp == 4 )
+        break;
+    case 4:
         state = setting;
+        break;
+    }
 }
 void printSetting()
 {
@@ -390,10 +428,48 @@ void printSetting()
 
 void game()
 {
+    hasBoard = false;
     currentPlayer = firstPlayer;
     while(1)
     {
         clearScreen();
         printRequiredScreen();
+    }
+}
+
+bool checkPromotion( char input[])
+{
+    bool allowedToPromote = false;
+    int currentY = convertNumber( input[1]);
+    int currentX = convertLetter( input[0]);
+    int nextY = convertNumber( input[3]);
+    if( (board[currentY][currentX] == 'p' && currentY == 6 && nextY == 7 ) || (board[currentY][currentX] == 'P' && currentY == 1 && nextY == 0 ))
+        allowedToPromote = true;
+    if( (currentPlayer == firstPlayer && isupper( input[4]) ) || (currentPlayer == secondPlayer && islower( input[4] ) ) )
+        allowedToPromote = true;
+    else
+    {
+        printError("not one piece");
+        allowedToPromote = false;
+        return false;
+    }
+    if( allowedToPromote)
+    {
+        for(int INDEX = 0; INDEX < sizeOfPromotable; INDEX++)
+        {
+                if( tolower( input[4]) == promotable[INDEX] )
+                    return true;
+        }
+    }
+    printError("no promotion");
+    return false;
+}
+
+void doPromotion()
+{
+    if( command.promotionExist)
+    {
+        board[command.nextY][command.nextX] = command.promotion;
+        command.promotionExist = false;
     }
 }

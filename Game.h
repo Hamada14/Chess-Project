@@ -9,7 +9,6 @@ struct commands {
                 int nextY;
                 char promotion;
                 bool promotionExist;
-                bool specialCommand;
 }command;
 
 enum GameState{ menu,
@@ -47,6 +46,8 @@ void startMenu();
 void printSetting();
 void goBack();
 void game();
+bool checkPromotion( char input[]);
+void doPromotion();
 
-//remember to handle in continue when it's first time to play
+
 #endif // GAME_H_INCLUDED
