@@ -10,7 +10,7 @@ struct commands {
                 char promotion;
                 bool promotionExist;
 }command;
-
+int turn;
 enum GameState{ menu,
                 play,
                 help,

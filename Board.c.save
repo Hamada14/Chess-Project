@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "Board.h"
+#include "Game.h"
+
 void printBoard(void)
 {
     int i,j;
@@ -19,24 +21,23 @@ void printBoard(void)
         }
 
         printf("\t");
-        if(2*i - 2 < graveyard1Size)
+        if(2*i  < graveyard1Size)
         {
-            printf("%c",player1Graveyard[2*i - 2]);
+            printf("%c",player1Graveyard[2*i]);
         }
-        if(2*i - 1 < graveyard1Size)
+        if(2*i + 1 < graveyard1Size)
         {
-            printf("  %c",player1Graveyard[2*i - 1]);
+            printf("  %c",player1Graveyard[2*i + 1]);
         }
         printf("\t  ");
-        if(2*i - 2 < graveyard2Size)
+        if(2*i < graveyard2Size)
         {
-            printf("%c",player2Graveyard[2*i - 2]);
+            printf("%c",player2Graveyard[2*i]);
         }
-        if(2*i - 1 < graveyard2Size)
+        if(2*i + 1 < graveyard2Size)
         {
-            printf("  %c",player2Graveyard[2*i - 1]);
+            printf("  %c",player2Graveyard[2*i + 1]);
         }
-
     }
     printf("\n");
 }
@@ -44,8 +45,6 @@ void printBoard(void)
 void resetBoard(void)
 {
     int i,j;
-    graveyard1Size = 0;
-    graveyard2Size = 0;
     for(i = 0 ; i < 8 ; i++)
     {
         for(j = 0 ; j < 8 ; j++)
@@ -90,4 +89,10 @@ void resetBoard(void)
 
         }
     }
+}
+void addToDeadPieces()
+{
+    deadPieces[numberOfDeadPieces] = board[command.nextY][command.nextX];
+    deathTurn[numberOfDeadPieces] = turn;
+    numberOfDeadPieces++ ;
 }

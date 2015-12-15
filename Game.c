@@ -507,5 +507,8 @@ void resetAll()
     resetBoard();
     currentPlayer = firstPlayer;
     hasBoard = true;
-
+    graveyard1Size = 0;
+    graveyard2Size = 0;
+    numberOfDeadPieces = 0;
+    turns = 0;
 }

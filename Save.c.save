@@ -4,7 +4,7 @@
 void saveGame(void)
 {
     FILE* save;
-    save = fopen("save.bin","w");
+    save = fopen("save.bin","wb");
     if(save == NULL)
     {
         printf("ERROR: failed to open file");
@@ -20,7 +20,7 @@ void saveGame(void)
 void loadGame(void)
 {
     FILE* load;
-    load = fopen("save.bin","r");
+    load = fopen("save.bin","rb");
     if(load == NULL)
     {
         printf("ERROR: failed to open file");
@@ -32,4 +32,8 @@ void loadGame(void)
     fread(&graveyard2Size,1,1,load);
     fread(player2Graveyard,graveyard2Size,1,load);
     fclose(load);
+}
+void undo()
+{
+    
 }

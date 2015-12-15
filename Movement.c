@@ -54,6 +54,7 @@ bool applyMove(void)
         }
     }while( !(movedSuccessfully) );
     doPromotion();
+    turn++;
     return true;
 }
 

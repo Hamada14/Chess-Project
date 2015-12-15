@@ -33,3 +33,7 @@ void loadGame(void)
     fread(player2Graveyard,graveyard2Size,1,load);
     fclose(load);
 }
+void undo()
+{
+
+}
