@@ -1,6 +1,6 @@
 #ifndef GAME_H_INCLUDED
 #define GAME_H_INCLUDED
-//#include <windows.h>
+#include <windows.h>
 #include <stdbool.h>
 struct commands {
                 int currentX;

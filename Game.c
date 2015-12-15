@@ -56,6 +56,8 @@ int commandSpecialSize = sizeof(commandSpecial) / sizeof(char);
 char promotable[] = { 'r', 'n','q','b'};
 int sizeOfPromotable = sizeof(promotable) / sizeof( promotable[0]);
 
+char simulationBoard[8][8];
+
 bool hasBoard = false;
 bool end = false;
 
@@ -230,23 +232,23 @@ bool verifyInput( char input[])
 }
 void printError(char *type)
 {
-//    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-//    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-//    WORD saved_attributes;
-//    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-//    saved_attributes = consoleInfo.wAttributes;
-//    SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-//    int INDEX;
-//    for( INDEX = 0; INDEX < errorMessageSize; INDEX++)
-//    {
-//        if( strcmp(type, errorCode[INDEX]) == 0 )
-//        {
-//            printf("%s\n", errorMessage[INDEX]);
-//            break;
-//        }
-//    }
-//    printf("Please refer to the help section if you need more informations.\n");
-//    SetConsoleTextAttribute(hConsole, saved_attributes);
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    WORD saved_attributes;
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    saved_attributes = consoleInfo.wAttributes;
+    SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+    int INDEX;
+    for( INDEX = 0; INDEX < errorMessageSize; INDEX++)
+    {
+        if( strcmp(type, errorCode[INDEX]) == 0 )
+        {
+            printf("%s\n", errorMessage[INDEX]);
+            break;
+                }
+        }
+        printf("Please refer to the help section if you need more informations.\n");
+        SetConsoleTextAttribute(hConsole, saved_attributes);
 }
 void doCommand( char input)
 {
