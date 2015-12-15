@@ -1,1 +1,1 @@
-bin/Debug/*.exe *.o *.save *.layout obj/Debug/*.o
+bin/Debug/*.exe *.o *.save *.layout obj/Debug/*.o *.depend
