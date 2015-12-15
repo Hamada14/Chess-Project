@@ -96,3 +96,23 @@ void addToDeadPieces()
     deathTurn[numberOfDeadPieces] = turn;
     numberOfDeadPieces++ ;
 }
+void saveMove()
+{
+    moves[4*turn] = command.currentX;
+    moves[4*turn+1] = command.currentY;
+    moves[4*turn+2] = command.nextX;
+    moves[4*turn+3] = command.nextY;
+}
+void loadMove()
+{
+    moves[4*turn+3] = command.currentY;
+    moves[4*turn+2] = command.currentX;
+    moves[4*turn] = command.nextY;
+    moves[4*turn+1] = command.nextX;
+}
+void savePromotion()
+{
+    promotion[promotionSize] = command.promotion;
+    promotionTurn[promotionSize] = turn;
+    promotionSize++;
+}
