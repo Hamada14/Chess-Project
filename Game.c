@@ -605,3 +605,13 @@ bool checkStructs( struct commands command, struct commands test)
     return false;
 }
 
+void copyBoard( char board[8][8], char simulationBoard[8][8])
+{
+    for(int counter=0; counter < 8; counter++)
+    {
+        for(int counter2=0; counter2 < 8 ;counter2++)
+        {
+            simulationBoard[counter][counter2] = board[counter][counter2];
+        }
+    }
+}
