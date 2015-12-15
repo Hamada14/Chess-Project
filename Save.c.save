@@ -76,10 +76,10 @@ void undo()
         printBoard();
     }
 }
-//void redo()
-//{
-//
-//}
+void redo()
+{
+    
+}
 int binarySearch (int A[],int key, int minA, int maxA,bool *isFound)
 {
     int midA = (minA + maxA)/2;

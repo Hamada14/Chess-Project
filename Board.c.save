@@ -93,7 +93,7 @@ void resetBoard(void)
 void addToDeadPieces()
 {
     deadPieces[numberOfDeadPieces] = board[command.nextY][command.nextX];
-    deathTurn[numberOfDeadPieces] = turn+1;
+    deathTurn[numberOfDeadPieces] = turn;
     numberOfDeadPieces++ ;
 }
 void saveMove()
@@ -107,8 +107,8 @@ void loadMove()
 {
     command.currentY = moves[4*turn-1] ;
     command.currentX = moves[4*turn-2] ;
-    command.nextY = moves[4*turn-3] ;
-    command.nextX = moves[4*turn-4] ;
+    command.nextY;
+    moves[4*turn-4] = command.nextX;
 }
 void savePromotion()
 {

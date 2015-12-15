@@ -264,7 +264,7 @@ void doCommand( char input)
         undo();
         break;
     case 'r':
-        //call the redo function here
+        //redo();
         break;
     case 'n':
         resetBoard();
@@ -502,8 +502,9 @@ void doPromotion()
     {
         board[command.nextY][command.nextX] = command.promotion;
         command.promotionExist = false;
+        savePromotion();
     }
-    savePromotion();
+
 }
 
 void resetAll()
@@ -515,7 +516,7 @@ void resetAll()
     graveyard2Size = 0;
     numberOfDeadPieces = 0;
     promotionSize = 0;
-    turn = 1;
+    turn = 0;
 }
 
 //void collectMove()
