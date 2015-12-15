@@ -44,10 +44,7 @@ void printBoard(void)
 
 void resetBoard(void)
 {
-    hasBoard = true;
     int i,j;
-    graveyard1Size = 0;
-    graveyard2Size = 0;
     for(i = 0 ; i < 8 ; i++)
     {
         for(j = 0 ; j < 8 ; j++)
@@ -92,4 +89,30 @@ void resetBoard(void)
 
         }
     }
+}
+void addToDeadPieces()
+{
+    deadPieces[numberOfDeadPieces] = board[command.nextY][command.nextX];
+    deathTurn[numberOfDeadPieces] = turn;
+    numberOfDeadPieces++ ;
+}
+void saveMove()
+{
+    moves[4*turn] = command.currentX;
+    moves[4*turn+1] = command.currentY;
+    moves[4*turn+2] = command.nextX;
+    moves[4*turn+3] = command.nextY;
+}
+void loadMove()
+{
+    moves[4*turn+3] = command.currentY;
+    moves[4*turn+2] = command.currentX;
+    moves[4*turn] = command.nextY;
+    moves[4*turn+1] = command.nextX;
+}
+void savePromotion()
+{
+    promotion[promotionSize] = command.promotion;
+    promotionTurn[promotionSize] = turn;
+    promotionSize++;
 }

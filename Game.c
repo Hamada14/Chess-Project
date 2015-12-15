@@ -259,7 +259,7 @@ void doCommand( char input)
         loadGame();
         break;
     case 'u':
-        //call the undo function here
+        undo();
         break;
     case 'r':
         //call the redo function here
@@ -501,6 +501,7 @@ void doPromotion()
         board[command.nextY][command.nextX] = command.promotion;
         command.promotionExist = false;
     }
+    savePromotion();
 }
 
 void resetAll()
@@ -508,6 +509,11 @@ void resetAll()
     resetBoard();
     currentPlayer = firstPlayer;
     hasBoard = true;
+    graveyard1Size = 0;
+    graveyard2Size = 0;
+    numberOfDeadPieces = 0;
+    promotionSize = 0;
+    turn = 1;
 }
 
 void collectMove()
@@ -582,6 +588,7 @@ void increment( char testCase[])
     }
     else
         testCase[3]++;
+
 
 }
 
