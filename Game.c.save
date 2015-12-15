@@ -7,7 +7,8 @@
 #include "Save.h"
 #include "Movement.h"
 #include <ctype.h>
-
+struct commands availableCommands[1000];
+int sizeOfAvailableCommands = 0;
 char *interfaceScreen[] = {     " ________   ___  ___   _______    ________    ________ ",
                                 "|\\   ____\\ |\\  \\|\\  \\ |\\  ___ \\  |\\   ____\\  |\\   ____\\",
                                 "\\ \\  \\___| \\ \\  \\\\\\  \\\\ \\   __/| \\ \\  \\___|_ \\ \\  \\___|_",
@@ -229,23 +230,23 @@ bool verifyInput( char input[])
 }
 void printError(char *type)
 {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-    SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-    int INDEX;
-    for( INDEX = 0; INDEX < errorMessageSize; INDEX++)
-    {
-        if( strcmp(type, errorCode[INDEX]) == 0 )
-        {
-            printf("%s\n", errorMessage[INDEX]);
-            break;
-        }
-    }
-    printf("Please refer to the help section if you need more informations.\n");
-    SetConsoleTextAttribute(hConsole, saved_attributes);
+//    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+//    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+//    WORD saved_attributes;
+//    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+//    saved_attributes = consoleInfo.wAttributes;
+//    SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+//    int INDEX;
+//    for( INDEX = 0; INDEX < errorMessageSize; INDEX++)
+//    {
+//        if( strcmp(type, errorCode[INDEX]) == 0 )
+//        {
+//            printf("%s\n", errorMessage[INDEX]);
+//            break;
+//        }
+//    }
+//    printf("Please refer to the help section if you need more informations.\n");
+//    SetConsoleTextAttribute(hConsole, saved_attributes);
 }
 void doCommand( char input)
 {
@@ -511,4 +512,74 @@ void resetAll()
     graveyard2Size = 0;
     numberOfDeadPieces = 0;
     turns = 0;
+}
+
+void collectMove()
+{
+    char testCase[] = "A1A1";
+    while( strcmp( testCase, "H8H9") != 0 )
+    {
+        bool acceptedMove = false;
+        int x1 = command.currentX ;
+        int y1 = command.currentY ;
+        int x2 = command.nextX;
+        int y2 = command.nextY;
+        if( checkRightPiece() )
+            switch(board[command.currentY][command.currentX])
+                {
+                case 'P':
+                case 'p':
+                    acceptedMove = checkSoldier( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                case 'R':
+                case 'r':
+                    acceptedMove = checkRook(  x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                case 'N':
+                case 'n':
+                    acceptedMove = checkHorse( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                case 'B':
+                case 'b':
+                    acceptedMove = checkBishop( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                case 'Q':
+                case 'q':
+                    acceptedMove = checkQueen( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                }
+            if( acceptedMove)
+            {
+                availableCommands[sizeOfAvailableCommands] = testCommand;
+                sizeOfAvailableCommands++;
+            }
+            increment( testCase);
+    }
+}
+
+void increment( char testCase[])
+{
+    if( strcmp( testCase, "H8H8") == 0)
+        testCase[3]++;
+    else if( testCase[3] == '8')
+    {
+        testCase[3] = '1';
+        if( testCase[2] == 'H')
+        {
+            testCase[2] = 'A';
+            if( testCase[1] == '9' )
+            {
+                testCase[1] = '1';
+                testCase[0]++;
+            }
+            else
+                testCase[0]++;
+        }
+        else
+            testCase[2]++;
+    }
+    else
+        testCase[3]++;
+
+
 }

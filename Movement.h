@@ -7,10 +7,10 @@ bool isValidEat(char piece);
 void movePiece(void);
 bool obstaclesExist(char piece);
 bool checkRightPiece();
-bool checkSoldier( int deltaX, int deltaY, char type);
-bool checkRook( int deltaX, int deltaY, char type);
-bool checkHorse(int deltaX, int deltaY, char type);
-bool checkBishop(int deltaX, int deltaY, char type);
-bool checkQueen( int deltaX, int deltaY, char type);
+bool checkSoldier(int x1, int y1, int x2, int y2, char type);
+bool checkRook(int x1, int y1, int x2, int y2, char type);
+bool checkHorse(int x1, int y1, int x2, int y2, char type);
+bool checkBishop(int x1, int y1, int x2, int y2, char type);
+bool checkQueen(int x1, int y1, int x2, int y2, char type);
 void addToGraveyard(void);
 #endif // MOVEMENT_H_INCLUDED
