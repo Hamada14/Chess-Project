@@ -338,43 +338,43 @@ There are certain commands used in this game.\n\
     state = menu;
 }
 
-void setColor(char* text)
-{
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    if( strcmp(text,"RED") == 0)
-        SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-    else if( strcmp(text, "BLUE") == 0 )
-        SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
-    else if( strcmp(text, "GREEN") == 0 )
-        SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
-    else if( strcmp(text, "INTENSITY") == 0 )
-        SetConsoleTextAttribute(hConsole,  FOREGROUND_INTENSITY);
-    else if ( strcmp(text,"DEFAULT") == 0 )
-        SetConsoleTextAttribute(hConsole,  FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
-    else
-        SetConsoleTextAttribute(hConsole,  FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
-}
-
-void setBackgroundColor(char* text)
-{
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    if( strcmp(text,"RED") == 0)
-        SetConsoleTextAttribute(hConsole, BACKGROUND_RED);
-    else if( strcmp(text, "BLUE") == 0 )
-        SetConsoleTextAttribute(hConsole, BACKGROUND_BLUE);
-    else if( strcmp(text, "GREEN") == 0 )
-        SetConsoleTextAttribute(hConsole, BACKGROUND_GREEN);
-    else if( strcmp(text, "INTENSITY") == 0 )
-        SetConsoleTextAttribute(hConsole,  FOREGROUND_INTENSITY);
-    else if ( strcmp(text,"DEFAULT") == 0 )
-        SetConsoleTextAttribute(hConsole,  BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
-    else
-        SetConsoleTextAttribute(hConsole,  BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
-}
+//void setColor(char* text)
+//{
+//    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+//    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+//    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+//    if( strcmp(text,"RED") == 0)
+//        SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+//    else if( strcmp(text, "BLUE") == 0 )
+//        SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
+//    else if( strcmp(text, "GREEN") == 0 )
+//        SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
+//    else if( strcmp(text, "INTENSITY") == 0 )
+//        SetConsoleTextAttribute(hConsole,  FOREGROUND_INTENSITY);
+//    else if ( strcmp(text,"DEFAULT") == 0 )
+//        SetConsoleTextAttribute(hConsole,  FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
+//    else
+//        SetConsoleTextAttribute(hConsole,  FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
+//}
+//
+//void setBackgroundColor(char* text)
+//{
+//    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+//    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+//    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+//    if( strcmp(text,"RED") == 0)
+//        SetConsoleTextAttribute(hConsole, BACKGROUND_RED);
+//    else if( strcmp(text, "BLUE") == 0 )
+//        SetConsoleTextAttribute(hConsole, BACKGROUND_BLUE);
+//    else if( strcmp(text, "GREEN") == 0 )
+//        SetConsoleTextAttribute(hConsole, BACKGROUND_GREEN);
+//    else if( strcmp(text, "INTENSITY") == 0 )
+//        SetConsoleTextAttribute(hConsole,  FOREGROUND_INTENSITY);
+//    else if ( strcmp(text,"DEFAULT") == 0 )
+//        SetConsoleTextAttribute(hConsole,  BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
+//    else
+//        SetConsoleTextAttribute(hConsole,  BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
+//}
 
 void switchTurn()
 {
@@ -512,51 +512,58 @@ void resetAll()
     graveyard1Size = 0;
     graveyard2Size = 0;
     numberOfDeadPieces = 0;
+    promotionSize = 0;
     turn = 1;
 }
 
-void collectMove()
-{
-    char testCase[] = "A1A1";
-    while( strcmp( testCase, "H8H9") != 0 )
-    {
-        bool acceptedMove = false;
-        int x1 = command.currentX ;
-        int y1 = command.currentY ;
-        int x2 = command.nextX;
-        int y2 = command.nextY;
-        if( checkRightPiece() )
-            switch(board[command.currentY][command.currentX])
-                {
-                case 'P':
-                case 'p':
-                    acceptedMove = checkSoldier( x1, y1, x2, y2, board[command.currentY][command.currentX]);
-                    break;
-                case 'R':
-                case 'r':
-                    acceptedMove = checkRook(  x1, y1, x2, y2, board[command.currentY][command.currentX]);
-                    break;
-                case 'N':
-                case 'n':
-                    acceptedMove = checkHorse( x1, y1, x2, y2, board[command.currentY][command.currentX]);
-                    break;
-                case 'B':
-                case 'b':
-                    acceptedMove = checkBishop( x1, y1, x2, y2, board[command.currentY][command.currentX]);
-                    break;
-                case 'Q':
-                case 'q':
-                    acceptedMove = checkQueen( x1, y1, x2, y2, board[command.currentY][command.currentX]);
-                    break;
-                }
-            if( acceptedMove)
-            {
-                availableCommands[sizeOfAvailableCommands] = testCommand;
-                sizeOfAvailableCommands++;
-            }
-            increment( testCase);
-    }
-}
+//void collectMove()
+//{
+//    char testCase[] = "A1A1";
+//    struct commands testCommand;
+//    sizeOfAvailableCommands = 0;
+//    while( strcmp( testCase, "H8H9") != 0 )
+//    {
+//        testCommand.currentY = convertNumber( testCase[1]);
+//        testCommand.currentX = convertLetter( testCase[0]);
+//        testCommand.nextY = convertNumber( testCase[3]);
+//        testCommand.nextX = convertLetter( testCase[2] );
+//        bool acceptedMove = false;
+//        int x1 = testCommand.currentX ;
+//        int y1 = testCommand.currentY ;
+//        int x2 = testCommand.nextX;
+//        int y2 = testCommand.nextY;
+//        if( checkRightPiece(x1,y1) )
+//            switch(board[testCommand.currentY][testCommand.currentX])
+//            {
+//                case 'P':
+//                case 'p':
+//                    acceptedMove = checkSoldier( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+//                    break;
+//                case 'R':
+//                case 'r':
+//                    acceptedMove = checkRook(  x1, y1, x2, y2, board[command.currentY][command.currentX]);
+//                    break;
+//                case 'N':
+//                case 'n':
+//                    acceptedMove = checkHorse( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+//                    break;
+//                case 'B':
+//                case 'b':
+//                    acceptedMove = checkBishop( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+//                    break;
+//                case 'Q':
+//                case 'q':
+//                    acceptedMove = checkQueen( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+//                    break;
+//            }
+//            if( acceptedMove && !checkSimulation( x1, y1, x2, y2, simulationBoard) )
+//            {
+//                availableCommands[sizeOfAvailableCommands] = testCommand;
+//                sizeOfAvailableCommands++;
+//            }
+//            increment( testCase);
+//    }
+//}
 
 void increment( char testCase[])
 {
@@ -584,3 +591,24 @@ void increment( char testCase[])
 
 
 }
+
+bool checkIfAvailable(struct commands command)
+{
+    for(int counter = 0; counter < sizeOfAvailableCommands; counter++)
+    {
+        if( checkStructs( command, availableCommands[counter]) )
+            return true;
+    }
+    return false;
+}
+
+bool checkStructs( struct commands command, struct commands test)
+{
+    if( command.currentX == test.currentX)
+        if( command.currentY == test.currentY)
+            if( command.nextX == test.nextX)
+                if( command.nextY == test.nextY)
+                    return true;
+    return false;
+}
+

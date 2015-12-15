@@ -6,7 +6,7 @@ bool applyMove(void);
 bool isValidEat(char piece);
 void movePiece(void);
 bool obstaclesExist(char piece);
-bool checkRightPiece();
+bool checkRightPiece(int x1, int y1);
 bool checkSoldier(int x1, int y1, int x2, int y2, char type);
 bool checkRook(int x1, int y1, int x2, int y2, char type);
 bool checkHorse(int x1, int y1, int x2, int y2, char type);
