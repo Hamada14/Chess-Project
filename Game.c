@@ -513,16 +513,22 @@ void resetAll()
 void collectMove()
 {
     char testCase[] = "A1A1";
+    struct commands testCommand;
+    sizeOfAvailableCommands = 0;
     while( strcmp( testCase, "H8H9") != 0 )
     {
+        testCommand.currentY = convertNumber( testCase[1]);
+        testCommand.currentX = convertLetter( testCase[0]);
+        testCommand.nextY = convertNumber( testCase[3]);
+        testCommand.nextX = convertLetter( testCase[2] );
         bool acceptedMove = false;
-        int x1 = command.currentX ;
-        int y1 = command.currentY ;
-        int x2 = command.nextX;
-        int y2 = command.nextY;
-        if( checkRightPiece() )
-            switch(board[command.currentY][command.currentX])
-                {
+        int x1 = testCommand.currentX ;
+        int y1 = testCommand.currentY ;
+        int x2 = testCommand.nextX;
+        int y2 = testCommand.nextY;
+        if( checkRightPiece(x1,y1) )
+            switch(board[testCommand.currentY][testCommand.currentX])
+            {
                 case 'P':
                 case 'p':
                     acceptedMove = checkSoldier( x1, y1, x2, y2, board[command.currentY][command.currentX]);
@@ -543,8 +549,8 @@ void collectMove()
                 case 'q':
                     acceptedMove = checkQueen( x1, y1, x2, y2, board[command.currentY][command.currentX]);
                     break;
-                }
-            if( acceptedMove)
+            }
+            if( acceptedMove && !checkSimulation( x1, y1, x2, y2, simulationBoard) )
             {
                 availableCommands[sizeOfAvailableCommands] = testCommand;
                 sizeOfAvailableCommands++;
@@ -578,3 +584,24 @@ void increment( char testCase[])
         testCase[3]++;
 
 }
+
+bool checkIfAvailable(struct commands command)
+{
+    for(int counter = 0; counter < sizeOfAvailableCommands; counter++)
+    {
+        if( checkStructs( command, availableCommands[counter]) )
+            return true;
+    }
+    return false;
+}
+
+bool checkStructs( struct commands command, struct commands test)
+{
+    if( command.currentX == test.currentX)
+        if( command.currentY == test.currentY)
+            if( command.nextX == test.nextX)
+                if( command.nextY == test.nextY)
+                    return true;
+    return false;
+}
+

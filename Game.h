@@ -49,5 +49,8 @@ void game();
 bool checkPromotion( char input[]);
 void doPromotion();
 void resetAll();
-
+void collectMove();
+void increment( char testCase[]);
+bool checkIfAvailable(struct commands command);
+bool checkStructs( struct commands command, struct commands test);
 #endif // GAME_H_INCLUDED
