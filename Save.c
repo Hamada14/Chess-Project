@@ -87,7 +87,5 @@ int binarySearch (int A[],int key, int minA, int maxA,bool *isFound)
         return binarySearch(A,key,midA+1,maxA);
     }
     else
-    {
         return midA;
-    }
 }
