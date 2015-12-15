@@ -432,14 +432,13 @@ void startMenu()
     switch(temp)
     {
     case 1:
-        resetBoard();
-        currentPlayer = firstPlayer;
+        resetAll();
         state = play;
         break;
     case 2:
         if( !hasBoard)
         {
-            resetBoard();
+            resetAll();
         }
         state = play;
         break;
@@ -459,7 +458,6 @@ void printSetting()
 void game()
 {
     hasBoard = false;
-    currentPlayer = firstPlayer;
     while(1)
     {
         clearScreen();
@@ -502,4 +500,12 @@ void doPromotion()
         board[command.nextY][command.nextX] = command.promotion;
         command.promotionExist = false;
     }
+}
+
+void resetAll()
+{
+    resetBoard();
+    currentPlayer = firstPlayer;
+    hasBoard = true;
+
 }

@@ -48,6 +48,6 @@ void goBack();
 void game();
 bool checkPromotion( char input[]);
 void doPromotion();
-
+void resetAll();
 
 #endif // GAME_H_INCLUDED
