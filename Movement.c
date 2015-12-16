@@ -20,7 +20,13 @@ bool applyMove(void)
         int y1 = command.currentY ;
         int x2 = command.nextX;
         int y2 = command.nextY;
-        if( checkRightPiece( x1, y1) )
+        if( !checkIfAvailable( command) )
+            {
+                printError("invalid move");
+                continue;
+            }
+        bool flag = checkRightPiece( x1, y1);
+        if( flag )
             switch(board[command.currentY][command.currentX])
             {
             case 'P':
@@ -43,13 +49,12 @@ bool applyMove(void)
             case 'q':
                 movedSuccessfully = checkQueen( x1, y1, x2, y2, board[command.currentY][command.currentX]);
                 break;
+            case 'K':
+            case 'k':
+                movedSuccessfully = checkKing( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                break;
             }
-        else
-        {
-            printError("not valid move");
-            continue;
-        }
-        if( !(movedSuccessfully) )
+        if( !(movedSuccessfully) && flag )
         {
             printError("not valid move");
         }
@@ -125,11 +130,23 @@ bool isValidEat(int x1,int y1,int x2,int y2,char piece)
         else
             return false;
         break;
+    case 'K':
+        if( islower( board[y2][x2]) && board[y2][x2] != 'q' && abs( deltaX) + abs(deltaY) == 1)
+            return true;
+        else
+            return false;
+        break;
     case 'r':
     case 'q':
     case 'b':
     case 'n':
         if( isupper( board[y2][x2] ) )
+            return true;
+        else
+            return false;
+        break;
+    case 'k':
+        if( isupper( board[y2][x2]) && board[y2][x2] != 'Q' && abs(deltaX) + abs(deltaY) == 1)
             return true;
         else
             return false;
@@ -349,14 +366,18 @@ bool checkRightPiece(int x1, int y1)
     {
     case '#':
     case '-':
-        printError("empty block");
+        if(!simulation)
+            printError("empty block");
         return false;
     }
 
     if( currentPlayer == firstPlayer && board[y1][x1] == toupper( board[y1][x1] ) )
         return true;
-    if( currentPlayer == secondPlayer && board[y1][x1] ==  tolower(board[y1][x1]) )
+    else if( currentPlayer == secondPlayer && board[y1][x1] ==  tolower(board[y1][x1]) )
         return true;
+    else
+        if(!simulation)
+            printError("move one piece");
     return false;
 }
 
@@ -367,20 +388,50 @@ bool checkSoldier(int x1, int y1, int x2, int y2, char type)
     if( type == 'p' )
         deltaY = -(deltaY);
     if(deltaY == -1 && deltaX == 0 && isNotOccupied())
-    {
-        movePiece();
+    {   if(!simulation)
+            movePiece();
         return true;
     }
     else if(deltaY == -2 && deltaX == 0 && isNotOccupied() && isFirstMove() && !obstaclesExist(x1,y1,x2,y2,type))
     {
-        movePiece();
+        if(!simulation)
+            movePiece();
         return true;
     }
     else if(isValidEat(x1,y1,x2,y2,type))
     {
-        addToGraveyard();
-        addToDeadPieces();
-        movePiece();
+        if(!simulation)
+        {
+            addToGraveyard();
+            addToDeadPieces();
+            movePiece();
+        }
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool checkKing(int x1, int y1, int x2, int y2, char type)
+{
+    int deltaX = x2 - x1;
+    int deltaY = y2 - y1;
+    if( abs(deltaX) + abs(deltaY) == 1 && isNotOccupied())
+    {
+        if(!simulation)
+            movePiece();
+        return true;
+    }
+    else if(isValidEat(x1,y1,x2,y2,type))
+    {
+        if(!simulation)
+        {
+            addToGraveyard();
+            addToDeadPieces();
+            movePiece();
+        }
         return true;
     }
     else
@@ -397,14 +448,18 @@ bool checkRook( int x1, int y1, int x2, int y2, char type)
     {
         if( isNotOccupied() )
         {
+            if(!simulation)
             movePiece();
             return true;
         }
         else if( isValidEat(x1,y1,x2,y2,type) )
         {
-            addToGraveyard();
-            addToDeadPieces();
-            movePiece();
+            if(!simulation)
+            {
+                addToGraveyard();
+                addToDeadPieces();
+                movePiece();
+            }
             return true;
         }
     }
@@ -419,14 +474,18 @@ bool checkHorse(int x1, int y1, int x2, int y2, char type)
     {
         if( isNotOccupied() )
         {
-            movePiece();
+            if(!simulation)
+                movePiece();
             return true;
         }
         else if( isValidEat(x1,y1,x2,y2,type) )
         {
-            addToGraveyard();
-            addToDeadPieces();
-            movePiece();
+            if(!simulation)
+            {
+                addToGraveyard();
+                addToDeadPieces();
+                movePiece();
+            }
             return true;
         }
     }
@@ -440,14 +499,18 @@ bool checkBishop(int x1, int y1, int x2, int y2, char type)
     {
         if( isNotOccupied() )
         {
+            if(!simulation);
             movePiece();
             return true;
         }
         else if( isValidEat(x1,y1,x2,y2,type) )
         {
-            addToGraveyard();
-            addToDeadPieces();
-            movePiece();
+            if(!simulation)
+            {
+                addToGraveyard();
+                addToDeadPieces();
+                movePiece();
+            }
             return true;
         }
     }
@@ -461,14 +524,18 @@ bool checkQueen(int x1, int y1, int x2, int y2, char type)
     {
         if( isNotOccupied() )
         {
+            if(!simulation)
             movePiece();
             return true;
         }
         else if( isValidEat(x1,y1,x2,y2,type) )
         {
-            addToGraveyard();
-            addToDeadPieces();
-            movePiece();
+            if(!simulation)
+            {
+                addToGraveyard();
+                addToDeadPieces();
+                movePiece();
+            }
             return true;
         }
     }
@@ -476,14 +543,18 @@ bool checkQueen(int x1, int y1, int x2, int y2, char type)
     {
         if( isNotOccupied() )
         {
+            if(!simulation)
             movePiece();
             return true;
         }
         else if( isValidEat(x1,y1,x2,y2,type) )
         {
-            addToGraveyard();
-            addToDeadPieces();
-            movePiece();
+            if(!simulation)
+            {
+                addToGraveyard();
+                addToDeadPieces();
+                movePiece();
+            }
             return true;
         }
     }
@@ -500,8 +571,13 @@ void addToGraveyard(void)
         player1Graveyard[graveyard1Size++] = board[command.nextY][command.nextX];
     }
 }
-bool isChecked(char king)
+bool isChecked()
 {
+    char king;
+    if( currentPlayer == firstPlayer)
+        king = 'K';
+    else
+        king = 'k';
     bool kingCase = isupper(king);
     char piece = '\0';
     int kingX,kingY;
@@ -516,51 +592,63 @@ bool isChecked(char king)
                 break;
             }
         }
-        for(int y1 = 0 ; y1 < 8 ; y1++)
+    }
+    for(int y1 = 0 ; y1 < 8 ; y1++)
+    {
+        for(int x1 = 0 ; x1 < 8 ; x1++)
         {
-            for(int x1 = 0 ; x1 < 8 ; x1++)
-            {
-                if(board[y1][x1]!= '#' && board[y1][x1]!= '-')
+            if(board[y1][x1]!= '#' && board[y1][x1]!= '-')
+                {
+                    if(isupper(board[y1][x1]) != kingCase)
                     {
-                        if(isupper(board[y1][x1]) != kingCase)
+                        piece = board[y1][x1];
+                        switch(piece)
                         {
-                            switch(piece)
+                        case 'p':
+                        case 'P':
+                            if(isValidEat(x1,y1,kingX,kingY,piece))
                             {
-                            case 'p':
-                            case 'P':
-                                if(isValidEat(x1,y1,kingX,kingY,piece))
-                                {
-                                    return true;
-                                }
-                                break;
-                            case 'q':
-                            case 'Q':
-                                if(checkQueen(x1,y1,kingX,kingY,piece) && !obstaclesExist(x1,y1,kingX,kingY,piece))
-                                {
-                                    return true;
-                                }
-                            case 'b':
-                            case 'B':
-                                if(checkBishop(x1,y1,kingX,kingY,piece) && !obstaclesExist(x1,y1,kingX,kingY,piece))
-                                {
-                                    return true;
-                                }
-                            case 'r':
-                            case 'R':
-                                if(checkRook(x1,y1,kingX,kingY,piece) && !obstaclesExist(x1,y1,kingX,kingY,piece))
-                                {
-                                    return true;
-                                }
-                            case 'n':
-                            case 'N':
-                                if(checkHorse(x1,y1,kingX,kingY,piece))
-                                {
-                                    return true;
-                                }
+                                return true;
                             }
+                            break;
+                        case 'q':
+                        case 'Q':
+                            if(checkQueen(x1,y1,kingX,kingY,piece) && !obstaclesExist(x1,y1,kingX,kingY,piece))
+                            {
+                                return true;
+                            }
+                            break;
+                        case 'b':
+                        case 'B':
+                            if(checkBishop(x1,y1,kingX,kingY,piece) && !obstaclesExist(x1,y1,kingX,kingY,piece))
+                            {
+                                return true;
+                            }
+                            break;
+                        case 'r':
+                        case 'R':
+                            if(checkRook(x1,y1,kingX,kingY,piece) && !obstaclesExist(x1,y1,kingX,kingY,piece))
+                            {
+                                return true;
+                            }
+                            break;
+                        case 'n':
+                        case 'N':
+                            if(checkHorse(x1,y1,kingX,kingY,piece))
+                            {
+                                return true;
+                            }
+                            break;
+                        case 'k':
+                        case 'K':
+                            if( checkKing(x1,y1,kingX,kingY,piece))
+                            {
+                                return true;
+                            }
+                            break;
                         }
                     }
-            }
+                }
         }
     }
     return false;

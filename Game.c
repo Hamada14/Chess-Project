@@ -34,7 +34,8 @@ char *errorCode[] = { "no input",
                     "not command",
                     "no promotion",
                     "bad input",
-                    "not one piece"
+                    "not one piece",
+                    "move one piece"
 };
 char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "The input you entered was Too large.",
@@ -46,7 +47,8 @@ char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "This command wasn't recognized",
                             "promotion isn't available in this move.\nPlease recheck your move.",
                             "Please make sure you entered the input in the correct structure.",
-                            "You can only promote to one's own pieces."
+                            "You can only promote to one's own pieces.",
+                            "You can only move your own's pieces."
 };
 int errorMessageSize = sizeof(errorCode) / sizeof(char*);
 
@@ -56,11 +58,10 @@ int commandSpecialSize = sizeof(commandSpecial) / sizeof(char);
 char promotable[] = { 'r', 'n','q','b'};
 int sizeOfPromotable = sizeof(promotable) / sizeof( promotable[0]);
 
-char simulationBoard[8][8];
+char backupBoard[8][8];
 
 bool hasBoard = false;
 bool end = false;
-
 
 void printInterface(void)
 {
@@ -166,6 +167,7 @@ void getMove()
                 printError("no input");
             else
                 printError("bad input");
+            setCommand( input, promotion);
         }while( !(done || commandStart) );
         if( commandStart )
         {
@@ -388,18 +390,50 @@ void gameFlow()
     printBoard();
     while(!end)
     {
-        //check for checkmates and stale mate and winning
-        if( applyMove() )
+        collectMove();
+        simulation = true;
+        if( isChecked() && sizeOfAvailableCommands == 0)
+        {
+            if( currentPlayer == firstPlayer)
+                gameWin = secondPlayer;
+            else
+                gameWin = firstPlayer;
+        }
+        else if( sizeOfAvailableCommands == 0)
+        {
+            gameWin = draw;
+        }
+        else if ( isChecked() )
+        {
+            printf("Be ware that's a check.\n");
+        }
+        simulation = false;
+        if( gameWin == none && applyMove() )
         {
             switchTurn();
             clearScreen();
-        }else
+            printBoard();
+        }else if ( gameWin == none)
         {
             commandStart = false;
+            clearScreen();
+            printBoard();
             break;
         }
-        clearScreen();
-        printBoard();
+        if(gameWin != none)
+        {
+            if( gameWin == player1)
+                printf("Player1 Win,CheckMate");
+            else if ( gameWin == player2)
+                printf("player2 Win,CheckMate");
+            else
+                printf("Draw,StaleMate");
+            getchar();
+            getchar();
+            resetAll();
+            clearScreen();
+            printBoard();
+        }
     }
 }
 
@@ -511,6 +545,8 @@ void resetAll()
 {
     resetBoard();
     currentPlayer = firstPlayer;
+    simulation = false;
+    gameWin = none;
     hasBoard = true;
     graveyard1Size = 0;
     graveyard2Size = 0;
@@ -519,109 +555,118 @@ void resetAll()
     turn = 0;
 }
 
-//void collectMove()
-//{
-//    char testCase[] = "A1A1";
-//    struct commands testCommand;
-//    sizeOfAvailableCommands = 0;
-//    while( strcmp( testCase, "H8H9") != 0 )
-//    {
-//        testCommand.currentY = convertNumber( testCase[1]);
-//        testCommand.currentX = convertLetter( testCase[0]);
-//        testCommand.nextY = convertNumber( testCase[3]);
-//        testCommand.nextX = convertLetter( testCase[2] );
-//        bool acceptedMove = false;
-//        int x1 = testCommand.currentX ;
-//        int y1 = testCommand.currentY ;
-//        int x2 = testCommand.nextX;
-//        int y2 = testCommand.nextY;
-//        if( checkRightPiece(x1,y1) )
-//            switch(board[testCommand.currentY][testCommand.currentX])
-//            {
-//                case 'P':
-//                case 'p':
-//                    acceptedMove = checkSoldier( x1, y1, x2, y2, board[command.currentY][command.currentX]);
-//                    break;
-//                case 'R':
-//                case 'r':
-//                    acceptedMove = checkRook(  x1, y1, x2, y2, board[command.currentY][command.currentX]);
-//                    break;
-//                case 'N':
-//                case 'n':
-//                    acceptedMove = checkHorse( x1, y1, x2, y2, board[command.currentY][command.currentX]);
-//                    break;
-//                case 'B':
-//                case 'b':
-//                    acceptedMove = checkBishop( x1, y1, x2, y2, board[command.currentY][command.currentX]);
-//                    break;
-//                case 'Q':
-//                case 'q':
-//                    acceptedMove = checkQueen( x1, y1, x2, y2, board[command.currentY][command.currentX]);
-//                    break;
-//            }
-//            if( acceptedMove && !checkSimulation( x1, y1, x2, y2, simulationBoard) )
-//            {
-//                availableCommands[sizeOfAvailableCommands] = testCommand;
-//                sizeOfAvailableCommands++;
-//            }
-//            increment( testCase);
-//    }
-//}
-//
-//void increment( char testCase[])
-//{
-//    if( strcmp( testCase, "H8H8") == 0)
-//        testCase[3]++;
-//    else if( testCase[3] == '8')
-//    {
-//        testCase[3] = '1';
-//        if( testCase[2] == 'H')
-//        {
-//            testCase[2] = 'A';
-//            if( testCase[1] == '9' )
-//            {
-//                testCase[1] = '1';
-//                testCase[0]++;
-//            }
-//            else
-//                testCase[0]++;
-//        }
-//        else
-//            testCase[2]++;
-//    }
-//    else
-//        testCase[3]++;
-//
-//
-//}
-//
-//bool checkIfAvailable(struct commands command)
-//{
-//    for(int counter = 0; counter < sizeOfAvailableCommands; counter++)
-//    {
-//        if( checkStructs( command, availableCommands[counter]) )
-//            return true;
-//    }
-//    return false;
-//}
-//
-//bool checkStructs( struct commands command, struct commands test)
-//{
-//    if( command.currentX == test.currentX)
-//        if( command.currentY == test.currentY)
-//            if( command.nextX == test.nextX)
-//                if( command.nextY == test.nextY)
-//                    return true;
-//    return false;
-//}
-//
-//void copyBoard( char board[8][8], char simulationBoard[8][8])
-//{
-//    for(int counter=0; counter < 8; counter++)
-//    {
-//        for(int counter2=0; counter2 < 8 ;counter2++)
-//        {
-//            simulationBoard[counter][counter2] = board[counter][counter2];
-//        }
-//    }
-//}
+void collectMove()
+{
+    char testCase[] = "A1A1";
+    simulation = true;
+    sizeOfAvailableCommands = 0;
+    copyBoard( board, backupBoard);
+    struct commands backup = command;
+    while( strcmp( testCase, "H8H9") != 0 )
+    {
+        copyBoard( backupBoard, board);
+        command.currentY = convertNumber( testCase[1]);
+        command.currentX = convertLetter( testCase[0]);
+        command.nextY = convertNumber( testCase[3]);
+        command.nextX = convertLetter( testCase[2] );
+        bool acceptedMove = false;
+        int x1 = command.currentX ;
+        int y1 = command.currentY ;
+        int x2 = command.nextX;
+        int y2 = command.nextY;
+        if( checkRightPiece(x1,y1) )
+            switch(board[command.currentY][command.currentX])
+            {
+                case 'P':
+                case 'p':
+                    acceptedMove = checkSoldier( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                case 'R':
+                case 'r':
+                    acceptedMove = checkRook(  x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                case 'N':
+                case 'n':
+                    acceptedMove = checkHorse( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                case 'B':
+                case 'b':
+                    acceptedMove = checkBishop( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                case 'Q':
+                case 'q':
+                    acceptedMove = checkQueen( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                case 'K':
+                case 'k':
+                    acceptedMove = checkKing( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+            }
+            if( acceptedMove && !isChecked() )
+            {
+                availableCommands[sizeOfAvailableCommands] = command;
+                sizeOfAvailableCommands++;
+            }
+            increment( testCase);
+    }
+    copyBoard( backupBoard, board);
+    command = backup;
+    simulation = false;
+}
+
+void increment( char testCase[])
+{
+    if( strcmp( testCase, "H8H8") == 0)
+        testCase[3]++;
+    else if( testCase[3] == '8')
+    {
+        testCase[3] = '1';
+        if( testCase[2] == 'H')
+        {
+            testCase[2] = 'A';
+            if( testCase[1] == '9' )
+            {
+                testCase[1] = '1';
+                testCase[0]++;
+            }
+            else
+                testCase[1]++;
+        }
+        else
+            testCase[2]++;
+    }
+    else
+        testCase[3]++;
+}
+
+bool checkIfAvailable(struct commands command)
+{
+    for(int counter = 0; counter < sizeOfAvailableCommands; counter++)
+    {
+        if( checkStructs( command, availableCommands[counter]) )
+            return true;
+    }
+    return false;
+}
+
+bool checkStructs( struct commands command, struct commands test)
+{
+
+    if( command.currentX == test.currentX)
+        if( command.currentY == test.currentY)
+            if(command.nextX == test.nextX )
+                if(command.nextY == test.nextY)
+                    return true;
+    return false;
+}
+
+void copyBoard( char board[8][8], char simulationBoard[8][8])
+{
+    for(int counter=0; counter < 8; counter++)
+    {
+        for(int counter2=0; counter2 < 8 ;counter2++)
+        {
+            simulationBoard[counter][counter2] = board[counter][counter2];
+        }
+    }
+}
