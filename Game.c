@@ -263,13 +263,13 @@ void doCommand( char input)
         loadGame();
         break;
     case 'u':
-        undo();
+        isUndone = undo();
         break;
     case 'r':
-        //redo();
+        redo();
         break;
     case 'n':
-        resetBoard();
+        resetAll();
         break;
     case 'b':
         goBack();
@@ -550,9 +550,8 @@ void resetAll()
     hasBoard = true;
     graveyard1Size = 0;
     graveyard2Size = 0;
-    numberOfDeadPieces = 0;
-    promotionSize = 0;
-    turn = 0;
+    turn = 0,minTurn = 0,maxTurn = 0;
+    isUndone = false;
 }
 
 void collectMove()

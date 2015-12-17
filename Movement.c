@@ -60,7 +60,13 @@ bool applyMove(void)
         }
     }
     while( !(movedSuccessfully) );
+    if(isUndone)
+    {
+        isUndone = false;
+        minTurn = turn;
+    }
     turn++ ;
+    maxTurn = turn;
     doPromotion();
     saveMove();
     return true;

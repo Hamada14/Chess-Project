@@ -19,6 +19,8 @@ void saveGame(void)
     fwrite(player1Graveyard,graveyard1Size,1,save);
     fwrite(&graveyard2Size,1,1,save);
     fwrite(player2Graveyard,graveyard2Size,1,save);
+    fwrite(&currentPlayer,1,1,save);
+    fwrite(&turn,1,1,save);
     fclose(save);
 }
 void loadGame(void)
@@ -35,33 +37,39 @@ void loadGame(void)
     fread(player1Graveyard,graveyard1Size,1,load);
     fread(&graveyard2Size,1,1,load);
     fread(player2Graveyard,graveyard2Size,1,load);
+    fread(&currentPlayer,1,1,load);
+    fread(&turn,1,1,load);
     fclose(load);
+    minTurn = turn;
+    maxTurn = turn;
 }
-void undo()
+bool undo()
 {
-    if(turn == 0)
+    if(turn <= minTurn)
     {
         printf("error! nothing to undo");
+        return false;
     }
     else
     {
         currentPlayer = !currentPlayer ;
-        bool isDeathTurn = false;
-        loadMove();
+        loadUndoMove();
         movePiece();
-        int turnPosition = binarySearch(deathTurn,turn,0,numberOfDeadPieces,&isDeathTurn);
-        if(isDeathTurn)
+        if(deadPieces[turn] != 0)
         {
-            if(isupper(deadPieces[turnPosition]))
+            board[command.currentY][command.currentX] = deadPieces[turn];
+            deadPiecesTemp[turn] = deadPieces[turn];
+            if(isupper(deadPieces[turn]))
+            {
                 graveyard1Size--;
+            }
             else
+            {
                 graveyard2Size--;
-
-            board[command.currentY][command.currentX] = deadPieces[turnPosition];
+            }
+            deadPieces[turn] = 0;
         }
-        bool isPromotionTurn = false;
-        turnPosition = binarySearch(promotionTurn,turn,0,promotionSize,&isPromotionTurn);
-        if(isPromotionTurn)
+        if(promotion[turn] != 0)
         {
             if(currentPlayer == firstPlayer)
             {
@@ -75,25 +83,32 @@ void undo()
         turn--;
         printBoard();
     }
+    return true;
 }
-//void redo()
-//{
-//
-//}
-int binarySearch (int A[],int key, int minA, int maxA,bool *isFound)
+void redo()
 {
-    int midA = (minA + maxA)/2;
-    if(minA > maxA)
+    if(turn >= maxTurn || turn < minTurn)
     {
-        return -1;
+        printf("error! nothing to redo");
     }
-    if(key == A[midA])
+    else
     {
-        *isFound = true ;
-        return midA;
+        loadRedoMove();
+        movePiece();
+        if(promotion[turn+1] != 0 )
+        {
+            board[command.nextY][command.nextX] = promotion[turn+1];
+        }
+        if(deadPiecesTemp[turn+1] != 0)
+        {
+            if(isupper(deadPiecesTemp[turn+1]))
+                graveyard1Size++;
+            else
+                graveyard2Size++;
+        }
+        deadPieces[turn+1] = deadPiecesTemp[turn+1];
+        currentPlayer = !currentPlayer;
+        turn++;
+        printBoard();
     }
-    else if(key > A[midA])
-        return binarySearch(A,key,midA+1,maxA,isFound);
-    else if(key < A[midA])
-        return binarySearch(A,key,minA,midA-1,isFound);
 }

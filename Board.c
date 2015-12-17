@@ -92,27 +92,30 @@ void resetBoard(void)
 }
 void addToDeadPieces()
 {
-    deadPieces[numberOfDeadPieces] = board[command.nextY][command.nextX];
-    deathTurn[numberOfDeadPieces] = turn+1;
-    numberOfDeadPieces++ ;
+    deadPieces[turn+1] = board[command.nextY][command.nextX];
 }
 void saveMove()
 {
-    moves[4*turn-4] = command.currentX;
-    moves[4*turn-3] = command.currentY;
-    moves[4*turn-2] = command.nextX;
-    moves[4*turn-1] = command.nextY;
+    moves[turn-1][0] = command.currentX;
+    moves[turn-1][1] = command.currentY;
+    moves[turn-1][2] = command.nextX;
+    moves[turn-1][3] = command.nextY;
 }
-void loadMove()
+void loadUndoMove()
 {
-    command.currentY = moves[4*turn-1] ;
-    command.currentX = moves[4*turn-2] ;
-    command.nextY = moves[4*turn-3] ;
-    command.nextX = moves[4*turn-4] ;
+    command.currentY = moves[turn-1][3] ;
+    command.currentX = moves[turn-1][2] ;
+    command.nextY = moves[turn-1][1] ;
+    command.nextX = moves[turn-1][0] ;
+}
+void loadRedoMove()
+{
+    command.currentX = moves[turn][0];
+    command.currentY = moves[turn][1];
+    command.nextX = moves[turn][2];
+    command.nextY = moves[turn][3];
 }
 void savePromotion()
 {
-    promotion[promotionSize] = command.promotion;
-    promotionTurn[promotionSize] = turn;
-    promotionSize++;
+    promotion[turn] = command.promotion;
 }
