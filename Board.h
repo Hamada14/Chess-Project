@@ -10,6 +10,7 @@ void loadUndoMove();
 void loadRedoMove();
 void savePromotion();
 char board[8][8];
+char backupBoard[8][8];
 char player1Graveyard[16];
 char player2Graveyard[16];
 char deadPieces[250];

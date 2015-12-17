@@ -20,12 +20,17 @@ bool applyMove(void)
         int y1 = command.currentY ;
         int x2 = command.nextX;
         int y2 = command.nextY;
-        if( !checkIfAvailable( command) )
-            {
-                printError("invalid move");
-                continue;
-            }
         bool flag = checkRightPiece( x1, y1);
+        bool kingCheck = !checkIfAvailable( command);
+        if( ! flag )
+        {
+            continue;
+        }
+        if( kingCheck)
+        {
+            printError("king check");
+            continue;
+        }
         if( flag )
             switch(board[command.currentY][command.currentX])
             {
@@ -54,7 +59,7 @@ bool applyMove(void)
                 movedSuccessfully = checkKing( x1, y1, x2, y2, board[command.currentY][command.currentX]);
                 break;
             }
-        if( !(movedSuccessfully) && flag )
+        if( !(movedSuccessfully)  )
         {
             printError("not valid move");
         }
@@ -117,7 +122,7 @@ bool isValidEat(int x1,int y1,int x2,int y2,char piece)
         }
         break;
     case 'p':
-        if(!isNotOccupied())
+        if(!(isNotOccupied() ) )
         {
             if( ( deltaX == 1 ) && ( deltaY == 1 ) && isupper(board[y2][x2]))
                 return true;
@@ -394,14 +399,13 @@ bool checkSoldier(int x1, int y1, int x2, int y2, char type)
     if( type == 'p' )
         deltaY = -(deltaY);
     if(deltaY == -1 && deltaX == 0 && isNotOccupied())
-    {   if(!simulation)
-            movePiece();
+    {
+        movePiece();
         return true;
     }
     else if(deltaY == -2 && deltaX == 0 && isNotOccupied() && isFirstMove() && !obstaclesExist(x1,y1,x2,y2,type))
     {
-        if(!simulation)
-            movePiece();
+        movePiece();
         return true;
     }
     else if(isValidEat(x1,y1,x2,y2,type))
@@ -410,8 +414,8 @@ bool checkSoldier(int x1, int y1, int x2, int y2, char type)
         {
             addToGraveyard();
             addToDeadPieces();
-            movePiece();
         }
+        movePiece();
         return true;
     }
     else
@@ -426,8 +430,7 @@ bool checkKing(int x1, int y1, int x2, int y2, char type)
     int deltaY = y2 - y1;
     if( abs(deltaX) + abs(deltaY) == 1 && isNotOccupied())
     {
-        if(!simulation)
-            movePiece();
+        movePiece();
         return true;
     }
     else if(isValidEat(x1,y1,x2,y2,type))
@@ -436,8 +439,8 @@ bool checkKing(int x1, int y1, int x2, int y2, char type)
         {
             addToGraveyard();
             addToDeadPieces();
-            movePiece();
         }
+        movePiece();
         return true;
     }
     else
@@ -454,7 +457,6 @@ bool checkRook( int x1, int y1, int x2, int y2, char type)
     {
         if( isNotOccupied() )
         {
-            if(!simulation)
             movePiece();
             return true;
         }
@@ -464,8 +466,8 @@ bool checkRook( int x1, int y1, int x2, int y2, char type)
             {
                 addToGraveyard();
                 addToDeadPieces();
-                movePiece();
             }
+            movePiece();
             return true;
         }
     }
@@ -480,8 +482,7 @@ bool checkHorse(int x1, int y1, int x2, int y2, char type)
     {
         if( isNotOccupied() )
         {
-            if(!simulation)
-                movePiece();
+            movePiece();
             return true;
         }
         else if( isValidEat(x1,y1,x2,y2,type) )
@@ -490,8 +491,8 @@ bool checkHorse(int x1, int y1, int x2, int y2, char type)
             {
                 addToGraveyard();
                 addToDeadPieces();
-                movePiece();
             }
+            movePiece();
             return true;
         }
     }
@@ -505,7 +506,6 @@ bool checkBishop(int x1, int y1, int x2, int y2, char type)
     {
         if( isNotOccupied() )
         {
-            if(!simulation);
             movePiece();
             return true;
         }
@@ -515,8 +515,8 @@ bool checkBishop(int x1, int y1, int x2, int y2, char type)
             {
                 addToGraveyard();
                 addToDeadPieces();
-                movePiece();
             }
+            movePiece();
             return true;
         }
     }
@@ -530,7 +530,6 @@ bool checkQueen(int x1, int y1, int x2, int y2, char type)
     {
         if( isNotOccupied() )
         {
-            if(!simulation)
             movePiece();
             return true;
         }
@@ -540,8 +539,8 @@ bool checkQueen(int x1, int y1, int x2, int y2, char type)
             {
                 addToGraveyard();
                 addToDeadPieces();
-                movePiece();
             }
+            movePiece();
             return true;
         }
     }
@@ -549,7 +548,6 @@ bool checkQueen(int x1, int y1, int x2, int y2, char type)
     {
         if( isNotOccupied() )
         {
-            if(!simulation)
             movePiece();
             return true;
         }
@@ -559,8 +557,8 @@ bool checkQueen(int x1, int y1, int x2, int y2, char type)
             {
                 addToGraveyard();
                 addToDeadPieces();
-                movePiece();
             }
+            movePiece();
             return true;
         }
     }

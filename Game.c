@@ -35,7 +35,8 @@ char *errorCode[] = { "no input",
                     "no promotion",
                     "bad input",
                     "not one piece",
-                    "move one piece"
+                    "move one piece",
+                    "king check"
 };
 char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "The input you entered was Too large.",
@@ -48,7 +49,8 @@ char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "promotion isn't available in this move.\nPlease recheck your move.",
                             "Please make sure you entered the input in the correct structure.",
                             "You can only promote to one's own pieces.",
-                            "You can only move your own's pieces."
+                            "You can only move your own's pieces.",
+                            "The move you just entered is invalid.\n The king is in check."
 };
 int errorMessageSize = sizeof(errorCode) / sizeof(char*);
 
@@ -57,8 +59,6 @@ int commandSpecialSize = sizeof(commandSpecial) / sizeof(char);
 
 char promotable[] = { 'r', 'n','q','b'};
 int sizeOfPromotable = sizeof(promotable) / sizeof( promotable[0]);
-
-char backupBoard[8][8];
 
 bool hasBoard = false;
 bool end = false;
@@ -392,21 +392,26 @@ void gameFlow()
     {
         collectMove();
         simulation = true;
-        if( isChecked() && sizeOfAvailableCommands == 0)
+        copyBoard( board,backupBoard);
+        if( isChecked() )
         {
-            if( currentPlayer == firstPlayer)
-                gameWin = secondPlayer;
-            else
-                gameWin = firstPlayer;
+            if(sizeOfAvailableCommands == 0)
+            {
+                if( currentPlayer == firstPlayer)
+                    gameWin = secondPlayer;
+                else
+                    gameWin = firstPlayer;
+            }
+            if( sizeOfAvailableCommands != 0)
+            {
+                printf("Be ware that's a check.\n");
+            }
         }
         else if( sizeOfAvailableCommands == 0)
         {
             gameWin = draw;
         }
-        else if ( isChecked() )
-        {
-            printf("Be ware that's a check.\n");
-        }
+        copyBoard( backupBoard, board);
         simulation = false;
         if( gameWin == none && applyMove() )
         {
@@ -623,7 +628,7 @@ void increment( char testCase[])
         if( testCase[2] == 'H')
         {
             testCase[2] = 'A';
-            if( testCase[1] == '9' )
+            if( testCase[1] == '8' )
             {
                 testCase[1] = '1';
                 testCase[0]++;
