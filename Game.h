@@ -14,7 +14,6 @@ int turn;
 enum GameState{ menu,
                 play,
                 help,
-                setting,
 } state;
 enum Turn {     firstPlayer,
                 secondPlayer,
@@ -49,7 +48,6 @@ void switchTurn();
 void gameFlow();
 void printRequiredScreen();
 void startMenu();
-void printSetting();
 void goBack();
 void game();
 bool checkPromotion( char input[]);

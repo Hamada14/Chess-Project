@@ -21,7 +21,6 @@ int interfaceScreenSize = sizeof(interfaceScreen) / sizeof(char*);
 char *gameOption[] ={   "Start a new Game",
                         "Continue",
                         "Help",
-                        "Setting",
 };
 int gameOptionSize = sizeof(gameOption) / sizeof(char*);
 char *errorCode[] = { "no input",
@@ -428,14 +427,29 @@ void gameFlow()
         if(gameWin != none)
         {
             if( gameWin == player1)
-                printf("Player1 Win,CheckMate");
+                printf("Player1 Win,CheckMate\n");
             else if ( gameWin == player2)
-                printf("player2 Win,CheckMate");
+                printf("player2 Win,CheckMate\n");
             else
-                printf("Draw,StaleMate");
+                printf("Draw,StaleMate\n");
+            printf("Enter any command: ");
+            bool stopGame = false;
             getchar();
-            getchar();
-            resetAll();
+            while(!stopGame)
+            {
+                char x;
+                x = getchar();
+                getchar();
+                if(verifyCommand(x))
+                {
+                    doCommand(x);
+                    stopGame = true;
+                    clearScreen();
+                    printBoard();
+                    break;
+                }
+                printf("Make sure it's a valid command.\n");
+            }
             clearScreen();
             printBoard();
         }
@@ -444,7 +458,7 @@ void gameFlow()
 
 void goBack()
 {
-    if( state == play || state == help || state == setting )
+    if( state == play || state == help )
         state = menu;
 }
 
@@ -457,9 +471,6 @@ void printRequiredScreen()
         break;
     case help:
         printHelp();
-        break;
-    case setting:
-        printSetting();
         break;
     case play:
         gameFlow();
@@ -487,14 +498,7 @@ void startMenu()
     case 3:
         state = help;
         break;
-    case 4:
-        state = setting;
-        break;
     }
-}
-void printSetting()
-{
-    //not finished
 }
 
 void game()

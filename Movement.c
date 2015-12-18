@@ -28,7 +28,7 @@ bool applyMove(void)
         }
         if( kingCheck)
         {
-            printError("king check");
+            printError("invalid move");
             continue;
         }
         if( flag )
@@ -428,7 +428,7 @@ bool checkKing(int x1, int y1, int x2, int y2, char type)
 {
     int deltaX = x2 - x1;
     int deltaY = y2 - y1;
-    if( abs(deltaX) + abs(deltaY) == 1 && isNotOccupied())
+    if( ( (abs(deltaX) == 1 && abs( deltaY) == 0) || ( abs(deltaX) == 1 && abs(deltaY) == 1 ) || (abs(deltaX) == 0 && abs(deltaY) == 1) ) && isNotOccupied())
     {
         movePiece();
         return true;
