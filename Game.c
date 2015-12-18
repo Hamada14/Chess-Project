@@ -25,8 +25,6 @@ char *gameOption[] ={   "Start a new Game",
 int gameOptionSize = sizeof(gameOption) / sizeof(char*);
 char *errorCode[] = { "no input",
                     "large",
-                    "number out of bound",
-                    "letter out of bound",
                     "number out of list",
                     "not valid move",
                     "empty block",
@@ -35,12 +33,9 @@ char *errorCode[] = { "no input",
                     "bad input",
                     "not one piece",
                     "move one piece",
-                    "king check"
 };
 char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "The input you entered was Too large.",
-                            "The Index number you entered was out of bound.",
-                            "Make sure you type the right Character in uppercase.",
                             "Make sure the number you entered exists in the List.",
                             "The move you just entered is invalid.",
                             "The Block you entered is an empty one.",
@@ -49,7 +44,6 @@ char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "Please make sure you entered the input in the correct structure.",
                             "You can only promote to one's own pieces.",
                             "You can only move your own's pieces.",
-                            "The move you just entered is invalid.\n The king is in check."
 };
 int errorMessageSize = sizeof(errorCode) / sizeof(char*);
 
@@ -107,7 +101,7 @@ int getGameOption(void)
                 if( (!endFound) )
                     printError("large");
                 else if ( (!rightNum) )
-                    printError("number not in list");
+                    printError("number out of list");
         }while( (!endFound) || (!rightNum));
         return input[0] - '0';
 }
@@ -215,21 +209,10 @@ int convertNumber( char number)
 bool verifyInput( char input[])
 {
     bool verifiedInput = true;
-    if( verifyLetter( input[0]) && verifyLetter( input[2]) )
-        verifiedInput = true;
+    if( verifyLetter( input[0]) && verifyLetter( input[2]) && verifyNumber( input[1]) && verifyNumber( input[3]) )
+        return true;
     else
-    {
-        printError("letter out of bound");
-        verifiedInput = false;
-    }
-    if( verifyNumber( input[1]) && verifyNumber( input[3]) )
-        verifiedInput = true;
-    else
-    {
-        printError("number out of bound");
-        verifiedInput = false;
-    }
-    return verifiedInput;
+        return false;
 }
 void printError(char *type)
 {
@@ -432,23 +415,29 @@ void gameFlow()
                 printf("player2 Win,CheckMate\n");
             else
                 printf("Draw,StaleMate\n");
-            printf("Enter any command: ");
-            bool stopGame = false;
-            getchar();
-            while(!stopGame)
+            char input[7];
+            do
             {
-                char x;
-                x = getchar();
-                getchar();
-                if(verifyCommand(x))
+                printf("Enter a command: ");
+                scanf(" %s",input);
+                int nullPosition = getNull( input, 7);
+                if( nullPosition == 1 )
                 {
-                    doCommand(x);
-                    stopGame = true;
-                    clearScreen();
-                    printBoard();
-                    break;
-                }
-                printf("Make sure it's a valid command.\n");
+                    if( verifyCommand(input[0]) )
+                    {
+                        commandStart = true;
+                        break;
+                    }else
+                    printError("not command");
+                }else if( nullPosition == 0)
+                    printError("no input");
+                else
+                    printError("bad input");
+            }while( !commandStart);
+            if( commandStart )
+            {
+                doCommand( input[0]);
+                commandStart = false;
             }
             clearScreen();
             printBoard();

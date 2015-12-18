@@ -53,6 +53,8 @@ bool undo()
     else
     {
         currentPlayer = !currentPlayer ;
+        if( gameWin != none)
+            gameWin = none;
         loadUndoMove();
         movePiece();
         if(deadPieces[turn] != 0)
