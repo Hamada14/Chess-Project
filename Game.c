@@ -33,6 +33,9 @@ char *errorCode[] = { "no input",
                     "bad input",
                     "not one piece",
                     "move one piece",
+                    "king check",
+                    "no undo",
+                    "no redo"
 };
 char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "The input you entered was Too large.",
@@ -44,6 +47,9 @@ char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "Please make sure you entered the input in the correct structure.",
                             "You can only promote to one's own pieces.",
                             "You can only move your own's pieces.",
+                            "You can't do such move when the king is in check",
+                            "There's nothing to undo at this stage of the game.",
+                            "There's nothing to redo at this stage of the game."
 };
 int errorMessageSize = sizeof(errorCode) / sizeof(char*);
 
@@ -63,7 +69,7 @@ void printInterface(void)
 }
 void printLogo(void)
 {
-        setColor("RED");
+        setColor("GREEN");
         int INDEX;
         for( INDEX = 0; INDEX < interfaceScreenSize; INDEX++)
         {
@@ -99,9 +105,19 @@ int getGameOption(void)
                 if( (input[0] > '0') && (input[0] <= '0' + gameOptionSize) )
                         rightNum = true;
                 if( (!endFound) )
+                {
+                    clearScreen();
+                    printLogo();
+                    printInterface();
                     printError("large");
+                }
                 else if ( (!rightNum) )
+                {
+                    clearScreen();
+                    printLogo();
+                    printInterface();
                     printError("number out of list");
+                }
         }while( (!endFound) || (!rightNum));
         return input[0] - '0';
 }
@@ -125,7 +141,11 @@ void getMove()
                     commandStart = true;
                     break;
                 }else
-                printError("not command");
+                {
+                    clearScreen();
+                    printBoard();
+                    printError("not command");
+                }
             }
             else if( nullPosition == 4 || nullPosition == 5 )
             {
@@ -156,10 +176,14 @@ void getMove()
                         done = true;
                     }
                 }
+                else
+                {
+                    clearScreen();
+                    printBoard();
+                    printError("bad input");
+                }
             }else if( nullPosition == 0)
                 printError("no input");
-            else
-                printError("bad input");
             setCommand( input, promotion);
         }while( !(done || commandStart) );
         if( commandStart )
@@ -208,7 +232,6 @@ int convertNumber( char number)
 }
 bool verifyInput( char input[])
 {
-    bool verifiedInput = true;
     if( verifyLetter( input[0]) && verifyLetter( input[2]) && verifyNumber( input[1]) && verifyNumber( input[3]) )
         return true;
     else
@@ -216,23 +239,20 @@ bool verifyInput( char input[])
 }
 void printError(char *type)
 {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-    SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+    setColor("RED");
     int INDEX;
     for( INDEX = 0; INDEX < errorMessageSize; INDEX++)
     {
         if( strcmp(type, errorCode[INDEX]) == 0 )
         {
+            if( INDEX == 10 )
+                setColor("MAGENTA");
             printf("%s\n", errorMessage[INDEX]);
             break;
-                }
         }
-        printf("Please refer to the help section if you need more informations.\n");
-        SetConsoleTextAttribute(hConsole, saved_attributes);
+        }
+    printf("Please refer to the help section if you need more informations.\n");
+    setColor("DEFAULT");
 }
 void doCommand( char input)
 {
@@ -330,11 +350,13 @@ void setColor(char* text)
     CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
     GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
     if( strcmp(text,"RED") == 0)
-        SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-    else if( strcmp(text, "BLUE") == 0 )
-        SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
+        SetConsoleTextAttribute(hConsole, 12);
+    else if( strcmp(text, "CYAN") == 0 )
+        SetConsoleTextAttribute(hConsole, 11);
+    else if( strcmp(text, "MAGENTA") == 0 )
+        SetConsoleTextAttribute(hConsole, 13);
     else if( strcmp(text, "GREEN") == 0 )
-        SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
+        SetConsoleTextAttribute(hConsole, 10);
     else if( strcmp(text, "INTENSITY") == 0 )
         SetConsoleTextAttribute(hConsole,  FOREGROUND_INTENSITY);
     else if ( strcmp(text,"DEFAULT") == 0 )
@@ -372,6 +394,16 @@ void gameFlow()
     printBoard();
     while(!end)
     {
+        if( undoErrorPrint)
+        {
+            printError("no undo");
+            undoErrorPrint = false;
+        }
+        if( redoErrorPrint)
+        {
+            printError("no redo");
+            redoErrorPrint = false;
+        }
         collectMove();
         simulation = true;
         copyBoard( board,backupBoard);
@@ -386,7 +418,9 @@ void gameFlow()
             }
             if( sizeOfAvailableCommands != 0)
             {
+                setColor("MAGENTA");
                 printf("Be ware that's a check.\n");
+                setColor("DEFAULT");
             }
         }
         else if( sizeOfAvailableCommands == 0)
@@ -409,12 +443,14 @@ void gameFlow()
         }
         if(gameWin != none)
         {
+            setColor("GREEN");
             if( gameWin == player1)
                 printf("Player1 Win,CheckMate\n");
             else if ( gameWin == player2)
                 printf("player2 Win,CheckMate\n");
             else
                 printf("Draw,StaleMate\n");
+            setColor("DEFAULT");
             char input[7];
             do
             {

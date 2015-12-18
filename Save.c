@@ -47,7 +47,7 @@ bool undo()
 {
     if(turn <= minTurn)
     {
-        printf("error! nothing to undo");
+        undoErrorPrint = true;
         return false;
     }
     else
@@ -91,7 +91,7 @@ void redo()
 {
     if(turn >= maxTurn || turn < minTurn)
     {
-        printf("error! nothing to redo");
+        redoErrorPrint = true;
     }
     else
     {

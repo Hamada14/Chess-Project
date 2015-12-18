@@ -5,22 +5,30 @@
 void printBoard(void)
 {
     int i,j;
+    setColor("CYAN");
     for(i = 0 ; i < 8 ; i++)
     {
         printf("\t%c",'A' + i);
         if(i == 7)
+        {
+            setColor("RED");
             printf("\t**Graveyard**");
+            setColor("DEFAULT");
+        }
     }
 
     for(i = 0 ; i < 8 ; i++)
     {
+        setColor("CYAN");
         printf("\n\n\n%d",8 - i);
+        setColor("DEFAULT");
         for(j = 0 ; j < 8 ; j++)
         {
            printf("\t%c",board[i][j]);
         }
 
         printf("\t");
+        setColor("RED");
         if(2*i  < graveyard1Size)
         {
             printf("%c",player1Graveyard[2*i]);
@@ -38,6 +46,7 @@ void printBoard(void)
         {
             printf("  %c",player2Graveyard[2*i + 1]);
         }
+        setColor("DEFAULT");
     }
     printf("\n");
 }

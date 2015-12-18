@@ -28,7 +28,9 @@ bool applyMove(void)
         }
         if( kingCheck)
         {
-            printError("invalid move");
+            clearScreen();
+            printBoard();
+            printError("king check");
             continue;
         }
         if( flag )
@@ -61,6 +63,8 @@ bool applyMove(void)
             }
         if( !(movedSuccessfully)  )
         {
+            clearScreen();
+            printBoard();
             printError("not valid move");
         }
     }
@@ -378,7 +382,11 @@ bool checkRightPiece(int x1, int y1)
     case '#':
     case '-':
         if(!simulation)
+        {
+            clearScreen();
+            printBoard();
             printError("empty block");
+        }
         return false;
     }
 
@@ -388,7 +396,11 @@ bool checkRightPiece(int x1, int y1)
         return true;
     else
         if(!simulation)
+        {
+            clearScreen();
+            printBoard();
             printError("move one piece");
+        }
     return false;
 }
 
