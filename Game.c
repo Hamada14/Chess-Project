@@ -8,6 +8,7 @@
 #include "Movement.h"
 #include <ctype.h>
 struct commands availableCommands[1000];
+int killValue[1000] = {0};
 int sizeOfAvailableCommands = 0;
 char *interfaceScreen[] = {     " ________   ___  ___   _______    ________    ________ ",
                                 "|\\   ____\\ |\\  \\|\\  \\ |\\  ___ \\  |\\   ____\\  |\\   ____\\",
@@ -21,6 +22,7 @@ int interfaceScreenSize = sizeof(interfaceScreen) / sizeof(char*);
 char *gameOption[] ={   "Start a new Game",
                         "Continue",
                         "Help",
+                        "Setting"
 };
 int gameOptionSize = sizeof(gameOption) / sizeof(char*);
 char *errorCode[] = { "no input",
@@ -127,73 +129,99 @@ void getMove()
         commandStart = false;
         char input[7];
         bool done,promotion;
-        do
+        if( currentPlayer == secondPlayer && computerState == on)
         {
-            done = false;
-            promotion = false;
-            printf("Enter the Index of current and Desired Move: ");
-            scanf("%s",input);
-            int nullPosition = getNull( input, 7);
-            if( nullPosition == 1 )
-            {
-                if( verifyCommand(input[0]) )
-                {
-                    commandStart = true;
-                    break;
-                }else
-                {
-                    clearScreen();
-                    printBoard();
-                    printError("not command");
-                }
-            }
-            else if( nullPosition == 4 || nullPosition == 5 )
-            {
-                switch( nullPosition){
-                case 4:
-                    promotion = false;
-                    break;
-                case 5:
-                    promotion = true;//TODO
-                    break;
-                }
-                if( verifyInput( input) )
-                {
-                    if( promotion)
-                    {
-                        if( checkPromotion( input) )
-                        {
-                            done = true;
-                            promotion = true;
-                        }
-                        else
-                        {
-                            done = false;
-                            promotion = false;
-                        }
-                    }else
-                    {
-                        done = true;
-                    }
-                }
-                else
-                {
-                    clearScreen();
-                    printBoard();
-                    printError("bad input");
-                }
-            }else if( nullPosition == 0)
-                printError("no input");
-            setCommand( input, promotion);
-        }while( !(done || commandStart) );
-        if( commandStart )
-        {
-            doCommand( input[0]);
+            getComputerCommand();
         }
         else
         {
-            setCommand( input, promotion);
+            do
+            {
+                done = false;
+                promotion = false;
+                printf("Enter the Index of current and Desired Move: ");
+                scanf("%s",input);
+                int nullPosition = getNull( input, 7);
+                if( nullPosition == 1 )
+                {
+                    if( verifyCommand(input[0]) )
+                    {
+                        commandStart = true;
+                        break;
+                    }else
+                    {
+                        clearScreen();
+                        printBoard();
+                        printError("not command");
+                    }
+                }
+                else if( nullPosition == 4 || nullPosition == 5 )
+                {
+                    switch( nullPosition){
+                    case 4:
+                        promotion = false;
+                        break;
+                    case 5:
+                        promotion = true;//TODO
+                        break;
+                    }
+                    if( verifyInput( input) )
+                    {
+                        if( promotion)
+                        {
+                            if( checkPromotion( input) )
+                            {
+                                done = true;
+                                promotion = true;
+                            }
+                            else
+                            {
+                                done = false;
+                                promotion = false;
+                            }
+                        }else
+                        {
+                            done = true;
+                        }
+                    }
+                    else
+                    {
+                        clearScreen();
+                        printBoard();
+                        printError("bad input");
+                    }
+                }else if( nullPosition == 0)
+                    printError("no input");
+                setCommand( input, promotion);
+            }while( !(done || commandStart) );
+            if( commandStart )
+            {
+                doCommand( input[0]);
+            }
+            else
+            {
+                setCommand( input, promotion);
+            }
         }
+}
+
+void getComputerCommand()
+{
+    int maxValue = 0;
+    int maxIndex = 0;
+    for(int counter = 0; counter < sizeOfAvailableCommands; counter++)
+    {
+        if( killValue[counter] > maxValue )
+        {
+            maxValue = killValue[counter];
+            maxIndex = counter;
+        }
+    }
+    if( maxIndex == 0)
+    {
+        maxIndex = sizeOfAvailableCommands/2;
+    }
+    command = availableCommands[maxIndex];
 }
 
 bool verifyNumber(char number)
@@ -338,10 +366,54 @@ There are certain commands used in this game.\n\
     getchar();
     while( getchar() != 'b' )
     {
+        clearScreen();
+        printLogo();
+    printf("Hello This is the help Section: \n\
+Game Play:\n\
+-You can start either by New Game or Continue game if you want\n\
+to continue a game you last played yet you didn\'t close the program.\n\
+Make sure when moving Piece to enter it in the Form XYLM\n\
+where :\n\
+'A' <= X,L <= 'H'\n\
+1 <= Y,M <= 8\n\
+Make sure to capitalize the letters.\n\
+If you want to promote a Pawn you can enter in this format XYLMT\n\
+where T is the promoted to piece.\n\
+make sure to Capitalize the Letters when needed.\n\
+\n\
+Commands:\n\
+There are certain commands used in this game.\n\
+'b' : used to go back to the main menu.\n\
+'l' : used to load a past saved game.\n\
+'s' : used to save a game for later use.\n\
+'u' : used to undo a move.\n\
+'r' : used to redo a move.\n\
+'n' : used to reset the board and start a new age.\n");
         printf("Not acceptable command.\nType \'b\' to get back to the main menu: ");
         getchar();
     }
     state = menu;
+}
+
+void printSetting()
+{
+    printLogo();
+    if( computerState == on )
+        printf("The computer mode is turned on.\n");
+    else
+        printf("The computer mode is turned off.\n");
+    printf("Type \'b\' to get back to the main menu.\nType 1 to change Computer State: ");
+    getchar();
+    char x = getchar();
+    while( x != 'b' && x!= '1')
+    {
+        printf("Not acceptable command.\nType \'b\' to get back to the main menu: ");
+        getchar();
+        x = getchar();
+    }
+    if( x == '1' )
+        computerState = !computerState;
+    goBack();
 }
 
 void setColor(char* text)
@@ -363,25 +435,6 @@ void setColor(char* text)
         SetConsoleTextAttribute(hConsole,  FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
     else
         SetConsoleTextAttribute(hConsole,  FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
-}
-
-void setBackgroundColor(char* text)
-{
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    if( strcmp(text,"RED") == 0)
-        SetConsoleTextAttribute(hConsole, BACKGROUND_RED);
-    else if( strcmp(text, "BLUE") == 0 )
-        SetConsoleTextAttribute(hConsole, BACKGROUND_BLUE);
-    else if( strcmp(text, "GREEN") == 0 )
-        SetConsoleTextAttribute(hConsole, BACKGROUND_GREEN);
-    else if( strcmp(text, "INTENSITY") == 0 )
-        SetConsoleTextAttribute(hConsole,  FOREGROUND_INTENSITY);
-    else if ( strcmp(text,"DEFAULT") == 0 )
-        SetConsoleTextAttribute(hConsole,  BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
-    else
-        SetConsoleTextAttribute(hConsole,  BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
 }
 
 void switchTurn()
@@ -483,7 +536,7 @@ void gameFlow()
 
 void goBack()
 {
-    if( state == play || state == help )
+    if( state != menu )
         state = menu;
 }
 
@@ -499,6 +552,9 @@ void printRequiredScreen()
         break;
     case play:
         gameFlow();
+        break;
+    case setting:
+        printSetting();
         break;
     }
 }
@@ -522,6 +578,9 @@ void startMenu()
         break;
     case 3:
         state = help;
+        break;
+    case 4:
+        state = setting;
         break;
     }
 }
@@ -607,6 +666,7 @@ void collectMove()
         int y1 = command.currentY ;
         int x2 = command.nextX;
         int y2 = command.nextY;
+        int valueOfKill = checkValue( x2, y2);
         if( checkRightPiece(x1,y1) )
             switch(board[command.currentY][command.currentX])
             {
@@ -638,6 +698,7 @@ void collectMove()
             if( acceptedMove && !isChecked() )
             {
                 availableCommands[sizeOfAvailableCommands] = command;
+                killValue[sizeOfAvailableCommands] = valueOfKill;
                 sizeOfAvailableCommands++;
             }
             increment( testCase);
@@ -702,4 +763,30 @@ void copyBoard( char board[8][8], char simulationBoard[8][8])
             simulationBoard[counter][counter2] = board[counter][counter2];
         }
     }
+}
+
+int checkValue( int nextX, int nextY)
+{
+    if( !isalpha(board[nextY][nextX]))
+        return 0;
+    char type = tolower( board[nextY][nextX]);
+    switch(type)
+    {
+    case 'p':
+        return 1;
+        break;
+    case 'r':
+        return 2;
+        break;
+    case 'b':
+        return 3;
+        break;
+    case 'n':
+        return 4;
+        break;
+    case 'k':
+        return 5;
+        break;
+    }
+    return 0;
 }

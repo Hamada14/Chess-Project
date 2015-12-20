@@ -14,10 +14,15 @@ int turn;
 enum GameState{ menu,
                 play,
                 help,
+                setting
 } state;
 enum Turn {     firstPlayer,
                 secondPlayer,
 }currentPlayer;
+enum computerStateEnum{
+                on,
+                off
+} computerState;
 enum gamewin{   player1,
                 player2,
                 draw,
@@ -58,4 +63,8 @@ void increment( char testCase[]);
 bool checkIfAvailable(struct commands command);
 bool checkStructs( struct commands command, struct commands test);
 void copyBoard( char board[8][8], char simulationBoard[8][8]);
+int checkValue( int nextX, int nextY);
+void getComputerCommand();
+void printSetting();
+
 #endif // GAME_H_INCLUDED
