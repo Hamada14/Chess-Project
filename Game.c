@@ -293,7 +293,13 @@ void doCommand( char input)
         loadGame();
         break;
     case 'u':
-        isUndone = undo();
+        if(computerState == off)
+            isUndone = undo();
+        else
+            {
+                isUndone = undo();//calls undo twice if the game is player vs computer
+                isUndone = undo();
+            }
         break;
     case 'r':
         redo();

@@ -655,13 +655,13 @@ bool isChecked()
                                 return true;
                             }
                             break;
-                        case 'k':
-                        case 'K':
-                            if( checkKing(x1,y1,kingX,kingY,piece))
-                            {
-                                return true;
-                            }
-                            break;
+//                        case 'k':
+//                        case 'K':
+//                            if( checkKing(x1,y1,kingX,kingY,piece))
+//                            {
+//                                return true;
+//                            }
+//                            break;
                         }
                     }
                 }

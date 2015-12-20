@@ -66,5 +66,4 @@ void copyBoard( char board[8][8], char simulationBoard[8][8]);
 int checkValue( int nextX, int nextY);
 void getComputerCommand();
 void printSetting();
-
 #endif // GAME_H_INCLUDED
