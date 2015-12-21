@@ -70,11 +70,6 @@ bool applyMove(void)
         }
     }
     while( !(movedSuccessfully) );
-    if(isUndone)
-    {
-        isUndone = false;
-        minTurn = turn;
-    }
     turn++ ;
     maxTurn = turn;
     doPromotion();
@@ -414,11 +409,19 @@ bool checkSoldier(int x1, int y1, int x2, int y2, char type)
     if(deltaY == -1 && deltaX == 0 && isNotOccupied())
     {
         movePiece();
+        if(!simulation)
+        {
+            deadPieces[turn] = 0;
+        }
         return true;
     }
     else if(deltaY == -2 && deltaX == 0 && isNotOccupied() && isFirstMove() && !obstaclesExist(x1,y1,x2,y2,type))
     {
         movePiece();
+        if(!simulation)
+        {
+            deadPieces[turn] = 0;
+        }
         return true;
     }
     else if(isValidEat(x1,y1,x2,y2,type))
@@ -456,6 +459,10 @@ bool checkKing(int x1, int y1, int x2, int y2, char type)
         if( isNotOccupied())
         {
             movePiece();
+            if(!simulation)
+            {
+                deadPieces[turn] = 0;
+            }
             return true;
         }
     }
@@ -471,6 +478,10 @@ bool checkRook( int x1, int y1, int x2, int y2, char type)
         if( isNotOccupied() )
         {
             movePiece();
+            if(!simulation)
+            {
+                deadPieces[turn] = 0;
+            }
             return true;
         }
         else if( isValidEat(x1,y1,x2,y2,type) )
@@ -496,6 +507,10 @@ bool checkHorse(int x1, int y1, int x2, int y2, char type)
         if( isNotOccupied() )
         {
             movePiece();
+            if(!simulation)
+            {
+                deadPieces[turn] = 0;
+            }
             return true;
         }
         else if( isValidEat(x1,y1,x2,y2,type) )
@@ -520,6 +535,10 @@ bool checkBishop(int x1, int y1, int x2, int y2, char type)
         if( isNotOccupied() )
         {
             movePiece();
+            if(!simulation)
+            {
+                deadPieces[turn] = 0;
+            }
             return true;
         }
         else if( isValidEat(x1,y1,x2,y2,type) )
@@ -544,6 +563,10 @@ bool checkQueen(int x1, int y1, int x2, int y2, char type)
         if( isNotOccupied() )
         {
             movePiece();
+            if(!simulation)
+            {
+                deadPieces[turn] = 0;
+            }
             return true;
         }
         else if( isValidEat(x1,y1,x2,y2,type) )
@@ -562,6 +585,10 @@ bool checkQueen(int x1, int y1, int x2, int y2, char type)
         if( isNotOccupied() )
         {
             movePiece();
+            if(!simulation)
+            {
+                deadPieces[turn] = 0;
+            }
             return true;
         }
         else if( isValidEat(x1,y1,x2,y2,type) )

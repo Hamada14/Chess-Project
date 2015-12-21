@@ -315,11 +315,11 @@ void doCommand( char input)
         break;
     case 'u':
         if(computerState == off)
-            isUndone = undo();
+            undoErrorPrint = !undo();
         else
             {
-                isUndone = undo();//calls undo twice if the game is player vs computer
-                isUndone = undo();
+                undoErrorPrint = !undo();//calls undo twice if the game is player vs computer
+                undoErrorPrint = !undo();
             }
         break;
     case 'r':
@@ -679,8 +679,7 @@ void resetAll()
     hasBoard = true;
     graveyard1Size = 0;
     graveyard2Size = 0;
-    turn = 0,minTurn = 0,maxTurn = 0;
-    isUndone = false;
+    turn = 0,maxTurn = 0;
 }
 
 void collectMove()

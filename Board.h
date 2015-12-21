@@ -20,9 +20,8 @@ char promotionTemp[250];
 int moves[250][4];//Assumption made that the maximum number of turns to be undone is 250 turns
 int graveyard1Size;
 int graveyard2Size;
-int maxTurn,minTurn;
+int maxTurn;
 bool hasBoard;
-bool isUndone;
 void resetDeadPieces();
 #endif // BOARD_H_INCLUDED
 

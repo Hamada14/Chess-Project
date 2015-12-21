@@ -40,12 +40,11 @@ void loadGame(void)
     fread(&currentPlayer,1,1,load);
     fread(&turn,1,1,load);
     fclose(load);
-    minTurn = turn;
     maxTurn = turn;
 }
 bool undo()
 {
-    if(turn <= minTurn)
+    if(turn <= 0)
     {
         undoErrorPrint = true;
         return false;
@@ -89,7 +88,7 @@ bool undo()
 }
 void redo()
 {
-    if(turn >= maxTurn || turn < minTurn)
+    if(turn >= maxTurn || turn < 0)
     {
         redoErrorPrint = true;
     }
