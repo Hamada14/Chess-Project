@@ -7,6 +7,8 @@
 #include "Save.h"
 #include "Movement.h"
 #include <ctype.h>
+#include <time.h>
+
 struct commands availableCommands[1000];
 int killValue[1000] = {0};
 int sizeOfAvailableCommands = 0;
@@ -14,7 +16,7 @@ char *interfaceScreen[] = {     " ________   ___  ___   _______    ________    _
                                 "|\\   ____\\ |\\  \\|\\  \\ |\\  ___ \\  |\\   ____\\  |\\   ____\\",
                                 "\\ \\  \\___| \\ \\  \\\\\\  \\\\ \\   __/| \\ \\  \\___|_ \\ \\  \\___|_",
                                 " \\ \\  \\     \\ \\   __  \\\\ \\  \\_|/__\\ \\_____  \\ \\ \\_____  \\",
-                                "  \\ \\  \\____ \\ \\  \\ \\  \\\\ \\  \\_|\\ \\\\|____|\\  \\ \\|____|\\  \\",
+                                "  \\ \\\\____ \\ \\  \\ \\  \\\\ \\  \\_|\\ \\\\|____|\\  \\ \\|____|\\  \\",
                                 "   \\ \\_______\\\\ \\__\\ \\__\\\\ \\_______\\ ____\\_\\  \\  ____\\_\\  \\",
                                 "    \\|_______| \\|__|\\|__| \\|_______||\\_________\\|\\_________\\",
                                 "                                    \\|_________|\\|_________|"};
@@ -49,7 +51,7 @@ char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "Please make sure you entered the input in the correct structure.",
                             "You can only promote to one's own pieces.",
                             "You can only move your own's pieces.",
-                            "You can't do such move when the king is in check",
+                            "You can't do such move in this situation.",
                             "There's nothing to undo at this stage of the game.",
                             "There's nothing to redo at this stage of the game."
 };
@@ -137,6 +139,10 @@ void getMove()
         {
             do
             {
+                if( !firstTurn && computerState == on && currentPlayer == firstPlayer)
+                {
+                    printf("The computer's last Command was %s.\n", lastComputerCommand);
+                }
                 done = false;
                 promotion = false;
                 printf("Enter the Index of current and Desired Move: ");
@@ -207,6 +213,8 @@ void getMove()
 
 void getComputerCommand()
 {
+    srand(time(NULL));
+    int random = rand() % sizeOfAvailableCommands;
     int maxValue = 0;
     int maxIndex = 0;
     for(int counter = 0; counter < sizeOfAvailableCommands; counter++)
@@ -219,9 +227,22 @@ void getComputerCommand()
     }
     if( maxIndex == 0)
     {
-        maxIndex = sizeOfAvailableCommands/2;
+        maxIndex = random;
     }
     command = availableCommands[maxIndex];
+    lastComputerCommand[1] = '8' - availableCommands[maxIndex].currentY;
+    lastComputerCommand[0] = availableCommands[maxIndex].currentX + 'A';
+    lastComputerCommand[3] = '8' - availableCommands[maxIndex].nextY;
+    lastComputerCommand[2] = availableCommands[maxIndex].nextX + 'A';
+    if( availableCommands[maxIndex].nextY == 7 && board[availableCommands[maxIndex].currentY][availableCommands[maxIndex].currentX] == 'P')
+    {
+        command.promotionExist = true;
+        command.promotion = 'Q';
+        lastComputerCommand[4] = 'Q';
+        lastComputerCommand[5] = '\0';
+    }
+    else
+        lastComputerCommand[4] = '\0';
 }
 
 bool verifyNumber(char number)
@@ -493,6 +514,8 @@ void gameFlow()
             switchTurn();
             clearScreen();
             printBoard();
+            if( firstTurn)
+                firstTurn = false;
         }else if ( gameWin == none)
         {
             commandStart = false;
@@ -504,9 +527,15 @@ void gameFlow()
         {
             setColor("GREEN");
             if( gameWin == player1)
-                printf("Player1 Win,CheckMate\n");
+                printf("Player1 Wins,CheckMate\n");
             else if ( gameWin == player2)
-                printf("player2 Win,CheckMate\n");
+            {
+                if( computerState == off)
+                    printf("Player2 Wins,CheckMate\n");
+                else
+                    printf("Computer Wins,CheckMate\n");
+
+            }
             else
                 printf("Draw,StaleMate\n");
             setColor("DEFAULT");
@@ -644,6 +673,7 @@ void resetAll()
 {
     resetBoard();
     currentPlayer = firstPlayer;
+    firstTurn = true;
     simulation = false;
     gameWin = none;
     hasBoard = true;
@@ -705,7 +735,13 @@ void collectMove()
             {
                 availableCommands[sizeOfAvailableCommands] = command;
                 killValue[sizeOfAvailableCommands] = valueOfKill;
+                switchTurn();
+                if( isChecked() )
+                {
+                    killValue[sizeOfAvailableCommands] += 10;
+                }
                 sizeOfAvailableCommands++;
+                switchTurn();
             }
             increment( testCase);
     }

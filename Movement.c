@@ -4,6 +4,7 @@
 #include "Board.h"
 #include "Game.h"
 #include "Movement.h"
+#include <stdio.h>
 
 char pieces[] = { 'p', 'r','n', 'b', 'q', 'k'};
 int pieceSize = sizeof(pieces) / sizeof(pieces[0]);
@@ -146,7 +147,7 @@ bool isValidEat(int x1,int y1,int x2,int y2,char piece)
             return false;
         break;
     case 'K':
-        if( islower( board[y2][x2]) && board[y2][x2] != 'q' && abs( deltaX) + abs(deltaY) == 1)
+        if( islower( board[y2][x2]) )
             return true;
         else
             return false;
@@ -161,7 +162,7 @@ bool isValidEat(int x1,int y1,int x2,int y2,char piece)
             return false;
         break;
     case 'k':
-        if( isupper( board[y2][x2]) && board[y2][x2] != 'Q' && abs(deltaX) + abs(deltaY) == 1)
+        if( isupper( board[y2][x2]) )
             return true;
         else
             return false;
@@ -440,25 +441,25 @@ bool checkKing(int x1, int y1, int x2, int y2, char type)
 {
     int deltaX = x2 - x1;
     int deltaY = y2 - y1;
-    if( ( (abs(deltaX) == 1 && abs( deltaY) == 0) || ( abs(deltaX) == 1 && abs(deltaY) == 1 ) || (abs(deltaX) == 0 && abs(deltaY) == 1) ) && isNotOccupied())
+    if( ( (abs(deltaX) == 1 && abs( deltaY) == 0) || ( abs(deltaX) == 1 && abs(deltaY) == 1 ) || (abs(deltaX) == 0 && abs(deltaY) == 1) ))
     {
-        movePiece();
-        return true;
-    }
-    else if(isValidEat(x1,y1,x2,y2,type))
-    {
-        if(!simulation)
+        if(isValidEat(x1,y1,x2,y2,type))
         {
-            addToGraveyard();
-            addToDeadPieces();
+            if(!simulation)
+            {
+                addToGraveyard();
+                addToDeadPieces();
+            }
+            movePiece();
+            return true;
         }
-        movePiece();
-        return true;
+        if( isNotOccupied())
+        {
+            movePiece();
+            return true;
+        }
     }
-    else
-    {
         return false;
-    }
 }
 
 bool checkRook( int x1, int y1, int x2, int y2, char type)

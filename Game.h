@@ -28,6 +28,9 @@ enum gamewin{   player1,
                 draw,
                 none,
 } gameWin;
+char lastComputerCommand[6];
+bool firstTurn;
+
 bool commandStart;
 bool simulation;
 void printInterface(void);
