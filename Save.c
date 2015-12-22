@@ -20,7 +20,6 @@ void saveGame(void)
     fwrite(&graveyard2Size,1,1,save);
     fwrite(player2Graveyard,graveyard2Size,1,save);
     fwrite(&currentPlayer,1,1,save);
-    fwrite(&turn,1,1,save);
     fclose(save);
 }
 void loadGame(void)
@@ -38,8 +37,8 @@ void loadGame(void)
     fread(&graveyard2Size,1,1,load);
     fread(player2Graveyard,graveyard2Size,1,load);
     fread(&currentPlayer,1,1,load);
-    fread(&turn,1,1,load);
     fclose(load);
+    turn = 0;
     maxTurn = turn;
 }
 bool undo()
