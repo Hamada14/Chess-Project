@@ -377,7 +377,7 @@ bool checkRightPiece(int x1, int y1)
     {
     case '#':
     case '-':
-        if(!simulation)
+        if(!simulation)//checks if it's an actual move or checkmate simulation
         {
             clearScreen();
             printBoard();
@@ -391,7 +391,7 @@ bool checkRightPiece(int x1, int y1)
     else if( currentPlayer == secondPlayer && board[y1][x1] ==  tolower(board[y1][x1]) )
         return true;
     else
-        if(!simulation)
+        if(!simulation)//checks if it's an actual move or checkmate simulation
         {
             clearScreen();
             printBoard();
@@ -400,7 +400,7 @@ bool checkRightPiece(int x1, int y1)
     return false;
 }
 
-bool checkSoldier(int x1, int y1, int x2, int y2, char type)
+bool checkSoldier(int x1, int y1, int x2, int y2, char type)//checks if the given move is a valid move for pawn
 {
     int deltaX = x2 - x1;
     int deltaY = y2 - y1;
@@ -408,8 +408,8 @@ bool checkSoldier(int x1, int y1, int x2, int y2, char type)
         deltaY = -(deltaY);
     if(deltaY == -1 && deltaX == 0 && isNotOccupied())
     {
-        movePiece();
-        if(!simulation)
+        movePiece();//moves the piece
+        if(!simulation)//checks if it's an actual move or checkmate simulation
         {
             deadPieces[turn] = 0;
         }
@@ -417,8 +417,8 @@ bool checkSoldier(int x1, int y1, int x2, int y2, char type)
     }
     else if(deltaY == -2 && deltaX == 0 && isNotOccupied() && isFirstMove() && !obstaclesExist(x1,y1,x2,y2,type))
     {
-        movePiece();
-        if(!simulation)
+        movePiece();//moves the piece
+        if(!simulation)//checks if it's an actual move or checkmate simulation
         {
             deadPieces[turn] = 0;
         }
@@ -426,12 +426,12 @@ bool checkSoldier(int x1, int y1, int x2, int y2, char type)
     }
     else if(isValidEat(x1,y1,x2,y2,type))
     {
-        if(!simulation)
+        if(!simulation)//checks if it's an actual move or checkmate simulation
         {
             addToGraveyard();
             addToDeadPieces();
         }
-        movePiece();
+        movePiece();//moves the piece
         return true;
     }
     else
@@ -440,7 +440,7 @@ bool checkSoldier(int x1, int y1, int x2, int y2, char type)
     }
 }
 
-bool checkKing(int x1, int y1, int x2, int y2, char type)
+bool checkKing(int x1, int y1, int x2, int y2, char type)//checks if the given move is a valid move for king
 {
     int deltaX = x2 - x1;
     int deltaY = y2 - y1;
@@ -448,18 +448,18 @@ bool checkKing(int x1, int y1, int x2, int y2, char type)
     {
         if(isValidEat(x1,y1,x2,y2,type))
         {
-            if(!simulation)
+            if(!simulation)//checks if it's an actual move or checkmate simulation
             {
                 addToGraveyard();
                 addToDeadPieces();
             }
-            movePiece();
+            movePiece();//moves the piece
             return true;
         }
         if( isNotOccupied())
         {
-            movePiece();
-            if(!simulation)
+            movePiece();//moves the piece
+            if(!simulation)//checks if it's an actual move or checkmate simulation
             {
                 deadPieces[turn] = 0;
             }
@@ -469,7 +469,7 @@ bool checkKing(int x1, int y1, int x2, int y2, char type)
         return false;
 }
 
-bool checkRook( int x1, int y1, int x2, int y2, char type)
+bool checkRook( int x1, int y1, int x2, int y2, char type)//checks if the given move is a valid move for rook
 {
     int deltaX = x2 - x1;
     int deltaY = y2 - y1;
@@ -477,8 +477,8 @@ bool checkRook( int x1, int y1, int x2, int y2, char type)
     {
         if( isNotOccupied() )
         {
-            movePiece();
-            if(!simulation)
+            movePiece();//moves the piece
+            if(!simulation)//checks if it's an actual move or checkmate simulation
             {
                 deadPieces[turn] = 0;
             }
@@ -486,19 +486,19 @@ bool checkRook( int x1, int y1, int x2, int y2, char type)
         }
         else if( isValidEat(x1,y1,x2,y2,type) )
         {
-            if(!simulation)
+            if(!simulation)//checks if it's an actual move or checkmate simulation
             {
                 addToGraveyard();
                 addToDeadPieces();
             }
-            movePiece();
+            movePiece();//moves the piece
             return true;
         }
     }
     return false;
 }
 
-bool checkHorse(int x1, int y1, int x2, int y2, char type)
+bool checkHorse(int x1, int y1, int x2, int y2, char type)//checks if the given move is a valid move for horse
 {
     int deltaX = x2 - x1;
     int deltaY = y2 - y1;
@@ -506,8 +506,8 @@ bool checkHorse(int x1, int y1, int x2, int y2, char type)
     {
         if( isNotOccupied() )
         {
-            movePiece();
-            if(!simulation)
+            movePiece();//moves the piece
+            if(!simulation)//checks if it's an actual move or checkmate simulation
             {
                 deadPieces[turn] = 0;
             }
@@ -515,27 +515,28 @@ bool checkHorse(int x1, int y1, int x2, int y2, char type)
         }
         else if( isValidEat(x1,y1,x2,y2,type) )
         {
-            if(!simulation)
+            if(!simulation)//checks if it's an actual move or checkmate simulation
             {
                 addToGraveyard();
                 addToDeadPieces();
             }
-            movePiece();
+            movePiece();//moves the piece
             return true;
         }
     }
     return false;
 }
-bool checkBishop(int x1, int y1, int x2, int y2, char type)
+bool checkBishop(int x1, int y1, int x2, int y2, char type)//checks if the given move is a valid move for bishop
 {
     int deltaX = x2 - x1;
     int deltaY = y2 - y1;
+    // checks if the move is valid and if there are any obstacles in the way
     if( abs(deltaX) == abs(deltaY) && !obstaclesExist(x1,y1,x2,y2,type))
     {
-        if( isNotOccupied() )
+        if( isNotOccupied() )//checks if the new position is already occupied by another piece
         {
-            movePiece();
-            if(!simulation)
+            movePiece();//moves the piece
+            if(!simulation)//checks if it's an actual move or checkmate simulation
             {
                 deadPieces[turn] = 0;
             }
@@ -543,43 +544,45 @@ bool checkBishop(int x1, int y1, int x2, int y2, char type)
         }
         else if( isValidEat(x1,y1,x2,y2,type) )
         {
-            if(!simulation)
+            if(!simulation)//checks if it's an actual move or checkmate simulation
             {
                 addToGraveyard();
                 addToDeadPieces();
             }
-            movePiece();
+            movePiece();//moves the piece
             return true;
         }
     }
     return false;
 }
-bool checkQueen(int x1, int y1, int x2, int y2, char type)
+bool checkQueen(int x1, int y1, int x2, int y2, char type)//checks if the given move is a valid move for queen
 {
     int deltaX = x2 - x1;
     int deltaY = y2 - y1;
+    // checks if the move is valid and if there are any obstacles in the way
     if( ( (deltaX == 0 && deltaY != 0) || ( deltaX != 0 && deltaY == 0) ) && !obstaclesExist(x1,y1,x2,y2,type))
     {
-        if( isNotOccupied() )
+        if( isNotOccupied() )//checks if the new position is already occupied by another piece
         {
-            movePiece();
-            if(!simulation)
+            movePiece();//moves the piece
+            if(!simulation)//checks if it's an actual move or checkmate simulation
             {
                 deadPieces[turn] = 0;
             }
             return true;
         }
-        else if( isValidEat(x1,y1,x2,y2,type) )
+        else if( isValidEat(x1,y1,x2,y2,type) )//if the position is occupied checks if the piece in it can be captured
         {
             if(!simulation)
             {
-                addToGraveyard();
-                addToDeadPieces();
+                addToGraveyard();//adds the captured piece to the graveyard of its owner
+                addToDeadPieces();//adds the captured piece to the list of captured pieces for undo
             }
-            movePiece();
+            movePiece();//moves the piece
             return true;
         }
     }
+    // checks if the move is valid and if there are any obstacles in the way
     else if( abs(deltaX) == abs(deltaY) && !obstaclesExist(x1,y1,x2,y2,type))
     {
         if( isNotOccupied() )
@@ -604,7 +607,7 @@ bool checkQueen(int x1, int y1, int x2, int y2, char type)
     }
     return false;
 }
-void addToGraveyard(void)
+void addToGraveyard(void)// adds the piece to the players' respective graveyar
 {
     if(currentPlayer == firstPlayer)
     {
@@ -615,7 +618,7 @@ void addToGraveyard(void)
         player1Graveyard[graveyard1Size++] = board[command.nextY][command.nextX];
     }
 }
-bool isChecked()
+bool isChecked()//finds the king and checks if the king is in check
 {
     char king;
     if( currentPlayer == firstPlayer)
@@ -625,7 +628,7 @@ bool isChecked()
     bool kingCase = isupper(king);
     char piece = '\0';
     int kingX,kingY;
-    for(int y1 = 0; y1 < 8 ; y1++)
+    for(int y1 = 0; y1 < 8 ; y1++)//finds the King of the current player
     {
         for(int x1 = 0 ; x1 < 8 ; x1++)
         {
@@ -637,7 +640,7 @@ bool isChecked()
             }
         }
     }
-    for(int y1 = 0 ; y1 < 8 ; y1++)
+    for(int y1 = 0 ; y1 < 8 ; y1++)//finds out whether the King is in check or not
     {
         for(int x1 = 0 ; x1 < 8 ; x1++)
         {
