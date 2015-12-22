@@ -39,7 +39,8 @@ char *errorCode[] = { "no input",
                     "move one piece",
                     "king check",
                     "no undo",
-                    "no redo"
+                    "no redo",
+                    "must have promotion"
 };
 char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "The input you entered was Too large.",
@@ -53,7 +54,8 @@ char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "You can only move your own's pieces.",
                             "You can't do such move in this situation.",
                             "There's nothing to undo at this stage of the game.",
-                            "There's nothing to redo at this stage of the game."
+                            "There's nothing to redo at this stage of the game.",
+                            "You must promote when using this move."
 };
 int errorMessageSize = sizeof(errorCode) / sizeof(char*);
 
@@ -184,6 +186,9 @@ void getMove()
                             {
                                 done = false;
                                 promotion = false;
+                                clearScreen();
+                                printBoard();
+                                printError("no promotion");
                             }
                         }else
                         {
@@ -197,8 +202,25 @@ void getMove()
                         printError("bad input");
                     }
                 }else if( nullPosition == 0)
+                {
+                    clearScreen();
+                    printBoard();
                     printError("no input");
+
+                }
                 setCommand( input, promotion);
+                char piece = board[command.currentY][command.currentX];
+
+                if(  (piece == 'p' && command.nextY == 7) || (piece == 'P' && command.nextY == 0) )
+                {
+                    if( !promotion)
+                    {
+                        clearScreen();
+                        printBoard();
+                        printError("must have promotion");
+                        done = false;
+                    }
+                }
             }while( !(done || commandStart) );
             if( commandStart )
             {
@@ -636,25 +658,19 @@ bool checkPromotion( char input[])
     int currentY = convertNumber( input[1]);
     int currentX = convertLetter( input[0]);
     int nextY = convertNumber( input[3]);
-    if( (board[currentY][currentX] == 'p' && currentY == 6 && nextY == 7 ) || (board[currentY][currentX] == 'P' && currentY == 1 && nextY == 0 ))
-        allowedToPromote = true;
-    if( (currentPlayer == firstPlayer && isupper( input[4]) ) || (currentPlayer == secondPlayer && islower( input[4] ) ) )
+    if( (board[currentY][currentX] == 'p' && currentY == 6 && nextY == 7 && islower( input[4] )) || (isupper( input[4]) && board[currentY][currentX] == 'P' && currentY == 1 && nextY == 0 ))
         allowedToPromote = true;
     else
     {
-        printError("not one piece");
         allowedToPromote = false;
         return false;
     }
     if( allowedToPromote)
-    {
         for(int INDEX = 0; INDEX < sizeOfPromotable; INDEX++)
         {
                 if( tolower( input[4]) == promotable[INDEX] )
                     return true;
         }
-    }
-    printError("no promotion");
     return false;
 }
 
