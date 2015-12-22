@@ -337,10 +337,10 @@ void doCommand( char input)
         break;
     case 'u':
         if(computerState == off)
-            undoErrorPrint = !undo();
-        else
+            undoErrorPrint = !undo();//if there was no move to undo prints an error
+        else//calls undo twice if the game is player vs computer
             {
-                undoErrorPrint = !undo();//calls undo twice if the game is player vs computer
+                undoErrorPrint = !undo();
                 undoErrorPrint = !undo();
             }
         break;
@@ -680,7 +680,11 @@ void doPromotion()
     {
         board[command.nextY][command.nextX] = command.promotion;
         command.promotionExist = false;
-        savePromotion();
+        savePromotion();//saves the promotion for undo and redo
+    }
+    else
+    {
+        promotion[turn] = 0;
     }
 
 }
