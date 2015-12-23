@@ -529,6 +529,8 @@ void gameFlow()//the flow of game
         collectMove();//collects all available moves in this turn
         simulation = true;//starts the simulation mode to check if the king of the current player is checked
         copyBoard( board,backupBoard);//copy the board to a backup board to remain unchanged
+        if( graveyard1Size == 15 && graveyard2Size == 15)
+            gameWin = draw;
         if( isChecked() )
         {
             if(sizeOfAvailableCommands == 0)
@@ -817,10 +819,11 @@ void collectMove()
             killValue[sizeOfAvailableCommands] = valueOfKill;
             switchTurn();
             if( isChecked() )
-                killValue[sizeOfAvailableCommands] += 3;//if the move will result in an opposite check then the computer does it
+                killValue[sizeOfAvailableCommands] += 2;//if the move will result in an opposite check then the computer does it
+            int temp = checkValue(x2,y2);
             if( checkCanBeKilled(x2,y2,board))
             {
-                killValue[sizeOfAvailableCommands] -= checkValue(x2,y2);//Subtracts the value of the piece itself if it can be killed
+                killValue[sizeOfAvailableCommands] -= temp;//Subtracts the value of the piece itself if it can be killed
             }
             sizeOfAvailableCommands++;
             switchTurn();
