@@ -275,91 +275,7 @@ bool obstaclesExist(int x1 ,int y1 , int x2 , int y2,char piece)
             }
         }
         break;
-    case 'Q':
-    case 'q':
-        if(deltaX == 0)
-        {
-            if(y2 > y1)
-            {
-                for(int y = y1+1 ; y < y2 ; y++)//checks if there is a piece blocking the way
-                {
-                    if(board[y][x1] != '#' && board[y][x1] != '-')//returns true if a piece is blocking the way
-                    {
-                        return true;
-                    }
-                }
-            }
-            else if(y2 < y1)
-            {
-                for(int y = y1-1 ; y > y2 ; y--)//checks if there is a piece blocking the way
-                {
-                    if(board[y][x1] != '#' && board[y][x1] != '-')//returns true if a piece is blocking the way
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-        else if(deltaY == 0)
-        {
-            if(x2 > x1)
-            {
-                for(int x = x1+1 ; x < x2 ; x++)//checks if there is a piece blocking the way
-                {
-                    if(board[y1][x] != '#' && board[y1][x] != '-')//returns true if a piece is blocking the way
-                    {
-                        return true;
-                    }
-                }
-            }
-            else if(x2 < x1)
-            {
-                for(int x = x1-1 ; x > x2 ; x--)//checks if there is a piece blocking the way
-                {
-                    if(board[y1][x] != '#' && board[y1][x] != '-')//returns true if a piece is blocking the way
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-        else if(deltaX == deltaY && x2 > x1)
-        {
-            for(int x = x1+1, y = y1+1 ; x < x2 ; x++)//checks if there is a piece blocking the way
-            {
-                if(board[y][x] != '#' && board[y][x] != '-')//returns true if a piece is blocking the way
-                    return true;
-                y++;
-            }
-        }
-        else if(deltaX == deltaY && x2 < x1)//checks if there is a piece blocking the way
-        {
-            for(int x = x1-1, y = y1-1 ; x > x2 ; x--)
-            {
-                if(board[y][x] != '#' && board[y][x] != '-')//returns true if a piece is blocking the way
-                    return true;
-                y--;
-            }
-        }
-        else if(deltaX == -deltaY && x2 > x1)
-        {
-            for(int x = x1+1, y = y1-1 ; x < x2 ; x++)//checks if there is a piece blocking the way
-            {
-                if(board[y][x] != '#' && board[y][x] != '-')//returns true if a piece is blocking the way
-                    return true;
-                y--;
-            }
-        }
-        else if(deltaX == -deltaY && x2 < x1)
-        {
-            for(int x = x1-1, y = y1+1 ; x > x2 ; x--)//checks if there is a piece blocking the way
-            {
-                if(board[y][x] != '#' && board[y][x] != '-')//returns true if a piece is blocking the way
-                    return true;
-                y++;
-            }
-        }
-        break;
+
     }
     return false;
 }
@@ -551,55 +467,14 @@ bool checkBishop(int x1, int y1, int x2, int y2, char type)//checks if the given
 }
 bool checkQueen(int x1, int y1, int x2, int y2, char type)//checks if the given move is a valid move for queen
 {
-    int deltaX = x2 - x1;
-    int deltaY = y2 - y1;
-    // checks if the move is valid and if there are any obstacles in the way
-    if( ( (deltaX == 0 && deltaY != 0) || ( deltaX != 0 && deltaY == 0) ) && !obstaclesExist(x1,y1,x2,y2,type))
-    {
-        if( isNotOccupied() )//checks if the new position is already occupied by another piece
-        {
-            movePiece();//moves the piece
-            if(!simulation)//checks if it's an actual move or checkmate simulation
-            {
-                deadPieces[turn] = 0;//resets the captured piece at this turn to 0
-            }
-            return true;
-        }
-        else if( isValidEat(x1,y1,x2,y2,type) )//if the position is occupied checks if the piece in it can be captured
-        {
-            if(!simulation)//checks if it's an actual move or checkmate simulation
-            {
-                addToGraveyard();//adds the captured piece to the graveyard of its owner
-                addToDeadPieces();//adds the captured piece to the list of captured pieces for undo
-            }
-            movePiece();//moves the piece
-            return true;
-        }
-    }
-    // checks if the move is valid and if there are any obstacles in the way
-    else if( abs(deltaX) == abs(deltaY) && !obstaclesExist(x1,y1,x2,y2,type))
-    {
-        if( isNotOccupied() )
-        {
-            movePiece();//moves the piece
-            if(!simulation)//checks if it's an actual move or checkmate simulation
-            {
-                deadPieces[turn] = 0;//resets the captured piece at this turn to 0
-            }
-            return true;
-        }
-        else if( isValidEat(x1,y1,x2,y2,type) )
-        {
-            if(!simulation)
-            {
-                addToGraveyard();//adds the captured piece to the graveyard of its owner
-                addToDeadPieces();//adds the captured piece to the list of captured pieces for undo
-            }
-            movePiece();//moves the piece
-            return true;
-        }
-    }
-    return false;
+   if(isupper(type))
+   {
+       return (checkRook(x1,y1,x2,y2,'R') || checkBishop(x1,y1,x2,y2,'B'));
+   }
+   else
+   {
+       return (checkRook(x1,y1,x2,y2,'r') || checkBishop(x1,y1,x2,y2,'b'));
+   }
 }
 void addToGraveyard(void)// adds the piece to the players' respective graveyard
 {
@@ -654,21 +529,21 @@ bool isChecked()//finds the king and checks if the king is in check
                             break;
                         case 'q':
                         case 'Q':
-                            if(checkQueen(x1,y1,kingX,kingY,piece) && !obstaclesExist(x1,y1,kingX,kingY,piece))
+                            if(checkQueen(x1,y1,kingX,kingY,piece))
                             {
                                 return true;
                             }
                             break;
                         case 'b':
                         case 'B':
-                            if(checkBishop(x1,y1,kingX,kingY,piece) && !obstaclesExist(x1,y1,kingX,kingY,piece))
+                            if(checkBishop(x1,y1,kingX,kingY,piece))
                             {
                                 return true;
                             }
                             break;
                         case 'r':
                         case 'R':
-                            if(checkRook(x1,y1,kingX,kingY,piece) && !obstaclesExist(x1,y1,kingX,kingY,piece))
+                            if(checkRook(x1,y1,kingX,kingY,piece))
                             {
                                 return true;
                             }

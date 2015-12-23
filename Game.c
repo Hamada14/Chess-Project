@@ -678,13 +678,13 @@ void doPromotion()
 {
     if( command.promotionExist)
     {
-        board[command.nextY][command.nextX] = command.promotion;
+        board[command.nextY][command.nextX] = command.promotion;//promotes the piece
         command.promotionExist = false;
         savePromotion();//saves the promotion for undo and redo
     }
     else
     {
-        promotion[turn] = 0;
+        promotion[turn] = 0;//resets the promotion list for undo and redo if no promotion was made this turn
     }
 
 }
