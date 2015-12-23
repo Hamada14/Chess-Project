@@ -12,22 +12,53 @@ void printBoard(void)//prints the board
         if(i == 7)
         {
             setColor("RED");//sets the color to red
-            printf("\t**Graveyard**");//prints the word graveyard
+            printf("\t  **Graveyard**");//prints the word graveyard
             setColor("DEFAULT");//sets the color to white
         }
     }
-
+    printf("\n");
     for(i = 0 ; i < 8 ; i++)
     {
+        if(i == 0)
+        {
+            printf("\n    ");
+            for(int j = 0 ; j< 8*8;j++)
+            {
+                if(j == 0)//checks if it's the first character in the table
+                    printf("\xda");//prints an L shaped angle
+                else if (j == 8*8-1)//checks if it's the first character in the table
+                    printf("\xbf");//prints an L shaped angle
+                else if (j % 8 == 0)//checks if it's the end of a cell
+                    printf("\xc2");//prints a three way down connector
+                else
+                    printf("\xc4");//prints a horizontal line
+            }
+        }
+        if(i>0)
+        {
+            printf("\n    ");//prints a new line
+            for(int j = 0 ; j< 8*8;j++)
+            {
+                if(j%8 == 0 && j != 0 )//checks if it's the end of a cell
+                    printf("\xc5");//prints a + shaped connector
+                else if(j == 0)//checks if it's the first character in the table
+                    printf("\xc3");//prints a three way connector opened to the right
+                else if (j == 8*8-1)//checks if it's the last character in the table
+                    printf("\xb4");//prints a three way connector opened to the left
+                else
+                    printf("\xc4");//prints a horizontal line
+            }
+        }
         setColor("CYAN");//sets the color to cyan
-        printf("\n\n\n%d",8 - i);//prints the horizontal coordinates of the board
+        printf("\n%d",8 - i);//prints the horizontal coordinates of the board
         setColor("DEFAULT");//sets the color to white
         for(j = 0 ; j < 8 ; j++)
         {
-            printf("\t%c",board[i][j]);//prints the pieces on the board row by row
+            printf("   \xb3   %c",board[i][j]);//prints a vertical line followed by the piece on the board
+            if(j == 7)
+                printf("  \xb3");//prints the last vertical line
         }
-
-        printf("\t");//prints a tab
+        printf("\t  ");//prints a tab
         setColor("RED");//sets the color to red
         if(2*i  < graveyard1Size)//checks if the piece exists in the graveyard
         {
@@ -48,6 +79,21 @@ void printBoard(void)//prints the board
             printf("  %c",player2Graveyard[2*i + 1]);//prints the pieces in player 2 graveyard
         }
         setColor("DEFAULT");//resets the color to white
+        if(i == 7)
+        {
+            printf("\n    ");
+            for(int j = 0 ; j< 8*8;j++)
+            {
+                if(j == 0)
+                    printf("\xc0");//prints an L shaped angle
+                else if (j == 8*8-1)
+                    printf("\xd9");//prints an L shaped angle
+                else if (j % 8 == 0)
+                    printf("\xc1");//prints a three way up connector
+                else
+                    printf("\xc4");//prints a horizontal line
+            }
+        }
     }
     printf("\n");//prints a new line
 }
