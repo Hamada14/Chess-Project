@@ -250,6 +250,7 @@ void getComputerCommand()
     int random = rand() % sizeOfAvailableCommands;//generate a random number less than the number of available moves
     int maxValue = 0;
     int maxIndex = 0;
+    int minValue = 10;
     for(int counter = 0; counter < sizeOfAvailableCommands; counter++)
     {
         if( killValue[counter] > maxValue )//search for highest kill value in the available moves collected
@@ -257,10 +258,13 @@ void getComputerCommand()
             maxValue = killValue[counter];
             maxIndex = counter;
         }
+        if( killValue[counter] < minValue)
+            minValue = killValue[counter];
     }
     if( maxIndex == 0)
     {
-        maxIndex = random;
+        if(killValue[random] == 0 )
+            maxIndex = random;
     }//if the highest kill value =0 which means that it doesn't eat any piece it uses a random move
     command = availableCommands[maxIndex];
     lastComputerCommand[1] = '8' - availableCommands[maxIndex].currentY;
@@ -811,8 +815,10 @@ void collectMove()
             killValue[sizeOfAvailableCommands] = valueOfKill;
             switchTurn();
             if( isChecked() )
+                killValue[sizeOfAvailableCommands] += 3;//if the move will result in an opposite check then the computer does it
+            if( checkCanBeKilled(x2,y2,board))
             {
-                killValue[sizeOfAvailableCommands] += 10;//if the move will result in an opposite check then the computer does it
+                killValue[sizeOfAvailableCommands] -= checkValue(x2,y2);//Subtracts the value of the piece itself if it can be killed
             }
             sizeOfAvailableCommands++;
             switchTurn();
@@ -905,4 +911,57 @@ int checkValue( int nextX, int nextY)
         break;
     }
     return 0;
+}
+
+bool checkCanBeKilled( int x2, int y2, char board[8][8])//check if the piece moved in the simulation will get killed
+{
+    char backupBoard[8][8];
+    copyBoard(board,backupBoard);
+    for(int counter = 0; counter < 8; counter++)
+    {
+        for(int counter2 = 0; counter2 < 8; counter2++)
+        {
+            command.currentY = counter;
+            command.currentX = counter2;
+            command.nextY = y2;
+            command.nextX = x2;
+            bool acceptedMove = false;
+            int x1 = command.currentX ;
+            int y1 = command.currentY ;
+            int x2 = command.nextX;
+            int y2 = command.nextY;
+            if( checkRightPiece(x1,y1) )
+                switch(board[command.currentY][command.currentX])
+                {
+                case 'P':
+                case 'p':
+                    acceptedMove = checkSoldier( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                case 'R':
+                case 'r':
+                    acceptedMove = checkRook(  x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                case 'N':
+                case 'n':
+                    acceptedMove = checkHorse( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                case 'B':
+                case 'b':
+                    acceptedMove = checkBishop( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                case 'Q':
+                case 'q':
+                    acceptedMove = checkQueen( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                case 'K':
+                case 'k':
+                    acceptedMove = checkKing( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    break;
+                }
+                if(acceptedMove)
+                    return true;
+                copyBoard(backupBoard,board);
+        }
+    }
+    return false;
 }

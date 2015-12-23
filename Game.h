@@ -69,4 +69,5 @@ void copyBoard( char board[8][8], char simulationBoard[8][8]);
 int checkValue( int nextX, int nextY);
 void getComputerCommand();
 void printSetting();
+bool checkCanBeKilled( int x2, int y2, char board[8][8]);
 #endif // GAME_H_INCLUDED
