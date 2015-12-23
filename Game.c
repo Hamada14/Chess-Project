@@ -175,7 +175,9 @@ void getMove()
             done = false;
             promotion = false;
             bool invalidInput = false;
+            setColor("GREEN");
             printf("Enter the Index of current and Desired Move: ");
+            setColor("DEFAULT");
             scanf("%s",input);
             //Checks for the position of the end of the string
             int nullPosition = getNull( input, 7);
