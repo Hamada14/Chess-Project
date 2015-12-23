@@ -58,7 +58,7 @@ void printRequiredScreen();
 void startMenu();
 void goBack();
 void game();
-bool checkPromotion( char input[]);
+bool checkPromotion( char input[], bool promotion);
 void doPromotion();
 void resetAll();
 void collectMove();

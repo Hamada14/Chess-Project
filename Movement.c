@@ -21,13 +21,8 @@ bool applyMove(void)
         int y1 = command.currentY ;
         int x2 = command.nextX;
         int y2 = command.nextY;
-        bool flag = checkRightPiece( x1, y1);//checks if the piece belongs to the current player
         //checks if the command is in the list of commands that remove the check on the king
         bool kingCheck = !checkIfAvailable( command);
-        if( ! flag )//checks if the piece belongs to the current player
-        {
-            continue;
-        }
         if( kingCheck)//checks if the move does not remove the check on the king
         {
             clearScreen();//clears the screen
@@ -35,7 +30,6 @@ bool applyMove(void)
             printError("king check");//prints error if the move does not remove the check on the king
             continue;
         }
-        if( flag )
             switch(board[command.currentY][command.currentX])//checks if the piece was moved successfully
             {
             case 'P':
@@ -367,7 +361,7 @@ bool obstaclesExist(int x1 ,int y1 , int x2 , int y2,char piece)
 bool checkRightPiece(int x1, int y1)//checks if the current player can move this piece
 {
 
-    switch ( board[command.currentY][command.currentX])
+    switch ( board[y1][x1])
     {
     case '#':
     case '-'://if the player is trying to move an empty block
