@@ -24,7 +24,7 @@ void printBoard(void)//prints the board
         setColor("DEFAULT");//sets the color to white
         for(j = 0 ; j < 8 ; j++)
         {
-           printf("\t%c",board[i][j]);//prints the pieces on the board row by row
+            printf("\t%c",board[i][j]);//prints the pieces on the board row by row
         }
 
         printf("\t");//prints a tab
@@ -32,6 +32,7 @@ void printBoard(void)//prints the board
         if(2*i  < graveyard1Size)//checks if the piece exists in the graveyard
         {
             printf("%c",player1Graveyard[2*i]);//prints the pieces in player 1 graveyard
+
         }
         if(2*i + 1 < graveyard1Size)//checks if the piece exists in the graveyard
         {

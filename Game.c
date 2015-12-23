@@ -345,7 +345,13 @@ void doCommand( char input)
             }
         break;
     case 'r':
-        redo();
+        if(computerState == off)
+            redo();
+        else//calls redo twice if the game was a player vs computer game
+        {
+            redo();
+            redo();
+        }
         break;
     case 'n':
         resetAll();
@@ -485,7 +491,6 @@ void setColor(char* text)
     else
         SetConsoleTextAttribute(hConsole,  FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 }
-
 void switchTurn()
 {
     currentPlayer = !currentPlayer;
