@@ -220,6 +220,8 @@ void getMove()
             }
             if( invalidInput)
                 continue;
+            if( commandStart)
+                continue;
             if(  verifyInput( input))
             {
                 done = true;
@@ -380,13 +382,13 @@ void doCommand( char input)
         }
         break;
     case 'n':
-        resetAll();
+        resetAll();//In case of new game it resets everything
         break;
     case 'b':
         goBack();
         break;
     case 'q':
-        gameTerminate = true;
+        gameTerminate = true;//to terminate the whole program
         break;
     default:
         printError("no input");
@@ -471,12 +473,12 @@ void printSetting()
     else
         printf("The computer mode is turned off.\n");
     printf("Type \'b\' to get back to the main menu.\nType 1 to change Computer State: ");
-    getchar();
+    fflush(stdin);
     char x = getchar();
     while( x != 'b' && x!= '1')
     {
         printf("Not acceptable command.\nType \'b\' to get back to the main menu: ");
-        getchar();
+        fflush(stdin);
         x = getchar();
     }
     if( x == '1' )
@@ -576,7 +578,7 @@ void gameFlow()//the flow of game
                 if( computerState == off)
                     printf("Player2 Wins,CheckMate\n");
                 else
-                    printf("Computer Wins,CheckMate\n");
+                    printf("Computer Wins,CheckMate\n");//if you are playing against computer and he wins
 
             }
             else
@@ -609,7 +611,7 @@ void gameFlow()//the flow of game
                 doCommand( input[0]);
                 commandStart = false;
             }
-            clearScreen();
+            clearScreen();//clear the screen and print the board after every move is done
             printBoard();
         }
     }
@@ -866,7 +868,7 @@ bool checkIfAvailable(struct commands command)
     }
     return false;
 }
-
+//check if 2 structs are the same in some of their attributes
 bool checkStructs( struct commands command, struct commands test)
 {
 
@@ -914,19 +916,19 @@ int checkValue( int nextX, int nextY)
     }
     return 0;
 }
-
+//checks if a piece can be killed
 bool checkCanBeKilled( int x2, int y2, char board[8][8])//check if the piece moved in the simulation will get killed
 {
     char backupBoard[8][8];
     copyBoard(board,backupBoard);
     for(int counter = 0; counter < 8; counter++)
     {
-        for(int counter2 = 0; counter2 < 8; counter2++)
+        for(int counter2 = 0; counter2 < 8; counter2++)//iterates over the board to check if their a piece that can kill it
         {
             command.currentY = counter;
             command.currentX = counter2;
-            command.nextY = y2;
-            command.nextX = x2;
+            command.nextY = y2;//it's set to the computer's piece's y-coordinate
+            command.nextX = x2;//it's set to the computer's piece's x-coordinate
             bool acceptedMove = false;
             int x1 = command.currentX ;
             int y1 = command.currentY ;
@@ -960,9 +962,9 @@ bool checkCanBeKilled( int x2, int y2, char board[8][8])//check if the piece mov
                     acceptedMove = checkKing( x1, y1, x2, y2, board[command.currentY][command.currentX]);
                     break;
                 }
-                if(acceptedMove)
+                if(acceptedMove)// if the move is accepted and this piece can move and eat the computer piece
                     return true;
-                copyBoard(backupBoard,board);
+                copyBoard(backupBoard,board);//reset the board
         }
     }
     return false;
