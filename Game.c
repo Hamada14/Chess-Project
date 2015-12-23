@@ -131,7 +131,7 @@ int getGameOption(void)
             endFound = true;
         if( (input[0] > '0') && (input[0] <= '0' + gameOptionSize) )
             rightNum = true;
-        if( input[0] == 'q')//used to quit the whole program
+        if( input[0] == 'q' && input[1] == '\0')//used to quit the whole program
         {
             gameTerminate = true;
             break;
