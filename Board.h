@@ -13,15 +13,13 @@ char board[8][8];
 char backupBoard[8][8];
 char player1Graveyard[16];
 char player2Graveyard[16];
-char deadPieces[250];
-char deadPiecesTemp[250];
-char promotion[250];
-char promotionTemp[250];
-int moves[250][4];//Assumption made that the maximum number of turns to be undone is 250 turns
+char deadPieces[500];
+char deadPiecesTemp[500];
+char promotion[500];
+int moves[500][4];//Assumption made that the maximum number of turns to be undone is 500 turns
 int graveyard1Size;
 int graveyard2Size;
 int maxTurn;
 bool hasBoard;
-void resetDeadPieces();
 #endif // BOARD_H_INCLUDED
 
