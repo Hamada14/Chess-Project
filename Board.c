@@ -12,7 +12,7 @@ void printBoard(void)//prints the board
         if(i == 7)
         {
             setColor("RED");//sets the color to red
-            printf("\t  **Graveyard**");//prints the word graveyard
+            printf("\t\t**Graveyard**");//prints the word graveyard
             setColor("DEFAULT");//sets the color to white
         }
     }
@@ -58,7 +58,13 @@ void printBoard(void)//prints the board
             if(j == 7)
                 printf("  \xb3");//prints the last vertical line
         }
-        printf("\t  ");//prints a tab
+
+        setColor("CYAN");//sets the color to cyan
+        printf("   %d",8 - i);//prints the horizontal coordinates of the board
+        setColor("DEFAULT");//sets the color to white
+
+
+        printf("\t");//prints a tab
         setColor("RED");//sets the color to red
         if(2*i  < graveyard1Size)//checks if the piece exists in the graveyard
         {
@@ -95,6 +101,13 @@ void printBoard(void)//prints the board
             }
         }
     }
+    printf("\n\n");//prints a new line
+    setColor("CYAN");//sets the color to cyan
+    for(i = 0 ; i < 8 ; i++)
+    {
+        printf("\t%c",'A' + i);//prints the horizontal ottom coordinates of the board
+    }
+    setColor("DEFAULT");//sets the color to white
     printf("\n");//prints a new line
 }
 

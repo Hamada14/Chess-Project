@@ -254,7 +254,6 @@ void getComputerCommand()
     int random = rand() % sizeOfAvailableCommands;//generate a random number less than the number of available moves
     int maxValue = -20;
     int maxIndex = 0;
-    int minValue = 10;
     for(int counter = 0; counter < sizeOfAvailableCommands; counter++)
     {
         if( killValue[counter] > maxValue )//search for highest kill value in the available moves collected
@@ -262,10 +261,8 @@ void getComputerCommand()
             maxValue = killValue[counter];
             maxIndex = counter;
         }
-        if( killValue[counter] < minValue)
-            minValue = killValue[counter];
     }
-    if( maxValue == minValue)
+    if( maxValue == 0)
     {
             maxIndex = random;
     }//if the highest kill value =0 which means that it doesn't eat any piece it uses a random move
@@ -835,7 +832,6 @@ void collectMove()
     command = backup;
     simulation = false;
 }
-
 void increment( char testCase[])
 {
     if( strcmp( testCase, "H8H8") == 0)
