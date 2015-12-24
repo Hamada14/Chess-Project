@@ -821,7 +821,7 @@ void collectMove()
             killValue[sizeOfAvailableCommands] = valueOfKill;
             switchTurn();
             if( isChecked() )
-                killValue[sizeOfAvailableCommands] += 2;//if the move will result in an opposite check then the computer does it
+                killValue[sizeOfAvailableCommands] += 3;//if the move will result in an opposite check then the computer does it
             int temp = checkValue(x2,y2);
             if( checkCanBeKilled(x2,y2,board))
             {
