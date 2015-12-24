@@ -315,7 +315,7 @@ bool checkSoldier(int x1, int y1, int x2, int y2, char type)//checks if the give
         movePiece();//moves the piece
         if(!simulation)//checks if it's an actual move or checkmate simulation
         {
-            deadPieces[turn] = 0;//resets the captured piece at this turn to 0
+            deadPieces[turn+1] = 0;//resets the captured piece at this turn to 0
         }
         return true;
     }
@@ -324,7 +324,7 @@ bool checkSoldier(int x1, int y1, int x2, int y2, char type)//checks if the give
         movePiece();//moves the piece
         if(!simulation)//checks if it's an actual move or checkmate simulation
         {
-            deadPieces[turn] = 0;//resets the captured piece at this turn to 0
+            deadPieces[turn+1] = 0;//resets the captured piece at this turn to 0
         }
         return true;
     }
@@ -365,7 +365,7 @@ bool checkKing(int x1, int y1, int x2, int y2, char type)//checks if the given m
             movePiece();//moves the piece
             if(!simulation)//checks if it's an actual move or checkmate simulation
             {
-                deadPieces[turn] = 0;//resets the captured piece at this turn to 0
+                deadPieces[turn+1] = 0;//resets the captured piece at this turn to 0
             }
             return true;
         }
@@ -384,7 +384,7 @@ bool checkRook( int x1, int y1, int x2, int y2, char type)//checks if the given 
             movePiece();//moves the piece
             if(!simulation)//checks if it's an actual move or checkmate simulation
             {
-                deadPieces[turn] = 0;//resets the captured piece at this turn to 0
+                deadPieces[turn+1] = 0;//resets the captured piece at this turn to 0
             }
             return true;
         }
@@ -413,7 +413,7 @@ bool checkHorse(int x1, int y1, int x2, int y2, char type)//checks if the given 
             movePiece();//moves the piece
             if(!simulation)//checks if it's an actual move or checkmate simulation
             {
-                deadPieces[turn] = 0;//resets the captured piece at this turn to 0
+                deadPieces[turn+1] = 0;//resets the captured piece at this turn to 0
             }
             return true;
         }
@@ -442,7 +442,7 @@ bool checkBishop(int x1, int y1, int x2, int y2, char type)//checks if the given
             movePiece();//moves the piece
             if(!simulation)//checks if it's an actual move or checkmate simulation
             {
-                deadPieces[turn] = 0;//resets the captured piece at this turn to 0
+                deadPieces[turn+1] = 0;//resets the captured piece at this turn to 0
             }
             return true;
         }

@@ -57,7 +57,6 @@ bool undo()//the function that does the undo operation
         if(deadPieces[turn] != 0)//checks if a piece was captured this turn
         {
             board[command.currentY][command.currentX] = deadPieces[turn];//restores the captured piece
-            deadPiecesTemp[turn] = deadPieces[turn];//stores the captured piece for redo
             if(isupper(deadPieces[turn]))//checks which player owns the piece and reduces the size of his graveyard
             {
                 graveyard1Size--;
@@ -66,7 +65,6 @@ bool undo()//the function that does the undo operation
             {
                 graveyard2Size--;
             }
-            deadPieces[turn] = 0;//resets the captured pieces at this turn
         }
         if(promotion[turn] != 0)//checks if a pawn was promoted at this turn
         {
@@ -98,14 +96,13 @@ void redo()//the function that does the redo operation
         {
             board[command.nextY][command.nextX] = promotion[turn+1];//does the promotion
         }
-        if(deadPiecesTemp[turn+1] != 0)
+        if(deadPieces[turn+1] != 0)
         {
-            if(isupper(deadPiecesTemp[turn+1]))
+            if(isupper(deadPieces[turn+1]))
                 graveyard1Size++;//adds the dead pieces back to graveyard
             else
                 graveyard2Size++;
         }
-        deadPieces[turn+1] = deadPiecesTemp[turn+1];//adds the captured piece back to the dead pieces for undo
         currentPlayer = !currentPlayer;//changes the current player
         turn++;//increases the turn by one
         printBoard();//prints the board
