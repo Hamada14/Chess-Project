@@ -1,0 +1,107 @@
+# depslib dependency file v1.0
+1450947337 source:d:\chess\board.c
+	<stdio.h>
+	"Board.h"
+	"Game.h"
+
+1450933771 d:\chess\board.h
+	<stdbool.h>
+
+1450871731 d:\chess\game.h
+	<windows.h>
+	<stdbool.h>
+
+1450638559 source:d:\chess\main.c
+	<stdio.h>
+	<stdlib.h>
+	"Game.h"
+	"Movement.h"
+	"Board.h"
+
+1450301301 d:\chess\movement.h
+
+1450933771 source:d:\chess\movement.c
+	<stdbool.h>
+	<ctype.h>
+	<math.h>
+	"Board.h"
+	"Game.h"
+	"Movement.h"
+	<stdio.h>
+
+1450933771 source:d:\chess\save.c
+	<stdio.h>
+	<stdbool.h>
+	<ctype.h>
+	"Board.h"
+	"Game.h"
+	"Save.h"
+	"Movement.h"
+
+1450473702 d:\chess\save.h
+
+1450951036 source:d:\chess\game.c
+	<stdio.h>
+	<stdbool.h>
+	<string.h>
+	"Game.h"
+	<stdlib.h>
+	"Board.h"
+	"Save.h"
+	"Movement.h"
+	<ctype.h>
+	<time.h>
+
+1450947337 source:d:\software\chess\board.c
+	<stdio.h>
+	"Board.h"
+	"Game.h"
+
+1450933771 d:\software\chess\board.h
+	<stdbool.h>
+
+1455300484 d:\software\chess\game.h
+	<windows.h>
+	<stdbool.h>
+
+1455303249 source:d:\software\chess\game.c
+	<stdio.h>
+	<stdbool.h>
+	<string.h>
+	"Game.h"
+	<stdlib.h>
+	"Board.h"
+	"Save.h"
+	"Movement.h"
+	<ctype.h>
+	<time.h>
+
+1450473702 d:\software\chess\save.h
+
+1455298466 d:\software\chess\movement.h
+
+1450638559 source:d:\software\chess\main.c
+	<stdio.h>
+	<stdlib.h>
+	"Game.h"
+	"Movement.h"
+	"Board.h"
+
+1455299486 source:d:\software\chess\movement.c
+	<stdbool.h>
+	<ctype.h>
+	<math.h>
+	"Board.h"
+	"Game.h"
+	"Movement.h"
+	<stdio.h>
+
+1455295130 source:d:\software\chess\save.c
+	<stdio.h>
+	<stdbool.h>
+	<ctype.h>
+	"Board.h"
+	"Game.h"
+	"Save.h"
+	"Movement.h"
+

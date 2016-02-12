@@ -53,7 +53,7 @@ bool undo()//the function that does the undo operation
         if( gameWin != none)//checks if the game state is checkmate or draw
             gameWin = none;
         loadUndoMove();//loads the move to undo
-        movePiece();//moves the piece
+        movePiece(command,board);//moves the piece
         if(deadPieces[turn] != 0)//checks if a piece was captured this turn
         {
             board[command.currentY][command.currentX] = deadPieces[turn];//restores the captured piece
@@ -91,7 +91,7 @@ void redo()//the function that does the redo operation
     else
     {
         loadRedoMove();//loads the move for redo
-        movePiece();//moves the piece
+        movePiece(command,board);//moves the piece
         if(promotion[turn+1] != 0 )//checks if a promotion occurred in this turn
         {
             board[command.nextY][command.nextX] = promotion[turn+1];//does the promotion

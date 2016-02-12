@@ -8,12 +8,11 @@
 #include "Movement.h"
 #include <ctype.h>
 #include <time.h>
-//Used to save all available commands during the current turn and their killValue
-//killValue refers to the value of the piece you can eat using such move
+int depth = 0;
 struct commands availableCommands[1000];
 int killValue[1000] = {0};
 int sizeOfAvailableCommands = 0;
-//Game Logo and using the size to print the logo line by line
+
 char *interfaceScreen[] = {     " ________   ___  ___   _______    ________    ________ ",
                                 "|\\   ____\\ |\\  \\|\\  \\ |\\  ___ \\  |\\   ____\\  |\\   ____\\",
                                 "\\ \\  \\___| \\ \\  \\\\\\  \\\\ \\   __/| \\ \\  \\___|_ \\ \\  \\___|_",
@@ -24,14 +23,14 @@ char *interfaceScreen[] = {     " ________   ___  ___   _______    ________    _
                                 "                                    \\|_________|\\|_________|"
                           };
 int interfaceScreenSize = sizeof(interfaceScreen) / sizeof(char*);
-//Game options to choose from in the menu
+
 char *gameOption[] = {   "Start a new Game",
                          "Continue",
                          "Help",
                          "Setting"
                      };
 int gameOptionSize = sizeof(gameOption) / sizeof(char*);
-//Error messages and their codes respectively
+
 char *errorCode[] = { "no input",
                       "large",
                       "number out of list",
@@ -68,17 +67,13 @@ char *errorMessage[] = {    "Please Make sure you entered a valid input.",
                             "You can't promote here.",
                        };
 int errorMessageSize = sizeof(errorCode) / sizeof(char*);
-//to add a new command add its shortcut here and it's function in doCommand()
+
 char commandSpecial[] = { 's', 'l', 'u', 'r', 'n', 'b','q'};
 int commandSpecialSize = sizeof(commandSpecial) / sizeof(char);
-//pieces which the pawn can promote to
+
 char promotable[] = { 'r', 'n','q','b'};
 int sizeOfPromotable = sizeof(promotable) / sizeof( promotable[0]);
-/*
-hasBoard is used to identify whether there's an already board or not
-to avoid using th continue option without having one.
-end is used to end the game
-*/
+
 bool hasBoard = false;
 bool end = false;
 bool gameTerminate = false;
@@ -88,7 +83,7 @@ void printInterface(void)
     printf("This is a Chess Game made by Team \"M&Ms\" as a project for Programming I course.\n");
     printGameOption();
 }
-//prints the Logo line by line
+
 void printLogo(void)
 {
     setColor("GREEN");
@@ -99,7 +94,7 @@ void printLogo(void)
     }
     setColor("DEFAULT");
 }
-//prints the game Options in the menu
+
 void printGameOption(void)
 {
     int INDEX;
@@ -108,14 +103,13 @@ void printGameOption(void)
         printf("%d- %s\n", INDEX+1, gameOption[INDEX]);
     }
 }
-//clear the screen,warning: not portable
-//if you test the project on a non windows machine remember to change the function
+
 void clearScreen(void)
 {
     system("cls");
     return;
 }
-//gets the player choice whether to start a new game , open the help menu ....
+
 int getGameOption(void)
 {
     char input[3];
@@ -126,12 +120,11 @@ int getGameOption(void)
         rightNum = false;
         printf("Type the Number facing your desired Menu Option.\n");
         scanf("%s", input);
-        //checks for large input
         if( input[1] == '\0')
             endFound = true;
         if( (input[0] > '0') && (input[0] <= '0' + gameOptionSize) )
             rightNum = true;
-        if( input[0] == 'q' && input[1] == '\0')//used to quit the whole program
+        if( input[0] == 'q' && input[1] == '\0')
         {
             gameTerminate = true;
             break;
@@ -162,7 +155,7 @@ void getMove()
     bool done,promotion;
     if( currentPlayer == secondPlayer && computerState == on)
     {
-        getComputerCommand();//if using the player vs Computer, it generates the computer move
+        getComputerCommand();
     }
     else
     {
@@ -179,26 +172,24 @@ void getMove()
             printf("Enter the Index of current and Desired Move: ");
             setColor("DEFAULT");
             scanf("%s",input);
-            //Checks for the position of the end of the string
             int nullPosition = getNull( input, 7);
             switch( nullPosition)
             {
             case 0:
             case 6:
-                //too large input
                 invalidInput = true;
                 clearScreen();
                 printBoard();
                 printError("large");
                 break;
             case 1:
-                if( verifyCommand(input[0]) )//checks if it's valid command
+                if( verifyCommand(input[0]) )
                 {
                     commandStart = true;
                 }
                 else
                 {
-                    invalidInput = true;//recognize input as invalid
+                    invalidInput = true;
                     clearScreen();
                     printBoard();
                     printError("not command");
@@ -225,7 +216,6 @@ void getMove()
             if(  verifyInput( input))
             {
                 done = true;
-                //checks if there's a promotion or not and whether it's moving the right piece
                 if( !checkPromotion(input, promotion) )
                         done = false;
             }
@@ -237,11 +227,11 @@ void getMove()
             }
         }
         while( !(done || commandStart) );
-        if( commandStart )//if the program took a command it executes it
+        if( commandStart )
         {
             doCommand( input[0]);
         }
-        else//if it got a move it checks if it's available and execute it
+        else
         {
             setCommand( input, promotion);
         }
@@ -251,12 +241,12 @@ void getMove()
 void getComputerCommand()
 {
     srand(time(NULL));
-    int random = rand() % sizeOfAvailableCommands;//generate a random number less than the number of available moves
+    int random = rand() % sizeOfAvailableCommands;
     int maxValue = -20;
     int maxIndex = 0;
     for(int counter = 0; counter < sizeOfAvailableCommands; counter++)
     {
-        if( killValue[counter] > maxValue )//search for highest kill value in the available moves collected
+        if( killValue[counter] > maxValue )
         {
             maxValue = killValue[counter];
             maxIndex = counter;
@@ -265,7 +255,7 @@ void getComputerCommand()
     if( maxValue == 0)
     {
             maxIndex = random;
-    }//if the highest kill value =0 which means that it doesn't eat any piece it uses a random move
+    }
     command = availableCommands[maxIndex];
     lastComputerCommand[1] = '8' - availableCommands[maxIndex].currentY;
     lastComputerCommand[0] = availableCommands[maxIndex].currentX + 'A';
@@ -275,33 +265,30 @@ void getComputerCommand()
     if( availableCommands[maxIndex].nextY == 7 && piece == 'P')
     {
         command.promotionExist = true;
-        command.promotion = 'Q';//if the generated move tried to place the pawn at the end of the board it promotes it
+        command.promotion = 'Q';
         lastComputerCommand[4] = 'Q';
         lastComputerCommand[5] = '\0';
     }
     else if( availableCommands[maxIndex].nextY == 0 && piece == 'p')
     {
         command.promotionExist = true;
-        command.promotion = 'q';//if the generated move tried to place the pawn at the end of the board it promotes it
+        command.promotion = 'q';
         lastComputerCommand[4] = 'q';
         lastComputerCommand[5] = '\0';
     }
     lastComputerCommand[4] = '\0';
 }
 
-//checks if the number is in the right range
 bool verifyNumber(char number)
 {
     return ( (number > '0') && (number < '9') )?true:false;
 }
 
-//checks if the letter is in the right range
 bool verifyLetter(char letter)
 {
     return ( (letter >= 'A') && (letter <= 'H') )?true:false;
 }
 
-//return the index of the null terminator in an array of characters
 int getNull( char input[], int maxSize)
 {
     int INDEX;
@@ -311,18 +298,16 @@ int getNull( char input[], int maxSize)
     return 0;
 }
 
-//converts the letter to a position in the array
 int convertLetter( char letter)
 {
     return (letter - 'A');
 }
 
-//converts the number to a position in the array
 int convertNumber( char number)
 {
     return ( 8 - (number - '1' + 1));
 }
-//checks if the input is valid or not
+
 bool verifyInput( char input[])
 {
     if( verifyLetter( input[0]) && verifyLetter( input[2]) && verifyNumber( input[1]) && verifyNumber( input[3]) )
@@ -330,7 +315,7 @@ bool verifyInput( char input[])
     else
         return false;
 }
-//prints error by using the error code
+
 void printError(char *type)
 {
     setColor("RED");
@@ -348,7 +333,7 @@ void printError(char *type)
     printf("Please refer to the help section if you need more informations.\n");
     setColor("DEFAULT");
 }
-//executes commands
+
 void doCommand( char input)
 {
     switch( input)
@@ -360,37 +345,37 @@ void doCommand( char input)
         loadGame();
         break;
     case 'u':
-        if(computerState == off)//in case of player vs player it undo one move only
-            undoErrorPrint = !undo();//if there was no move to undo prints an error
-        else//calls undo twice if the game is player vs computer
+        if(computerState == off)
+            undoErrorPrint = !undo();
+        else
         {
-            undoErrorPrint = !undo();//in case of player vs computer it undo 2 moves
+            undoErrorPrint = !undo();
             undoErrorPrint = !undo();
         }
         break;
     case 'r':
         if(computerState == off)
             redo();
-        else//calls redo twice if the game was a player vs computer game
+        else
         {
             redo();
             redo();
         }
         break;
     case 'n':
-        resetAll();//In case of new game it resets everything
+        resetAll();
         break;
     case 'b':
         goBack();
         break;
     case 'q':
-        gameTerminate = true;//to terminate the whole program
+        gameTerminate = true;
         break;
     default:
         printError("no input");
     }
 }
-//takes the input given by the user and set it to the struct
+
 void setCommand( char input[], bool promotion)
 {
     command.currentY = convertNumber( input[1]);
@@ -408,7 +393,7 @@ void setCommand( char input[], bool promotion)
         command.promotionExist = false;
     }
 }
-//verifies that the character is a command shortcut by using the array in the beginning
+
 bool verifyCommand( char input)
 {
 
@@ -419,7 +404,7 @@ bool verifyCommand( char input)
     }
     return false;
 }
-//prints the help section
+
 void printHelp()
 {
     char x= 0;
@@ -460,11 +445,11 @@ There are certain commands used in this game.\n\
     while( x != 'b' );
     state = menu;
 }
-//prints the setting section to change computer mode
+
 void printSetting()
 {
     printLogo();
-    if( computerState == on )//prints the computer state
+    if( computerState == on )
         printf("The computer mode is turned on.\n");
     else
         printf("The computer mode is turned off.\n");
@@ -478,11 +463,10 @@ void printSetting()
         x = getchar();
     }
     if( x == '1' )
-        computerState = !computerState;//changes the computer state
-    goBack();//go back to the main menu
+        computerState = !computerState;
+    goBack();
 }
-//changes the color of the text according to need
-//used the windows.h documentation over internet
+
 void setColor(char* text)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -503,37 +487,37 @@ void setColor(char* text)
     else
         SetConsoleTextAttribute(hConsole,  FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 }
-//switches turn each time a player does a move
+
 void switchTurn()
 {
     currentPlayer = !currentPlayer;
 }
 
-void gameFlow()//the flow of game
+void gameFlow()
 {
-    printBoard();//prints the board
+    printBoard();
     while(!end)
     {
-        if( undoErrorPrint)//if there's an undo warning prints an error message
+        if( undoErrorPrint)
         {
             printError("no undo");
             undoErrorPrint = false;
         }
-        if( redoErrorPrint)//if there's an redo warning prints an error message
+        if( redoErrorPrint)
         {
             printError("no redo");
             redoErrorPrint = false;
         }
-        collectMove();//collects all available moves in this turn
-        simulation = true;//starts the simulation mode to check if the king of the current player is checked
-        copyBoard( board,backupBoard);//copy the board to a backup board to remain unchanged
+        collectMove();
+        simulation = true;
+        copyFromToBoard( board,backupBoard);
         if( graveyard1Size == 15 && graveyard2Size == 15)
             gameWin = draw;
-        if( isChecked() )
+        if( isChecked(board) )
         {
             if(sizeOfAvailableCommands == 0)
             {
-                if( currentPlayer == firstPlayer)//if the king is checked and there's no available moves then the player whose turn is now lose
+                if( currentPlayer == firstPlayer)
                     gameWin = secondPlayer;
                 else
                     gameWin = firstPlayer;
@@ -541,17 +525,17 @@ void gameFlow()//the flow of game
             if( sizeOfAvailableCommands != 0)
             {
                 setColor("MAGENTA");
-                printf("Be ware that's a check.\n");//if the player still has an available moves he's warned about the check state only
+                printf("Be ware that's a check.\n");
                 setColor("DEFAULT");
             }
         }
-        else if( sizeOfAvailableCommands == 0)//if he isn't checked but has no available move then it's stale
+        else if( sizeOfAvailableCommands == 0)
         {
             gameWin = draw;
         }
-        copyBoard( backupBoard, board);//obtain the main state of the board from the backup
-        simulation = false;//turns the simulation mode off to continue the game
-        if( gameWin == none && applyMove() )//applyMove() function gets the input and executes it
+        copyFromToBoard( backupBoard, board);
+        simulation = false;
+        if( gameWin == none && applyMove() )
         {
             switchTurn();
             clearScreen();
@@ -559,14 +543,14 @@ void gameFlow()//the flow of game
             if( firstTurn)
                 firstTurn = false;
         }
-        else if ( gameWin == none)//if applyMove return false then it was a command not a move and we end it
+        else if ( gameWin == none)
         {
             commandStart = false;
             clearScreen();
             printBoard();
             break;
         }
-        if(gameWin != none)//if the game ended we announce the new state whether a draw or a winner
+        if(gameWin != none)
         {
             setColor("GREEN");
             if( gameWin == player1)
@@ -576,13 +560,13 @@ void gameFlow()//the flow of game
                 if( computerState == off)
                     printf("Player2 Wins,CheckMate\n");
                 else
-                    printf("Computer Wins,CheckMate\n");//if you are playing against computer and he wins
+                    printf("Computer Wins,CheckMate\n");
 
             }
             else
                 printf("Draw,StaleMate\n");
             setColor("DEFAULT");
-            char input[7];//then we check whether he wants to save the winning board or undo something
+            char input[7];
             do
             {
                 printf("Enter a command: ");
@@ -609,18 +593,18 @@ void gameFlow()//the flow of game
                 doCommand( input[0]);
                 commandStart = false;
             }
-            clearScreen();//clear the screen and print the board after every move is done
+            clearScreen();
             printBoard();
         }
     }
 }
-//it returns to an upper layer window
+
 void goBack()
 {
     if( state != menu )
         state = menu;
 }
-//it checks what layer to print
+
 void printRequiredScreen()
 {
     switch (state)
@@ -639,7 +623,7 @@ void printRequiredScreen()
         break;
     }
 }
-//it prints the main menu and asks the user for input
+
 void startMenu()
 {
     printLogo();
@@ -652,7 +636,7 @@ void startMenu()
         state = play;
         break;
     case 2:
-        if( !hasBoard)//if he chooses to continue and he has no games left from before the game is reseted
+        if( !hasBoard)
         {
             resetAll();
         }
@@ -669,35 +653,35 @@ void startMenu()
 
 void game()
 {
-    hasBoard = false;//it sets that he has no game
-    while(!gameTerminate)//an infinite loop where the game keeps going under the user enters quit
+    hasBoard = false;
+    while(!gameTerminate)
     {
         clearScreen();
         printRequiredScreen();
     }
 }
-//checks for the promotion
+
 bool checkPromotion( char input[], bool promotion)
 {
     int currentY = convertNumber( input[1]);
     int currentX = convertLetter( input[0]);
     int nextY = convertNumber( input[3]);
     char piece = board[currentY][currentX];
-    if( !checkRightPiece(currentX,currentY))//if trying to move a piece not his own
+    if( !checkRightPiece(piece))
         return false;
-    if( !(promotion) && tolower(piece) != 'p')//if trying to move your piece and not promoting a non pawn
+    if( !(promotion) && tolower(piece) != 'p')
         return true;
-    else if( (promotion) && tolower(piece) != 'p')//if trying to promote a non pawn
+    else if( (promotion) && tolower(piece) != 'p')
     {
         clearScreen();
         printBoard();
         printError("cannot promote piece");
         return false;
-    }else if( tolower(piece) == 'p')//if the piece moved is a pawn
+    }else if( tolower(piece) == 'p')
     {
         if(  (piece == 'p' && nextY == 7) || (piece == 'P' && nextY == 0) )
         {
-            if( !(promotion) )//if trying to place a pawn at the end of the board without promotion
+            if( !(promotion) )
             {
                 clearScreen();
                 printBoard();
@@ -706,7 +690,7 @@ bool checkPromotion( char input[], bool promotion)
             }
             if( (promotion) )
             {
-                if( !(currentPlayer ^ isupper(input[4])) )//if trying to promote to the players piece
+                if( !(currentPlayer ^ isupper(input[4])) )
                 {
                     clearScreen();
                     printBoard();
@@ -715,7 +699,7 @@ bool checkPromotion( char input[], bool promotion)
                 }
                 for(int INDEX = 0; INDEX < sizeOfPromotable; INDEX++)
                 {
-                    if( tolower( input[4]) == promotable[INDEX] )//checks if promoting to a piece your promote to
+                    if( tolower( input[4]) == promotable[INDEX] )
                         return true;
                 }
                 clearScreen();
@@ -725,7 +709,7 @@ bool checkPromotion( char input[], bool promotion)
             }
         }else if( !(promotion) )
             return true;
-        else if( (promotion))//if trying to promote before reaching the end of the board
+        else if( (promotion))
         {
             clearScreen();
             printBoard();
@@ -734,22 +718,22 @@ bool checkPromotion( char input[], bool promotion)
     }
     return false;
 }
-//does the promotion
+
 void doPromotion()
 {
     if( command.promotionExist)
     {
-        board[command.nextY][command.nextX] = command.promotion;//promotes the piece
+        board[command.nextY][command.nextX] = command.promotion;
         command.promotionExist = false;
-        savePromotion();//saves the promotion for undo and redo
+        savePromotion();
     }
     else
     {
-        promotion[turn] = 0;//resets the promotion list for undo and redo if no promotion was made this turn
+        promotion[turn] = 0;
     }
 
 }
-//reset all the stats to use in the start of game or when loading a file
+
 void resetAll()
 {
     resetBoard();
@@ -762,75 +746,151 @@ void resetAll()
     graveyard2Size = 0;
     turn = 0,maxTurn = 0;
 }
-//collect all available moves in a turn
+
 void collectMove()
 {
-    char testCase[] = "A1A1";//starts by the first move A1A1 where it increment
-    simulation = true;//starts simulation move
-    sizeOfAvailableCommands = 0;//initialize the number of moves to zero
-    copyBoard( board, backupBoard);//copy a backup of the main board
-    struct commands backup = command;
+    char testCase[] = "A1A1";
+    simulation = true;
+    sizeOfAvailableCommands = 0;
+    char backupBoard[8][8];
+    copyFromToBoard( board, backupBoard);
+    struct commands command;
     while( strcmp( testCase, "H8H9") != 0 )
     {
-        copyBoard( backupBoard, board);
+        copyFromToBoard( backupBoard, board);
         command.currentY = convertNumber( testCase[1]);
         command.currentX = convertLetter( testCase[0]);
         command.nextY = convertNumber( testCase[3]);
         command.nextX = convertLetter( testCase[2] );
         bool acceptedMove = false;
-        int x1 = command.currentX ;
-        int y1 = command.currentY ;
-        int x2 = command.nextX;
-        int y2 = command.nextY;
-        int valueOfKill = checkValue( x2, y2);//if the move will kill a piece it return the value of the piece
-        if( checkRightPiece(x1,y1) )
+        int pieceValue = checkValue( board[command.currentY][command.currentX]);
+        int opponentValue = checkValue( board[command.nextY][command.nextX]);
+        switchTurn();
+        bool beforeKilled = checkCanBeKilled(command.currentX, command.currentY, board);
+        switchTurn();
+        if( checkRightPiece(board[command.currentY][command.currentX]) )
             switch(board[command.currentY][command.currentX])
             {
             case 'P':
             case 'p':
-                acceptedMove = checkSoldier( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                acceptedMove = checkSoldier(command,board, board[command.currentY][command.currentX]);
                 break;
             case 'R':
             case 'r':
-                acceptedMove = checkRook(  x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                acceptedMove = checkRook(command,board, board[command.currentY][command.currentX]);
                 break;
             case 'N':
             case 'n':
-                acceptedMove = checkHorse( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                acceptedMove = checkHorse(command,board, board[command.currentY][command.currentX]);
                 break;
             case 'B':
             case 'b':
-                acceptedMove = checkBishop( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                acceptedMove = checkBishop(command, board, board[command.currentY][command.currentX]);
                 break;
             case 'Q':
             case 'q':
-                acceptedMove = checkQueen( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                acceptedMove = checkQueen(command, board, board[command.currentY][command.currentX]);
                 break;
             case 'K':
             case 'k':
-                acceptedMove = checkKing( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                acceptedMove = checkKing(command, board, board[command.currentY][command.currentX]);
                 break;
             }
-        if( acceptedMove && !isChecked() )//if the move can be done and doesn't result a check it's available
+        if( acceptedMove && !isChecked(board))
         {
             availableCommands[sizeOfAvailableCommands] = command;
-            killValue[sizeOfAvailableCommands] = valueOfKill;
+            killValue[sizeOfAvailableCommands] = opponentValue;
+            if(beforeKilled)
+                killValue[sizeOfAvailableCommands] += pieceValue;
             switchTurn();
-            if( isChecked() )
-                killValue[sizeOfAvailableCommands] += 3;//if the move will result in an opposite check then the computer does it
-            int temp = checkValue(x2,y2);
-            if( checkCanBeKilled(x2,y2,board))
-            {
-                killValue[sizeOfAvailableCommands] -= temp;//Subtracts the value of the piece itself if it can be killed
-            }
+            bool afterKilled = checkCanBeKilled(command.nextX,command.nextY,board);
+            if( afterKilled)
+                killValue[sizeOfAvailableCommands] -= pieceValue;
+             if( isChecked(board) )
+                killValue[sizeOfAvailableCommands] += 3;
+            int val = rev(board);
+            killValue[sizeOfAvailableCommands] -= val;
+            switchTurn();
+            //printf("%s beforeKilled:%d  afterKilled:%d killing:%d  rec:%d\n",testCase,beforeKilled,afterKilled,opponentValue,val);
             sizeOfAvailableCommands++;
+        }
+        increment( testCase);
+    }
+    copyFromToBoard( backupBoard, board);
+    simulation = false;
+}
+
+int rev(char board[8][8])
+{
+    int sum = 0;
+    if(depth == 2)
+    {
+        return 0;
+    }
+    char testCase[] = "A1A1";
+    char lboard[8][8];
+    copyFromToBoard( board, lboard);
+    struct commands command;
+    while( strcmp( testCase, "H8H9") != 0 )
+    {
+        copyFromToBoard( lboard, board);
+        command.currentY = convertNumber( testCase[1]);
+        command.currentX = convertLetter( testCase[0]);
+        command.nextY = convertNumber( testCase[3]);
+        command.nextX = convertLetter( testCase[2] );
+        bool acceptedMove = false;
+        int pieceValue = checkValue( board[command.currentY][command.currentX]);
+        int opponentValue = checkValue( board[command.nextY][command.nextX]);
+        switchTurn();
+        bool beforeKilled = checkCanBeKilled(command.currentX, command.currentY, board);
+        switchTurn();
+        if( checkRightPiece(board[command.currentY][command.currentX]) )
+            switch(board[command.currentY][command.currentX])
+            {
+            case 'P':
+            case 'p':
+                acceptedMove = checkSoldier(command,board, board[command.currentY][command.currentX]);
+                break;
+            case 'R':
+            case 'r':
+                acceptedMove = checkRook(command,board, board[command.currentY][command.currentX]);
+                break;
+            case 'N':
+            case 'n':
+                acceptedMove = checkHorse(command,board, board[command.currentY][command.currentX]);
+                break;
+            case 'B':
+            case 'b':
+                acceptedMove = checkBishop(command, board, board[command.currentY][command.currentX]);
+                break;
+            case 'Q':
+            case 'q':
+                acceptedMove = checkQueen(command, board, board[command.currentY][command.currentX]);
+                break;
+            case 'K':
+            case 'k':
+                acceptedMove = checkKing(command, board, board[command.currentY][command.currentX]);
+                break;
+            }
+        if( acceptedMove && !isChecked(board))
+        {
+            sum = opponentValue;
+            if(beforeKilled)
+                sum += pieceValue;
+            switchTurn();
+            bool afterKilled = checkCanBeKilled(command.nextX,command.nextY,board);
+            if( afterKilled)
+                sum -= pieceValue;
+             if( isChecked(board) )
+                sum += 3;
+            depth++;
+            sum -= rev(board);
+            depth--;
             switchTurn();
         }
-        increment( testCase);//increment the test case for example from A1A1 to A1A2
+        increment( testCase);
     }
-    copyBoard( backupBoard, board);
-    command = backup;
-    simulation = false;
+    return sum;
 }
 void increment( char testCase[])
 {
@@ -856,7 +916,7 @@ void increment( char testCase[])
     else
         testCase[3]++;
 }
-//checks if the command given by user is found in the available commands
+
 bool checkIfAvailable(struct commands command)
 {
     for(int counter = 0; counter < sizeOfAvailableCommands; counter++)
@@ -866,7 +926,7 @@ bool checkIfAvailable(struct commands command)
     }
     return false;
 }
-//check if 2 structs are the same in some of their attributes
+
 bool checkStructs( struct commands command, struct commands test)
 {
 
@@ -877,8 +937,8 @@ bool checkStructs( struct commands command, struct commands test)
                     return true;
     return false;
 }
-//function which copy the main board to a backup board
-void copyBoard( char board[8][8], char simulationBoard[8][8])
+
+void copyFromToBoard( char board[8][8], char simulationBoard[8][8])
 {
     for(int counter=0; counter < 8; counter++)
     {
@@ -888,12 +948,12 @@ void copyBoard( char board[8][8], char simulationBoard[8][8])
         }
     }
 }
-//returns the value of a piece
-int checkValue( int nextX, int nextY)
+
+int checkValue(char type)
 {
-    if( !isalpha(board[nextY][nextX]))
+    if( !isalpha(type))
         return 0;
-    char type = tolower( board[nextY][nextX]);
+    type = tolower(type);
     switch(type)
     {
     case 'p':
@@ -914,55 +974,52 @@ int checkValue( int nextX, int nextY)
     }
     return 0;
 }
-//checks if a piece can be killed
-bool checkCanBeKilled( int x2, int y2, char board[8][8])//check if the piece moved in the simulation will get killed
+
+bool checkCanBeKilled( int x2, int y2, char lastBoard[8][8])
 {
-    char backupBoard[8][8];
-    copyBoard(board,backupBoard);
+    char board[8][8];
+    copyFromToBoard(lastBoard,board);
     for(int counter = 0; counter < 8; counter++)
     {
-        for(int counter2 = 0; counter2 < 8; counter2++)//iterates over the board to check if their a piece that can kill it
+        for(int counter2 = 0; counter2 < 8; counter2++)
         {
             command.currentY = counter;
             command.currentX = counter2;
-            command.nextY = y2;//it's set to the computer's piece's y-coordinate
-            command.nextX = x2;//it's set to the computer's piece's x-coordinate
+            command.nextY = y2;
+            command.nextX = x2;
             bool acceptedMove = false;
-            int x1 = command.currentX ;
-            int y1 = command.currentY ;
-            int x2 = command.nextX;
-            int y2 = command.nextY;
-            if( checkRightPiece(x1,y1) )
+            if( checkRightPiece(board[command.currentY][command.currentX]) )
                 switch(board[command.currentY][command.currentX])
                 {
                 case 'P':
                 case 'p':
-                    acceptedMove = checkSoldier( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    acceptedMove = checkSoldier(command, board, board[command.currentY][command.currentX]);
                     break;
                 case 'R':
                 case 'r':
-                    acceptedMove = checkRook(  x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    acceptedMove = checkRook(command, board, board[command.currentY][command.currentX]);
                     break;
                 case 'N':
                 case 'n':
-                    acceptedMove = checkHorse( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    acceptedMove = checkHorse(command, board, board[command.currentY][command.currentX]);
                     break;
                 case 'B':
                 case 'b':
-                    acceptedMove = checkBishop( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    acceptedMove = checkBishop(command, board, board[command.currentY][command.currentX]);
                     break;
                 case 'Q':
                 case 'q':
-                    acceptedMove = checkQueen( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    acceptedMove = checkQueen(command, board, board[command.currentY][command.currentX]);
                     break;
                 case 'K':
                 case 'k':
-                    acceptedMove = checkKing( x1, y1, x2, y2, board[command.currentY][command.currentX]);
+                    acceptedMove = checkKing(command, board, board[command.currentY][command.currentX]);
                     break;
                 }
-                if(acceptedMove)// if the move is accepted and this piece can move and eat the computer piece
+                if(acceptedMove)
+                {
                     return true;
-                copyBoard(backupBoard,board);//reset the board
+                }
         }
     }
     return false;
