@@ -811,7 +811,6 @@ void collectMove()
             int val = rev(board);
             killValue[sizeOfAvailableCommands] -= val;
             switchTurn();
-            //printf("%s beforeKilled:%d  afterKilled:%d killing:%d  rec:%d\n",testCase,beforeKilled,afterKilled,opponentValue,val);
             sizeOfAvailableCommands++;
         }
         increment( testCase);
@@ -1021,6 +1020,38 @@ bool checkCanBeKilled( int x2, int y2, char lastBoard[8][8])
                     return true;
                 }
         }
+    }
+    return false;
+}
+
+bool validCurrentCommand(char board[8][8], struct commands curCommand)
+{
+    switch(board[curCommand.currentY][curCommand.currentX])
+    {
+        case 'P':
+        case 'p':
+            return checkSoldier(curCommand, board, board[command.currentY][command.currentX]);
+            break;
+        case 'R':
+        case 'r':
+            return checkRook(curCommand, board, board[command.currentY][command.currentX]);
+            break;
+        case 'N':
+        case 'n':
+            return checkHorse(curCommand, board, board[command.currentY][command.currentX]);
+            break;
+        case 'B':
+        case 'b':
+            return checkBishop(curCommand, board, board[command.currentY][command.currentX]);
+            break;
+        case 'Q':
+        case 'q':
+            return checkQueen(curCommand, board, board[command.currentY][command.currentX]);
+            break;
+        case 'K':
+        case 'k':
+            return checkKing(curCommand, board, board[command.currentY][command.currentX]);
+            break;
     }
     return false;
 }

@@ -71,4 +71,5 @@ int checkValue(char type);
 void getComputerCommand();
 void printSetting();
 bool checkCanBeKilled( int x1, int y1, char board[8][8]);
+bool validCurrentCommand(char board[8][8], struct commands curCommand);
 #endif // GAME_H_INCLUDED

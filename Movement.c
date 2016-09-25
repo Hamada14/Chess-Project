@@ -15,51 +15,25 @@ bool applyMove(void)
     do
     {
         getMove();
-        if( commandStart)
+        if(commandStart)
             return false;
         bool kingCheck = !checkIfAvailable( command);
-        if( kingCheck)
+        if(kingCheck)
         {
             clearScreen();
             printBoard();
             printError("king check");
             continue;
         }
-            switch(board[command.currentY][command.currentX])
-            {
-            case 'P':
-            case 'p':
-                movedSuccessfully = checkSoldier(command, board, board[command.currentY][command.currentX]);
-                break;
-            case 'R':
-            case 'r':
-                movedSuccessfully = checkRook(command, board, board[command.currentY][command.currentX]);
-                break;
-            case 'N':
-            case 'n':
-                movedSuccessfully = checkHorse(command, board, board[command.currentY][command.currentX]);
-                break;
-            case 'B':
-            case 'b':
-                movedSuccessfully = checkBishop(command, board, board[command.currentY][command.currentX]);
-                break;
-            case 'Q':
-            case 'q':
-                movedSuccessfully = checkQueen(command, board, board[command.currentY][command.currentX]);
-                break;
-            case 'K':
-            case 'k':
-                movedSuccessfully = checkKing(command, board, board[command.currentY][command.currentX]);
-                break;
-            }
-        if( !(movedSuccessfully)  )
+        movedSuccessfully = validCurrentCommand(board, command);
+        if(!(movedSuccessfully))
         {
             clearScreen();
             printBoard();
             printError("not valid move");
         }
     }
-    while( !(movedSuccessfully) );
+    while(!(movedSuccessfully));
     turn++ ;
     maxTurn = turn;
     doPromotion();
